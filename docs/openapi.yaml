@@ -1,0 +1,186 @@
+openapi: 3.0.3
+info:
+  title: Pronostics Sportifs API
+  description: API REST officielle pour l'application mobile Flutter de Pronostics Sportifs (VIP & Montante) connectée à Laravel 12 et CinetPay.
+  version: 1.0.0
+  contact:
+    name: Support Technique
+    email: support@pronostics-sportifs.pro
+servers:
+  - url: https://api.pronostics-sportifs.pro/api/v1
+    description: Serveur de Production
+  - url: http://localhost:8000/api/v1
+    description: Serveur de Développement Local
+paths:
+  /auth/register:
+    post:
+      summary: Inscription utilisateur (Démarre 48h essai gratuit Côte 5)
+      tags:
+        - Authentification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Inscription réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /auth/login:
+    post:
+      summary: Connexion utilisateur
+      tags:
+        - Authentification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+  /auth/profile:
+    get:
+      summary: Récupérer le profil et l'état de l'abonnement
+      tags:
+        - Authentification
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Profil utilisateur retourné
+  /predictions:
+    get:
+      summary: Liste des pronostics filtrés par catégorie et recherche
+      tags:
+        - Pronostics
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [MONTANTE, COTE_5, COTE_10, COTE_50]
+        - in: query
+          name: championship
+          schema:
+            type: string
+        - in: query
+          name: team
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Liste des pronostics (avec masquage si non-abonné)
+  /subscriptions/plans:
+    get:
+      summary: Liste des forfaits d'abonnement (VIP & Montante)
+      tags:
+        - Abonnements
+      responses:
+        '200':
+          description: Plans VIP (2000 FCFA/mois) et Montante (2000 FCFA/semaine)
+  /subscriptions/subscribe:
+    post:
+      summary: Initialiser un paiement d'abonnement avec CinetPay
+      tags:
+        - Abonnements
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                plan_code:
+                  type: string
+                  example: VIP
+                payment_method:
+                  type: string
+                  example: MOBILE_MONEY
+                phone:
+                  type: string
+                  example: "+22670112233"
+      responses:
+        '200':
+          description: Token de paiement CinetPay initialisé
+  /cinetpay/webhook:
+    post:
+      summary: Webhook de confirmation CinetPay (Mobile Money & Carte CB)
+      tags:
+        - CinetPay
+      responses:
+        '200':
+          description: Webhook traité et abonnement activé
+  /admin/dashboard/stats:
+    get:
+      summary: Statistiques et KPIs du tableau de bord admin
+      tags:
+        - Administration
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Statistiques complètes
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    RegisterRequest:
+      type: object
+      required: [last_name, first_name, phone, email, password, password_confirmation]
+      properties:
+        last_name:
+          type: string
+          example: Kaboré
+        first_name:
+          type: string
+          example: Moussa
+        phone:
+          type: string
+          example: "+22670112233"
+        email:
+          type: string
+          example: moussa.kabore@example.com
+        password:
+          type: string
+          example: Password123!
+        password_confirmation:
+          type: string
+          example: Password123!
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          example: moussa.kabore@example.com
+        password:
+          type: string
+          example: Password123!
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        token:
+          type: string
+          example: "1|abcdef123456789..."
+        user:
+          type: object

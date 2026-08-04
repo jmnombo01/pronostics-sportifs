@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Documentation API REST - Pronostics Sportifs (Swagger UI)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0A0A0B;
+      color: #FFF;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .topbar {
+      background: #121216;
+      padding: 15px 30px;
+      border-bottom: 2px solid #D4AF37;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar h1 {
+      margin: 0;
+      font-size: 20px;
+      color: #D4AF37;
+      font-weight: 700;
+    }
+    .topbar span {
+      color: #00C853;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    #swagger-ui {
+      background: #FFFFFF;
+      min-height: calc(100vh - 60px);
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>👑 PRONOSTICS SPORTIFS - API REST SWAGGER UI</h1>
+    <span>Laravel 12 & CinetPay Ready</span>
+  </div>
+  <div id="swagger-ui"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-bundle.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-standalone-preset.js"></script>
+  <script>
+    window.onload = function() {
+      const ui = SwaggerUIBundle({
+        url: "./openapi.yaml",
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        layout: "BaseLayout"
+      });
+      window.ui = ui;
+    };
+  </script>
+</body>
+</html>

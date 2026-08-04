@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👑 Client Utilisateur - Pronostics Sportifs VIP & Montante</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg-main: #0A0A0B;
+      --bg-card: #16161A;
+      --bg-card-hover: #1F1F25;
+      --border-color: #2C2C35;
+      --gold: #D4AF37;
+      --gold-light: #F3E5AB;
+      --green: #00C853;
+      --red: #E53935;
+      --orange: #FF9800;
+      --text-main: #FFFFFF;
+      --text-muted: #8E8E93;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #060608;
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      line-height: 1.5;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Top Demo Switcher Bar */
+    .demo-switcher {
+      width: 100%;
+      background: #121217;
+      border-bottom: 2px solid var(--gold);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+    }
+
+    .demo-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .demo-title i {
+      color: var(--gold);
+      font-size: 24px;
+    }
+
+    .demo-title h1 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: 0.8px;
+    }
+
+    .user-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .user-select-box {
+      background: var(--bg-main);
+      border: 1px solid var(--gold);
+      color: #FFF;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .badge-sim {
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Mobile App Viewport Wrapper */
+    .app-container {
+      width: 100%;
+      max-width: 680px;
+      background: var(--bg-main);
+      min-height: calc(100vh - 60px);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+      position: relative;
+      padding-bottom: 80px;
+    }
+
+    /* App Header */
+    .app-header {
+      padding: 20px 24px 15px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .app-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-logo i {
+      color: var(--gold);
+      font-size: 24px;
+    }
+
+    .app-logo span {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .header-icons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .icon-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: #FFF;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .icon-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* Modern Hero Banner */
+    .hero-banner {
+      margin: 20px;
+      padding: 22px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #1A1A22 0%, #282834 100%);
+      border: 1.5px solid var(--gold);
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner.vip-banner {
+      background: linear-gradient(135deg, #D4AF37 0%, #996515 100%);
+      color: #000;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+    .badge-gold-bg { background: rgba(0,0,0,0.8); color: var(--gold); }
+    .badge-green-bg { background: rgba(0, 200, 83, 0.2); color: var(--green); border: 1px solid var(--green); }
+    .badge-red-bg { background: rgba(229, 57, 53, 0.2); color: var(--red); border: 1px solid var(--red); }
+
+    .hero-title {
+      font-size: 20px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .hero-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+    }
+    .vip-banner .hero-desc { color: #222; font-weight: 600; }
+
+    .btn {
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: none;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-gold { background: var(--gold); color: #000; }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-dark { background: #0A0A0B; color: var(--gold); }
+
+    /* Stats Bar */
+    .stats-bar {
+      margin: 0 20px 20px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 18px;
+      font-weight: 900;
+    }
+    .stat-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 28px;
+      background: var(--border-color);
+    }
+
+    /* Category Tabs */
+    .category-tabs {
+      display: flex;
+      gap: 10px;
+      padding: 0 20px;
+      overflow-x: auto;
+      margin-bottom: 15px;
+      scrollbar-width: none;
+    }
+    .category-tabs::-webkit-scrollbar { display: none; }
+
+    .cat-tab {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: #FFF;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cat-tab.active {
+      background: var(--gold);
+      color: #000;
+      border-color: var(--gold);
+    }
+
+    /* Prediction Cards (Multi-match Combinés) */
+    .prediction-card {
+      margin: 0 20px 15px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.2s, border-color 0.2s;
+      cursor: pointer;
+    }
+
+    .prediction-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .prediction-card.locked {
+      border-color: rgba(229, 57, 53, 0.4);
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-champ {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 6px;
+    }
+
+    .badge-combiné {
+      background: rgba(0, 200, 83, 0.18);
+      color: var(--green);
+      border: 1px solid var(--green);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .badge-cat {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .cat-cote5 { background: rgba(33, 150, 243, 0.2); color: #42A5F5; border: 1px solid #42A5F5; }
+    .cat-cote10 { background: rgba(212, 175, 55, 0.2); color: var(--gold); border: 1px solid var(--gold); }
+    .cat-cote50 { background: rgba(229, 57, 53, 0.2); color: var(--red); border: 1px solid var(--red); }
+    .cat-montante { background: rgba(0, 200, 83, 0.2); color: var(--green); border: 1px solid var(--green); }
+
+    .card-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #FFF;
+      line-height: 1.3;
+    }
+
+    .odds-badge {
+      background: linear-gradient(135deg, var(--gold), var(--green));
+      color: #000;
+      padding: 8px 14px;
+      border-radius: 12px;
+      text-align: center;
+      min-width: 65px;
+    }
+
+    .odds-val {
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .odds-lbl {
+      font-size: 9px;
+      font-weight: 800;
+    }
+
+    .card-selections-preview {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+
+    .preview-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      color: #CCC;
+    }
+    .preview-item:last-child { margin-bottom: 0; }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-color);
+      padding-top: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .stars {
+      color: var(--gold);
+      font-size: 13px;
+    }
+
+    /* Lock Overlay */
+    .lock-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.88);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .lock-overlay i {
+      font-size: 38px;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+
+    .lock-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #FFF;
+      margin-bottom: 6px;
+    }
+
+    .lock-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 680px;
+      background: #111116;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 900;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-item i {
+      font-size: 20px;
+    }
+
+    .nav-item.active {
+      color: var(--gold);
+    }
+
+    /* Modal / Detail View */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 24px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .selection-box {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+
+    .tip-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 200, 83, 0.2);
+      color: var(--green);
+      border: 1px solid var(--green);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      z-index: 9999;
+    }
+
+    .toast {
+      background: #1C1C22;
+      border: 2px solid var(--gold);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+      animation: slideIn 0.3s ease;
+      margin-top: 10px;
+      max-width: 360px;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR: DEMO ACCOUNT SWITCHER -->
+  <div class="demo-switcher">
+    <div class="demo-title">
+      <i class="fa-solid fa-mobile-screen-button"></i>
+      <div>
+        <h1>CLIENT UTILISATEUR (FLUTTER / WEB SIMULATOR)</h1>
+      </div>
+    </div>
+
+    <div class="user-selector">
+      <span style="font-size: 12px; color: var(--text-muted);">Basculer d'utilisateur :</span>
+      <select class="user-select-box" id="user-select" onchange="switchUser(this.value)">
+        <option value="trial">🎁 Fatima (Essai Gratuit 48h - Côte 5 autorisée)</option>
+        <option value="vip">👑 Amadou (Abonné VIP 2000 FCFA - Accès total 100%)</option>
+        <option value="montante">📈 Issa (Abonné Montante 2000 FCFA/sem)</option>
+        <option value="expired">🔒 Brahima (Essai 48h Expiré - Tout verrouillé)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- APP VIEWPORT CONTAINER -->
+  <div class="app-container">
+
+    <!-- APP HEADER -->
+    <header class="app-header">
+      <div class="app-logo">
+        <i class="fa-solid fa-crown"></i>
+        <span>PRONOSTICS VIP</span>
+      </div>
+      <div class="header-icons">
+        <button class="icon-btn" onclick="openSubscribeModal()" title="Abonnements CinetPay">
+          <i class="fa-solid fa-star" style="color: var(--gold);"></i>
+        </button>
+        <button class="icon-btn" onclick="alert('Profil : ' + currentUser.name + '\\nEmail: ' + currentUser.email)" title="Mon Profil">
+          <i class="fa-solid fa-user"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- TAB 1: HOME SCREEN (ACCUEIL) -->
+    <main id="screen-home">
+      <!-- BANNIÈRE UTILISATEUR -->
+      <div id="hero-banner-container"></div>
+
+      <!-- BARRE DE STATISTIQUES -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-val" style="color: var(--green);">86%</div>
+          <div class="stat-lbl">Réussite</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-val" style="color: var(--gold);">54.00</div>
+          <div class="stat-lbl">Cote Max</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-val">15+</div>
+          <div class="stat-lbl">Pronos / Sem.</div>
+        </div>
+      </div>
+
+      <!-- ONGLET HORIZONTAL DES CATÉGORIES -->
+      <div class="category-tabs">
+        <button class="cat-tab active" id="tab-ALL" onclick="filterCategory('ALL')">🔥 TOUS</button>
+        <button class="cat-tab" id="tab-MONTANTE" onclick="filterCategory('MONTANTE')">📈 MONTANTE</button>
+        <button class="cat-tab" id="tab-COTE_5" onclick="filterCategory('COTE_5')">⚡ CÔTE 5</button>
+        <button class="cat-tab" id="tab-COTE_10" onclick="filterCategory('COTE_10')">👑 CÔTE 10</button>
+        <button class="cat-tab" id="tab-COTE_50" onclick="filterCategory('COTE_50')">💎 CÔTE 50 (SEMAINE)</button>
+      </div>
+
+      <!-- LISTE DES PRONOSTICS (COMBINÉS MULTI-MATCHS) -->
+      <div id="predictions-list"></div>
+    </main>
+
+    <!-- TAB 2: SUBSCRIPTIONS SCREEN (ABONNEMENTS & CINETPAY) -->
+    <main id="screen-subscriptions" style="display: none; padding: 20px;">
+      <h2 style="color: var(--gold); font-size: 20px; font-weight: 900; margin-bottom: 6px;">
+        👑 FORFAITS D'ABONNEMENT CINETPAY
+      </h2>
+      <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">
+        Paiement sécurisé par CinetPay • Mobile Money (Orange, MTN, Moov) & Carte Bancaire
+      </p>
+
+      <!-- CARTE FORFAIT VIP -->
+      <div class="prediction-card" style="margin: 0 0 16px 0; border: 2px solid var(--gold); padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span style="font-size: 18px; font-weight: 900; color: #FFF;">👑 FORFAIT VIP MENSUEl</span>
+          <span style="background: rgba(212,175,55,0.2); color: var(--gold); padding: 6px 12px; border-radius: 8px; font-weight: 800;">2000 FCFA / MOIS</span>
+        </div>
+        <ul style="list-style: none; color: #DDD; font-size: 14px; margin-bottom: 18px;">
+          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Accès garanti aux <strong>Combinés Côte 5</strong> quotidiens</li>
+          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Accès exclusif aux <strong>Combinés Côte 10</strong></li>
+          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Accès au <strong>Pronostic de la Semaine (Côte ≥ 50)</strong></li>
+          <li><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Analyses d'experts détaillées pour chaque match</li>
+        </ul>
+        <button class="btn btn-gold" style="width: 100%; justify-content: center;" onclick="triggerCinetPayCheckout('VIP', 2000)">
+          <i class="fa-solid fa-shield-halved"></i> PAYER 2000 FCFA AVEC CINETPAY
+        </button>
+      </div>
+
+      <!-- CARTE FORFAIT MONTANTE -->
+      <div class="prediction-card" style="margin: 0 0 20px 0; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span style="font-size: 18px; font-weight: 900; color: #FFF;">📈 FORFAIT MONTANTE</span>
+          <span style="background: rgba(0,200,83,0.2); color: var(--green); padding: 6px 12px; border-radius: 8px; font-weight: 800;">2000 FCFA / SEMAINE</span>
+        </div>
+        <ul style="list-style: none; color: #DDD; font-size: 14px; margin-bottom: 18px;">
+          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Accès exclusif à la <strong>stratégie Montante</strong> sur 7 jours</li>
+          <li><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Gestion de mise pas-à-pas sécurisée</li>
+        </ul>
+        <button class="btn" style="width: 100%; justify-content: center; background: var(--green); color: #000;" onclick="triggerCinetPayCheckout('MONTANTE', 2000)">
+          <i class="fa-solid fa-shield-halved"></i> PAYER 2000 FCFA AVEC CINETPAY
+        </button>
+      </div>
+
+      <!-- CODE PROMO INPUT -->
+      <div style="background: var(--bg-card); padding: 16px; border-radius: 14px; border: 1px solid var(--border-color);">
+        <label style="font-size: 13px; font-weight: 700; color: var(--gold); display: block; margin-bottom: 8px;">
+          🎟️ VOUS AVEZ UN CODE PROMO ?
+        </label>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="promo-input" placeholder="Ex: WELCOME10 (-10%) ou VIP20" style="flex: 1; background: var(--bg-main); border: 1px solid var(--border-color); color: #FFF; padding: 10px 14px; border-radius: 10px;" />
+          <button class="btn btn-gold" onclick="testPromoCode()">APPLIQUER</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- TAB 3: HISTORY SCREEN (HISTORIQUE) -->
+    <main id="screen-history" style="display: none; padding: 20px;">
+      <h2 style="color: var(--gold); font-size: 20px; font-weight: 900; margin-bottom: 16px;">
+        📜 HISTORIQUE DES PRONOSTICS GAGNÉS
+      </h2>
+      <div id="history-list"></div>
+    </main>
+
+    <!-- TAB 4: SUPPORT SCREEN (SUPPORT WHATSAPP & FAQ) -->
+    <main id="screen-support" style="display: none; padding: 20px;">
+      <h2 style="color: var(--gold); font-size: 20px; font-weight: 900; margin-bottom: 16px;">
+        💬 SUPPORT CLIENT WHATSAPP & FAQ
+      </h2>
+      <a href="https://wa.me/22670000000?text=Bonjour%20Support%20Pronostics%20Sportifs" target="_blank" style="text-decoration: none;">
+        <div style="background: linear-gradient(135deg, #25D366, #128C7E); padding: 20px; border-radius: 16px; color: #FFF; display: flex; align-items: center; gap: 16px; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(37,211,102,0.3);">
+          <i class="fa-brands fa-whatsapp" style="font-size: 40px;"></i>
+          <div>
+            <div style="font-size: 16px; font-weight: 900;">SUPPORT WHATSAPP DIRECT</div>
+            <div style="font-size: 13px; color: rgba(255,255,255,0.8);">Assistance instantanée (7j/7, 08h - 22h GMT)</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Parrainage Box -->
+      <div style="background: rgba(0,200,83,0.12); border: 1px solid var(--green); padding: 18px; border-radius: 16px; margin-bottom: 25px; text-align: center;">
+        <div style="font-size: 13px; font-weight: 800; color: var(--green); margin-bottom: 8px;">
+          🤝 VOTRE CODE DE PARRAINAGE PERSONNEL
+        </div>
+        <div style="font-size: 24px; font-weight: 900; color: #FFF; letter-spacing: 2px; margin-bottom: 6px;">SAWAD2026</div>
+        <div style="font-size: 12px; color: var(--text-muted);">
+          Partagez ce code : gagnez +7 jours d'abonnement VIP gratuits pour chaque ami qui s'abonne !
+        </div>
+      </div>
+
+      <h3 style="color: var(--gold); font-size: 15px; margin-bottom: 10px;">❓ QUESTIONS FRÉQUENTES (FAQ)</h3>
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 15px; margin-bottom: 12px;">
+        <div style="font-weight: 800; color: #FFF; margin-bottom: 4px;">1. Comment fonctionne l'essai gratuit de 48 heures ?</div>
+        <div style="color: var(--text-muted); font-size: 13px;">Dès l'inscription, vous accédez gratuitement pendant 48h aux combinés de la catégorie Côte 5. Après 48h, l'abonnement VIP (2000 FCFA/mois) prend le relais.</div>
+      </div>
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 15px;">
+        <div style="font-weight: 800; color: #FFF; margin-bottom: 4px;">2. Comment payer par Mobile Money avec CinetPay ?</div>
+        <div style="color: var(--text-muted); font-size: 13px;">Sélectionnez votre forfait, choisissez Orange Money, MTN, Moov ou Airtel, saisissez votre numéro de téléphone et validez directement !</div>
+      </div>
+    </main>
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav class="bottom-nav">
+      <a class="nav-item active" id="nav-home" onclick="switchNav('home')">
+        <i class="fa-solid fa-house"></i>
+        <span>Accueil</span>
+      </a>
+      <a class="nav-item" id="nav-subscriptions" onclick="switchNav('subscriptions')">
+        <i class="fa-solid fa-star"></i>
+        <span>Abonnement</span>
+      </a>
+      <a class="nav-item" id="nav-history" onclick="switchNav('history')">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <span>Historique</span>
+      </a>
+      <a class="nav-item" id="nav-support" onclick="switchNav('support')">
+        <i class="fa-solid fa-headset"></i>
+        <span>Support</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- MODAL DÉTAIL DU COMBINÉ (POUR TICKET AUTORISÉ) -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeDetailModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div id="modal-body-content"></div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // 4 Utilisateurs types pour la démonstration client
+    const USERS = {
+      trial: {
+        id: 3,
+        name: "Fatima Kaboré",
+        email: "trial@pronostics.pro",
+        status: "FREE_TRIAL",
+        badge: "🎁 ESSAI GRATUIT 48H",
+        canAccess: ["COTE_5"]
+      },
+      vip: {
+        id: 1,
+        name: "Amadou Sawadogo",
+        email: "vip@pronostics.pro",
+        status: "ACTIVE_VIP",
+        badge: "👑 ABONNÉ VIP ACTIF",
+        canAccess: ["COTE_5", "COTE_10", "COTE_50"]
+      },
+      montante: {
+        id: 2,
+        name: "Issa Ouédraogo",
+        email: "montante@pronostics.pro",
+        status: "ACTIVE_MONTANTE",
+        badge: "📈 ABONNÉ MONTANTE ACTIF",
+        canAccess: ["MONTANTE"]
+      },
+      expired: {
+        id: 4,
+        name: "Brahima Sanou",
+        email: "expired@pronostics.pro",
+        status: "EXPIRED",
+        badge: "🔒 ESSAI EXPIRÉ (>48H)",
+        canAccess: []
+      }
+    };
+
+    let currentUser = USERS.trial;
+    let currentCategory = 'ALL';
+
+    // Base de données des Combinés Multi-Matchs (reflète le Backend Laravel 12 / Flutter)
+    const PREDICTIONS = [
+      {
+        id: 1,
+        title: "⚡ COMBINÉ CÔTE 5 DU LUNDI (3 MATCHS)",
+        championship: "Combiné Europe",
+        type: "COTE_5",
+        odds: 5.18,
+        confidence: 5,
+        matchDate: "2026-08-03",
+        matchTime: "19:30",
+        status: "PENDING",
+        selections: [
+          { match: "Real Madrid vs FC Séville", championship: "La Liga", time: "19:30", tip: "Victoire Real Madrid (1)", odds: 1.65 },
+          { match: "PSG vs Olympique Lyonnais", championship: "Ligue 1", time: "20:45", tip: "Les deux équipes marquent (BTTS - Oui)", odds: 1.80 },
+          { match: "Bayern Munich vs RB Leipzig", championship: "Bundesliga", time: "18:30", tip: "Plus de 2.5 buts dans le match", odds: 1.75 }
+        ],
+        analysis: "Combiné de 3 matchs sélectionnés par nos algorithmes et nos experts. La cote cumulée (1.65 × 1.80 × 1.75 = 5.18) offre un ratio sécurité/gain optimal."
+      },
+      {
+        id: 2,
+        title: "⚡ COMBINÉ CÔTE 5 DU MARDI (3 MATCHS)",
+        championship: "Combiné PL & Serie A",
+        type: "COTE_5",
+        odds: 5.04,
+        confidence: 5,
+        matchDate: "2026-08-04",
+        matchTime: "16:30",
+        status: "PENDING",
+        selections: [
+          { match: "Arsenal vs Chelsea", championship: "Premier League", time: "16:30", tip: "Victoire Arsenal & Plus de 1.5 buts", odds: 1.80 },
+          { match: "Inter Milan vs AC Milan", championship: "Serie A", time: "20:45", tip: "Victoire Inter Milan (DNB 1)", odds: 1.75 },
+          { match: "FC Porto vs Benfica", championship: "Liga Portugal", time: "21:00", tip: "Plus de 1.5 buts en 2e mi-temps", odds: 1.60 }
+        ],
+        analysis: "Deuxième ticket Côte 5 de la semaine avec 3 sélections européennes à haute probabilité."
+      },
+      {
+        id: 3,
+        title: "👑 COMBINÉ CÔTE 10 - GRAND CHELEM (4 MATCHS)",
+        championship: "Combiné Champions & Europa",
+        type: "COTE_10",
+        odds: 10.45,
+        confidence: 4,
+        matchDate: "2026-08-05",
+        matchTime: "18:30",
+        status: "PENDING",
+        selections: [
+          { match: "Manchester City vs Aston Villa", championship: "Premier League", time: "18:30", tip: "Victoire Man City & Haaland Buteur", odds: 1.85 },
+          { match: "Juventus vs Naples", championship: "Serie A", time: "20:45", tip: "Moins de 3.5 buts dans le match", odds: 1.70 },
+          { match: "Borussia Dortmund vs Eintracht", championship: "Bundesliga", time: "17:30", tip: "Victoire Dortmund (1)", odds: 1.80 },
+          { match: "FC Barcelone vs Atletico Madrid", championship: "La Liga", time: "21:00", tip: "Les deux équipes marquent (Oui)", odds: 1.85 }
+        ],
+        analysis: "Combiné de 4 matchs pour atteindre notre cote 10 exclusive. Misez 2% de votre bankroll."
+      },
+      {
+        id: 4,
+        title: "💎 MÉGA COMBINÉ SEMAINE VIP (6 MATCHS)",
+        championship: "Ligue des Champions",
+        type: "COTE_50",
+        odds: 54.20,
+        confidence: 4,
+        matchDate: "2026-08-06",
+        matchTime: "21:00",
+        status: "PENDING",
+        selections: [
+          { match: "Real Madrid vs Benfica", championship: "UCL", time: "21:00", tip: "Victoire Real Madrid", odds: 1.60 },
+          { match: "Manchester City vs Porto", championship: "UCL", time: "21:00", tip: "Victoire City -1.5", odds: 1.75 },
+          { match: "Bayern Munich vs Celtic", championship: "UCL", time: "21:00", tip: "Plus de 3.5 buts", odds: 1.80 },
+          { match: "Liverpool vs Galatasaray", championship: "UCL", time: "21:00", tip: "Victoire Liverpool (1)", odds: 1.55 },
+          { match: "Inter Milan vs Shakhtar", championship: "UCL", time: "21:00", tip: "Inter Milan sans encaisser", odds: 2.05 },
+          { match: "Arsenal vs PSV Eindhoven", championship: "UCL", time: "21:00", tip: "Arsenal gagne les deux MT", odds: 3.40 }
+        ],
+        analysis: "Notre combiné phare de la semaine réunit 6 sélections pour une cote de 54.20. Réservé aux abonnés VIP."
+      },
+      {
+        id: 5,
+        title: "📈 MONTANTE ÉTAPE 1 : Inter Milan vs AS Roma",
+        championship: "Serie A - Italie",
+        type: "MONTANTE",
+        odds: 1.85,
+        confidence: 5,
+        matchDate: "2026-08-03",
+        matchTime: "20:45",
+        status: "PENDING",
+        selections: [
+          { match: "Inter Milan vs AS Roma", championship: "Serie A", time: "20:45", tip: "Victoire Inter Milan (Remboursé si nul)", odds: 1.85 }
+        ],
+        analysis: "Étape 1 de la montante en 5 jours. Victoire de l'Inter Milan (remboursé si match nul)."
+      },
+      {
+        id: 6,
+        title: "⚡ COMBINÉ CÔTE 5 (HISTORIQUE GAGNÉ - 3 MATCHS)",
+        championship: "Combiné Premier League",
+        type: "COTE_5",
+        odds: 5.10,
+        confidence: 5,
+        matchDate: "2026-08-01",
+        matchTime: "17:30",
+        status: "WON",
+        selections: [
+          { match: "Liverpool vs Chelsea", championship: "PL", time: "17:30", tip: "Victoire Liverpool (3-1)", odds: 1.75 },
+          { match: "Newcastle vs Everton", championship: "PL", time: "15:00", tip: "Victoire Newcastle (2-0)", odds: 1.70 },
+          { match: "Tottenham vs Fulham", championship: "PL", time: "15:00", tip: "Plus de 2.5 buts (2-1)", odds: 1.72 }
+        ],
+        analysis: "Ticket Côte 5 gagnant à 100% ! Les 3 sélections sont validées."
+      }
+    ];
+
+    window.onload = function() {
+      renderBanner();
+      renderPredictions();
+      renderHistory();
+    };
+
+    function switchUser(key) {
+      currentUser = USERS[key];
+      renderBanner();
+      renderPredictions();
+
+      showToast("👤 Compte basculé vers " + currentUser.name, currentUser.badge);
+    }
+
+    function switchNav(nav) {
+      const navs = ['home', 'subscriptions', 'history', 'support'];
+      navs.forEach(n => {
+        document.getElementById(`nav-${n}`).classList.remove('active');
+        document.getElementById(`screen-${n}`).style.display = 'none';
+      });
+
+      document.getElementById(`nav-${nav}`).classList.add('active');
+      document.getElementById(`screen-${nav}`).style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      const tabs = ['ALL', 'MONTANTE', 'COTE_5', 'COTE_10', 'COTE_50'];
+      tabs.forEach(t => document.getElementById(`tab-${t}`).classList.remove('active'));
+      document.getElementById(`cat-tab-${cat}` || `tab-${cat}`).classList.add('active');
+      renderPredictions();
+    }
+
+    function renderBanner() {
+      const container = document.getElementById('hero-banner-container');
+      const isVip = currentUser.status === 'ACTIVE_VIP';
+      const isTrial = currentUser.status === 'FREE_TRIAL';
+      const isExpired = currentUser.status === 'EXPIRED';
+
+      let bgClass = isVip ? "vip-banner" : "";
+      let badgeHtml = isVip
+        ? `<span class="hero-badge badge-gold-bg">👑 MEMBRE VIP ACTIF</span>`
+        : (isTrial
+            ? `<span class="hero-badge badge-green-bg">🎁 ESSAI GRATUIT 48H (Côte 5)</span>`
+            : `<span class="hero-badge badge-red-bg">🔒 ESSAI EXPIRÉ - NON ABONNÉ</span>`);
+
+      container.innerHTML = `
+        <div class="hero-banner ${bgClass}">
+          ${badgeHtml}
+          <div class="hero-title">
+            ${isVip ? "Accès 100% Débloqué à Nos Pronostics" : (isTrial ? "Essai 48h sur la catégorie Côte 5" : "Passez au Forfait VIP ou Montante")}
+          </div>
+          <div class="hero-desc">
+            ${isVip
+              ? "Vous bénéficiez de toutes les sélections précises, cotes individuelles et analyses d'experts."
+              : "Abonnez-vous à 2000 FCFA/mois avec CinetPay pour révéler les sélections des Côtes 10, 50 et Montante."}
+          </div>
+          ${!isVip ? `
+            <button class="btn btn-gold" onclick="switchNav('subscriptions')">
+              <i class="fa-solid fa-star"></i> S'ABONNER MAINTENANT (2000 FCFA)
+            </button>
+          ` : ``}
+        </div>
+      `;
+    }
+
+    function renderPredictions() {
+      const container = document.getElementById('predictions-list');
+      container.innerHTML = "";
+
+      const filtered = PREDICTIONS.filter(p => {
+        if (currentCategory !== 'ALL' && p.type !== currentCategory) return false;
+        if (p.status !== 'PENDING') return false; // On n'affiche sur l'accueil que les paris en cours
+        return true;
+      });
+
+      filtered.forEach(p => {
+        const hasAccess = currentUser.canAccess.includes(p.type);
+        const isLocked = !hasAccess;
+
+        const card = document.createElement('div');
+        card.className = `prediction-card ${isLocked ? 'locked' : ''}`;
+        card.onclick = () => openPredictionDetail(p, isLocked);
+
+        card.innerHTML = `
+          <div class="card-body">
+            <div class="card-header">
+              <div class="card-champ">
+                <i class="fa-solid fa-trophy"></i>
+                <span>${p.championship.toUpperCase()}</span>
+              </div>
+              <div class="card-tags">
+                <span class="badge-combiné">COMBINÉ ${p.selections.length} MATCHS</span>
+                ${getCatBadge(p.type)}
+              </div>
+            </div>
+
+            <div class="card-main">
+              <div class="card-title">${p.title}</div>
+              <div class="odds-badge">
+                <div class="odds-val">${p.odds.toFixed(2)}</div>
+                <div class="odds-lbl">COTE</div>
+              </div>
+            </div>
+
+            <div class="card-selections-preview">
+              ${p.selections.slice(0, 3).map((s, idx) => `
+                <div class="preview-item">
+                  <span>${idx + 1}. ${s.match}</span>
+                  <span>(@${s.odds.toFixed(2)})</span>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="card-footer">
+              <div><i class="fa-regular fa-clock"></i> ${p.matchDate} à ${p.matchTime}</div>
+              <div class="stars">${"⭐".repeat(p.confidence)}</div>
+            </div>
+          </div>
+
+          ${isLocked ? `
+            <div class="lock-overlay">
+              <i class="fa-solid fa-lock"></i>
+              <div class="lock-title">🔒 COMBINÉ CÔTE ${p.odds.toFixed(2)} (${p.selections.length} MATCHS) - RÉSERVÉ</div>
+              <div class="lock-desc">Abonnez-vous (2000 FCFA/mois) pour voir le pari conseillé de chaque match du ticket.</div>
+              <button class="btn btn-gold" onclick="event.stopPropagation(); switchNav('subscriptions')">
+                <i class="fa-solid fa-key"></i> Débloquer ce ticket (2000 FCFA)
+              </button>
+            </div>
+          ` : ``}
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function getCatBadge(type) {
+      switch(type) {
+        case 'MONTANTE': return `<span class="badge-cat cat-montante">MONTANTE</span>`;
+        case 'COTE_10': return `<span class="badge-cat cat-cote10">CÔTE 10</span>`;
+        case 'COTE_50': return `<span class="badge-cat cat-cote50">CÔTE 50</span>`;
+        default: return `<span class="badge-cat cat-cote5">CÔTE 5</span>`;
+      }
+    }
+
+    function openPredictionDetail(p, isLocked) {
+      if (isLocked) {
+        switchNav('subscriptions');
+        return;
+      }
+
+      const modalBody = document.getElementById('modal-body-content');
+      modalBody.innerHTML = `
+        <div style="text-align: center; margin-bottom: 20px;">
+          <span class="badge-combiné">TICKET COMBINÉ (${p.selections.length} MATCHS)</span>
+          <h2 style="color: var(--gold); font-size: 20px; font-weight: 900; margin: 10px 0 6px 0;">${p.title}</h2>
+          <div style="color: var(--text-muted); font-size: 13px;">Cote Cumulée : <strong style="color: var(--green); font-size: 16px;">${p.odds.toFixed(2)}</strong> • Confiance ${"⭐".repeat(p.confidence)}</div>
+        </div>
+
+        <h3 style="color: var(--gold); font-size: 15px; margin-bottom: 12px;">🎯 SÉLECTIONS INDIVIDUELLES DU TICKET</h3>
+        ${p.selections.map((sel, idx) => `
+          <div class="selection-box">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
+              <span>#${idx + 1} • ${sel.championship}</span>
+              <span>${sel.time}</span>
+            </div>
+            <div style="font-size: 16px; font-weight: 800; color: #FFF; margin: 4px 0;">${sel.match}</div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span class="tip-badge"><i class="fa-solid fa-check"></i> PARI : ${sel.tip.toUpperCase()}</span>
+              <span style="color: var(--gold); font-weight: 900; font-size: 15px;">@${sel.odds.toFixed(2)}</span>
+            </div>
+          </div>
+        `).join('')}
+
+        <h3 style="color: var(--gold); font-size: 15px; margin: 18px 0 8px 0;">📝 ANALYSE D'EXPERT & CONSEIL DE MISE</h3>
+        <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 14px; padding: 15px; color: #DDD; font-size: 14px; line-height: 1.6;">
+          ${p.analysis}
+        </div>
+        <div style="background: rgba(0,200,83,0.12); border: 1px solid var(--green); padding: 14px; border-radius: 12px; margin-top: 15px; color: #FFF; font-size: 13px;">
+          <i class="fa-solid fa-shield-halved" style="color: var(--green); margin-right: 8px;"></i>
+          <strong>Conseil de gestion :</strong> Ne misez pas plus de 5% de votre bankroll sur ce combiné.
+        </div>
+      `;
+
+      document.getElementById('detail-modal').style.display = 'flex';
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').style.display = 'none';
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('history-list');
+      container.innerHTML = "";
+
+      const wonList = PREDICTIONS.filter(p => p.status === 'WON');
+      wonList.forEach(p => {
+        const div = document.createElement('div');
+        div.className = "prediction-card";
+        div.style.cursor = "default";
+        div.innerHTML = `
+          <div class="card-body">
+            <div class="card-header">
+              <span style="color: var(--green); font-weight: 900; font-size: 13px;"><i class="fa-solid fa-check-circle"></i> TICKET GAGNÉ À 100%</span>
+              <span class="badge-combiné">COMBINÉ ${p.selections.length} MATCHS</span>
+            </div>
+            <div class="card-main">
+              <div class="card-title">${p.title}</div>
+              <div class="odds-badge" style="background: var(--green); color: #000;">
+                <div class="odds-val">${p.odds.toFixed(2)}</div>
+                <div class="odds-lbl">COTE</div>
+              </div>
+            </div>
+            <div style="font-size: 13px; color: #CCC; margin-bottom: 8px;">
+              ${p.selections.map(s => `✔️ ${s.match} (${s.tip})`).join('<br>')}
+            </div>
+            <div class="card-footer">
+              <div>Validé le ${p.matchDate}</div>
+              <div style="color: var(--green); font-weight: bold;">+100% DE GAIN</div>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function openSubscribeModal() {
+      switchNav('subscriptions');
+    }
+
+    function testPromoCode() {
+      const code = document.getElementById('promo-input').value.trim().toUpperCase();
+      if (code === 'WELCOME10') {
+        showToast("🎟️ CODE PROMO APPLIQUÉ !", "-10% de réduction : Nouveau total = 1800 FCFA");
+      } else if (code === 'VIP20') {
+        showToast("🎟️ CODE PROMO APPLIQUÉ !", "-20% de réduction : Nouveau total = 1600 FCFA");
+      } else {
+        showToast("❌ CODE INVALIDE", "Ce code promo n'existe pas ou est expiré.");
+      }
+    }
+
+    // SIMULATION DU PAIEMENT CINETPAY ET DÉBLOCAGE DU COMPTE !
+    function triggerCinetPayCheckout(planCode, amount) {
+      const txId = "CP-20260803-" + Math.floor(Math.random() * 89999 + 10000);
+
+      showToast("💳 INITIALISATION CINETPAY...", "Connexion à Orange Money / MTN / Moov...");
+
+      setTimeout(() => {
+        // Upgrade automatique de l'utilisateur actuel vers VIP ou Montante !
+        if (planCode === 'VIP') {
+          currentUser = USERS.vip;
+          document.getElementById('user-select').value = 'vip';
+        } else {
+          currentUser = USERS.montante;
+          document.getElementById('user-select').value = 'montante';
+        }
+
+        renderBanner();
+        renderPredictions();
+        switchNav('home');
+
+        showToast("✅ PAIEMENT CINETPAY CONFIRMÉ !", `${amount} FCFA encaissés • ID: ${txId} — ACCÈS ${planCode} DÉBLOQUÉ !`);
+      }, 1500);
+    }
+
+    function showToast(title, message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <div style="font-size: 24px; color: var(--gold);"><i class="fa-solid fa-bell"></i></div>
+        <div>
+          <div style="font-weight: 800; color: var(--gold); font-size: 13px;">${title}</div>
+          <div style="font-size: 12px; color: #FFF;">${message}</div>
+        </div>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 400);
+      }, 4500);
+    }
+  </script>
+</body>
+</html>

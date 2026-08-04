@@ -1,0 +1,24 @@
+# Laravel 12 Backend
+backend/.env
+backend/vendor/
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*
+
+# Flutter Mobile App
+flutter_app/.dart_tool/
+flutter_app/.flutter-plugins
+flutter_app/.flutter-plugins-dependencies
+flutter_app/build/
+flutter_app/.pub-cache/
+flutter_app/.pub/
+
+# OS & Python
+.DS_Store
+__pycache__/
+*.pyc
+*.zip
+*.aab
+*.ipa

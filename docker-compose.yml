@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # 1. API Laravel 12
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: pronostics-api:latest
+    container_name: pronostics_api
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=pronostics_db
+      - DB_USERNAME=pronostics_user
+      - DB_PASSWORD=secure_password_123
+    depends_on:
+      - db
+    networks:
+      - pronostics-network
+
+  # 2. Base de Données MySQL 8.0
+  db:
+    image: mysql:8.0
+    container_name: pronostics_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: pronostics_db
+      MYSQL_USER: pronostics_user
+      MYSQL_PASSWORD: secure_password_123
+      MYSQL_ROOT_PASSWORD: root_secret_password
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - pronostics-network
+
+  # 3. Serveur Web Nginx
+  nginx:
+    image: nginx:alpine
+    container_name: pronostics_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend:/var/www
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - pronostics-network
+
+networks:
+  pronostics-network:
+    driver: bridge
+
+volumes:
+  dbdata:

@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: pronostics-api-server
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: frankfurt
+    healthCheckPath: /
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://pronostics-api-server.onrender.com
+      - key: PAYDUNYA_MODE
+        value: live
+      - key: PAYDUNYA_IPN_URL
+        value: https://pronostics-api-server.onrender.com/api/v1/paydunya/ipn
+      - key: PAYDUNYA_RETURN_URL
+        value: https://pronostics-api-server.onrender.com/api/v1/paydunya/return
+      - key: PAYDUNYA_CANCEL_URL
+        value: https://pronostics-api-server.onrender.com/api/v1/paydunya/cancel
+      - key: PAYDUNYA_CURRENCY
+        value: XOF
