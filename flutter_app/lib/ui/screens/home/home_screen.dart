@@ -5,6 +5,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/prediction_provider.dart';
 import '../../widgets/prediction_card.dart';
+import '../../widgets/frog_mascot_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -18,17 +19,21 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+        title: const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.workspace_premium, color: AppTheme.gold, size: 22),
-            const SizedBox(width: 8),
-            const Text('PRONOSTICS VIP'),
+            Text('🐸 ', style: TextStyle(fontSize: 22)),
+            Text('FROGAZZ ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900)),
+            Text('SPORT', style: TextStyle(color: AppTheme.frogGreen, fontWeight: FontWeight.w900)),
           ],
         ),
         actions: [
+          const Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: FrogMascotWidget(compact: true),
+          ),
           IconButton(
-            icon: const Icon(Icons.search, color: AppTheme.gold),
+            icon: const Icon(Icons.search, color: AppTheme.frogGreen),
             onPressed: () => context.push('/search'),
           ),
           IconButton(
@@ -116,16 +121,16 @@ class HomeScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isVip
-              ? [const Color(0xFFD4AF37), const Color(0xFF996515)]
-              : [const Color(0xFF16161A), const Color(0xFF23232A)],
+              ? [const Color(0xFF00E676), const Color(0xFF008D46)]
+              : [const Color(0xFF102617), const Color(0xFF173822)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppTheme.gold.withOpacity(0.5), width: 1.5),
+        border: Border.all(color: AppTheme.frogGreen.withOpacity(0.5), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.gold.withOpacity(0.15),
+            color: AppTheme.frogGreen.withOpacity(0.15),
             blurRadius: 15,
             offset: const Offset(0, 6),
           ),
@@ -140,26 +145,27 @@ class HomeScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
+                  color: Colors.black.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppTheme.frogGreen, width: 1),
                 ),
                 child: Text(
-                  isVip ? '👑 MEMBRE VIP ACTIF' : (isTrial ? '🎁 ESSAI GRATUIT 48H' : '🔒 NON ABONNÉ'),
+                  isVip ? '👑 MEMBRE VIP FROGAZZ ACTIF' : (isTrial ? '🎁 ESSAI GRATUIT 48H (Côte 5)' : '🔒 NON ABONNÉ'),
                   style: const TextStyle(
-                    color: AppTheme.gold,
+                    color: AppTheme.frogGreen,
                     fontSize: 11,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ),
-              const Icon(Icons.shield_moon, color: AppTheme.gold),
+              const Text('🐸', style: TextStyle(fontSize: 28)),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             isVip
-                ? 'Accès Illimité à Nos Pronostics Experts'
-                : 'Passez au Forfait VIP ou Montante',
+                ? '🐸 Accès 100% Débloqué à Nos Pronostics'
+                : 'Passez au Forfait Frogazz VIP ou Montante',
             style: TextStyle(
               color: isVip ? Colors.black : Colors.white,
               fontSize: 20,
@@ -169,8 +175,8 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(height: 6),
           Text(
             isVip
-                ? 'Profitez des Côtes 5, 10, 50 et de nos analyses exclusives.'
-                : 'Débloquez toutes les côtes et maximisez vos gains avec nos experts.',
+                ? 'Profitez des Côtes 5, 10, 50 et de nos analyses d\'experts Frogazz.'
+                : 'Débloquez toutes les côtes et sautez vers les gains avec nos analystes.',
             style: TextStyle(
               color: isVip ? Colors.black87 : AppTheme.grey,
               fontSize: 13,
@@ -181,7 +187,7 @@ class HomeScreen extends ConsumerWidget {
             ElevatedButton(
               onPressed: () => context.push('/subscription-plans'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.gold,
+                backgroundColor: AppTheme.frogGreen,
                 foregroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -208,11 +214,11 @@ class HomeScreen extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildStatItem('86%', 'Réussite', AppTheme.green),
+          _buildStatItem('86%', 'Réussite', AppTheme.frogGreen),
           _buildDivider(),
-          _buildStatItem('54.00', 'Cote Max', AppTheme.gold),
+          _buildStatItem('54.00', 'Cote Max', Colors.white),
           _buildDivider(),
-          _buildStatItem('15+', 'Pronos/Sem.', Colors.white),
+          _buildStatItem('🐸 15+', 'Pronos/Sem.', AppTheme.frogGreen),
         ],
       ),
     );
@@ -246,10 +252,10 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  // 3. TABS CATÉGORIES (MONTANTE, VIP, COTE 5, COTE 10, COTE 50)
+  // 3. TABS CATÉGORIES FROGAZZ (MONTANTE, VIP, COTE 5, COTE 10, COTE 50)
   Widget _buildCategoryTabs(WidgetRef ref, String currentCategory) {
     final categories = [
-      {'key': 'ALL', 'label': '🔥 TOUS'},
+      {'key': 'ALL', 'label': '🐸 TOUS'},
       {'key': 'MONTANTE', 'label': '📈 MONTANTE'},
       {'key': 'COTE_5', 'label': '⚡ CÔTE 5'},
       {'key': 'COTE_10', 'label': '👑 CÔTE 10'},
@@ -275,10 +281,10 @@ class HomeScreen extends ConsumerWidget {
               margin: const EdgeInsets.only(right: 10),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: isSelected ? AppTheme.gold : AppTheme.darkCard,
+                color: isSelected ? AppTheme.frogGreen : AppTheme.darkCard,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isSelected ? AppTheme.gold : AppTheme.darkBorder,
+                  color: isSelected ? AppTheme.frogGreen : AppTheme.darkBorder,
                 ),
               ),
               child: Text(

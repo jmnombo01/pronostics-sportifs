@@ -27,7 +27,7 @@ class PredictionCardWidget extends StatelessWidget {
           border: Border.all(
             color: prediction.isLocked
                 ? AppTheme.red.withOpacity(0.4)
-                : AppTheme.gold.withOpacity(0.5),
+                : AppTheme.frogGreen.withOpacity(0.5),
             width: 1.2,
           ),
           boxShadow: [
@@ -53,12 +53,12 @@ class PredictionCardWidget extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.emoji_events, color: AppTheme.gold, size: 18),
-                            const SizedBox(width: 6),
+                            const Text('🐸 ', style: TextStyle(fontSize: 14)),
+                            const SizedBox(width: 4),
                             Text(
                               prediction.championship.toUpperCase(),
                               style: const TextStyle(
-                                color: AppTheme.gold,
+                                color: AppTheme.frogGreen,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 0.8,
@@ -116,7 +116,7 @@ class PredictionCardWidget extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [AppTheme.gold, AppTheme.green],
+                              colors: [AppTheme.frogGreen, Color(0xFF00B248)],
                             ),
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -220,13 +220,13 @@ class PredictionCardWidget extends StatelessWidget {
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.88),
+                      color: Colors.black.withOpacity(0.90),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.lock_outline, color: AppTheme.gold, size: 36),
+                        const Text('🐸🔒', style: TextStyle(fontSize: 40)),
                         const SizedBox(height: 8),
                         Text(
                           prediction.matchesCount > 1
@@ -240,7 +240,7 @@ class PredictionCardWidget extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         const Text(
-                          'Abonnez-vous pour révéler les sélections.',
+                          'Abonnez-vous pour révéler les sélections Frogazz.',
                           style: TextStyle(color: AppTheme.grey, fontSize: 13),
                         ),
                         const SizedBox(height: 12),
@@ -251,7 +251,7 @@ class PredictionCardWidget extends StatelessWidget {
                           icon: const Icon(Icons.stars, size: 18),
                           label: const Text('Débloquer maintenant (2000 FCFA)'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.gold,
+                            backgroundColor: AppTheme.frogGreen,
                             foregroundColor: Colors.black,
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                           ),
@@ -313,7 +313,7 @@ class PredictionCardWidget extends StatelessWidget {
       children: List.generate(5, (index) {
         return Icon(
           index < count ? Icons.star : Icons.star_border,
-          color: index < count ? AppTheme.gold : AppTheme.grey,
+          color: index < count ? AppTheme.frogGreen : AppTheme.grey,
           size: 14,
         );
       }),

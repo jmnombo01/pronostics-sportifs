@@ -1,5 +1,5 @@
-name: pronostics_sportifs
-description: Application mobile professionnelle de pronostics sportifs (VIP & Montante) en Flutter Material 3 avec Riverpod, GoRouter, Dio et CinetPay.
+name: frogazz_sport_analyse
+description: Application mobile professionnelle de pronostics sportifs Frogazz Sport Analyse (VIP & Montante) en Flutter Material 3 avec grenouille interactive, Riverpod, GoRouter et PayDunya/CinetPay.
 publish_to: 'none'
 version: 1.0.0+1
 

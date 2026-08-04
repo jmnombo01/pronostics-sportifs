@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>👑 Client Utilisateur - Pronostics Sportifs VIP & Montante</title>
+  <title>🐸 Frogazz Sport Analyse - VIP & Montante</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
-      --bg-main: #0A0A0B;
-      --bg-card: #16161A;
-      --bg-card-hover: #1F1F25;
-      --border-color: #2C2C35;
-      --gold: #D4AF37;
-      --gold-light: #F3E5AB;
-      --green: #00C853;
-      --red: #E53935;
-      --orange: #FF9800;
+      --bg-main: #060907;
+      --bg-card: #0F1711;
+      --bg-card-hover: #16221A;
+      --border-color: #1F3325;
+      --frog-green: #00E676;
+      --frog-green-dark: #00B248;
+      --frog-green-light: #66FFA6;
+      --white: #FFFFFF;
+      --red: #FF5252;
+      --orange: #FFAB00;
       --text-main: #FFFFFF;
-      --text-muted: #8E8E93;
+      --text-muted: #8EAE96;
       --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
@@ -28,7 +29,7 @@
     }
 
     body {
-      background-color: #060608;
+      background-color: #030504;
       color: var(--text-main);
       font-family: var(--font-stack);
       line-height: 1.5;
@@ -42,8 +43,8 @@
     /* Top Demo Switcher Bar */
     .demo-switcher {
       width: 100%;
-      background: #121217;
-      border-bottom: 2px solid var(--gold);
+      background: #0B140E;
+      border-bottom: 2px solid var(--frog-green);
       padding: 12px 20px;
       display: flex;
       justify-content: space-between;
@@ -53,7 +54,7 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+      box-shadow: 0 4px 25px rgba(0,230,118,0.2);
     }
 
     .demo-title {
@@ -62,16 +63,23 @@
       gap: 10px;
     }
 
-    .demo-title i {
-      color: var(--gold);
-      font-size: 24px;
+    .demo-title span.frog-emoji {
+      font-size: 26px;
+      animation: frogBounce 2s infinite ease-in-out;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    @keyframes frogBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-4px) scale(1.15); }
     }
 
     .demo-title h1 {
       font-size: 16px;
-      font-weight: 800;
-      color: var(--gold);
-      letter-spacing: 0.8px;
+      font-weight: 900;
+      color: var(--frog-green);
+      letter-spacing: 1px;
     }
 
     .user-selector {
@@ -83,7 +91,7 @@
 
     .user-select-box {
       background: var(--bg-main);
-      border: 1px solid var(--gold);
+      border: 1px solid var(--frog-green);
       color: #FFF;
       padding: 8px 14px;
       border-radius: 10px;
@@ -91,16 +99,6 @@
       font-weight: 700;
       outline: none;
       cursor: pointer;
-    }
-
-    .badge-sim {
-      padding: 5px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     /* Mobile App Viewport Wrapper */
@@ -111,40 +109,72 @@
       min-height: calc(100vh - 60px);
       display: flex;
       flex-direction: column;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+      box-shadow: 0 0 50px rgba(0, 230, 118, 0.15);
       position: relative;
       padding-bottom: 80px;
     }
 
     /* App Header */
     .app-header {
-      padding: 20px 24px 15px 24px;
+      padding: 18px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border-color);
+      background: #09100C;
     }
 
     .app-logo {
       display: flex;
       align-items: center;
       gap: 10px;
+      cursor: pointer;
     }
 
-    .app-logo i {
-      color: var(--gold);
-      font-size: 24px;
+    .app-logo .frog-icon {
+      font-size: 28px;
+      transition: transform 0.3s;
+    }
+    .app-logo:hover .frog-icon {
+      transform: scale(1.25) rotate(-10deg);
     }
 
     .app-logo span {
-      font-size: 18px;
+      font-size: 19px;
       font-weight: 900;
-      letter-spacing: 1px;
+      color: var(--white);
+      letter-spacing: 0.5px;
+    }
+
+    .app-logo span.green-text {
+      color: var(--frog-green);
     }
 
     .header-icons {
       display: flex;
-      gap: 15px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    /* Interactive Frog Mascot Pill Button */
+    .mascot-btn {
+      background: rgba(0, 230, 118, 0.15);
+      border: 1.5px solid var(--frog-green);
+      color: var(--frog-green);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mascot-btn:hover {
+      background: var(--frog-green);
+      color: #000;
+      transform: scale(1.05);
     }
 
     .icon-btn {
@@ -160,52 +190,113 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    .icon-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .icon-btn:hover { border-color: var(--frog-green); color: var(--frog-green); }
+
+    /* Interactive Frog Tooltip Modal */
+    .frog-tooltip-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      padding: 20px;
+    }
+
+    .frog-tooltip-card {
+      background: #0B1810;
+      border: 2px solid var(--frog-green);
+      border-radius: 24px;
+      padding: 26px;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 230, 118, 0.35);
+      position: relative;
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .frog-tooltip-card .big-frog {
+      font-size: 64px;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: frogJump 0.6s infinite alternate ease-in-out;
+    }
+
+    @keyframes frogJump {
+      from { transform: translateY(0); }
+      to { transform: translateY(-12px); }
+    }
+
+    .frog-tooltip-card h3 {
+      color: var(--frog-green);
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .frog-tooltip-card p {
+      color: var(--white);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
 
     /* Modern Hero Banner */
     .hero-banner {
       margin: 20px;
-      padding: 22px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #1A1A22 0%, #282834 100%);
-      border: 1.5px solid var(--gold);
-      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+      padding: 24px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #102617 0%, #173822 100%);
+      border: 2px solid var(--frog-green);
+      box-shadow: 0 8px 30px rgba(0, 230, 118, 0.25);
       position: relative;
       overflow: hidden;
     }
 
     .hero-banner.vip-banner {
-      background: linear-gradient(135deg, #D4AF37 0%, #996515 100%);
+      background: linear-gradient(135deg, #00E676 0%, #008D46 100%);
       color: #000;
+      border-color: #FFFFFF;
     }
 
     .hero-badge {
       display: inline-block;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 8px;
       font-size: 11px;
       font-weight: 900;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
-    .badge-gold-bg { background: rgba(0,0,0,0.8); color: var(--gold); }
-    .badge-green-bg { background: rgba(0, 200, 83, 0.2); color: var(--green); border: 1px solid var(--green); }
-    .badge-red-bg { background: rgba(229, 57, 53, 0.2); color: var(--red); border: 1px solid var(--red); }
+    .badge-green-bg { background: rgba(0, 230, 118, 0.25); color: var(--frog-green); border: 1px solid var(--frog-green); }
+    .badge-dark-bg { background: #060907; color: var(--frog-green); border: 1px solid var(--white); }
+    .badge-red-bg { background: rgba(255, 82, 82, 0.25); color: var(--red); border: 1px solid var(--red); }
 
     .hero-title {
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 900;
       margin-bottom: 6px;
+      color: #FFFFFF;
     }
+    .vip-banner .hero-title { color: #000000; }
 
     .hero-desc {
       font-size: 13px;
       color: var(--text-muted);
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
-    .vip-banner .hero-desc { color: #222; font-weight: 600; }
+    .vip-banner .hero-desc { color: #0C2113; font-weight: 700; }
 
     .btn {
-      padding: 12px 20px;
+      padding: 12px 22px;
       border-radius: 12px;
       border: none;
       font-size: 14px;
@@ -216,17 +307,18 @@
       gap: 8px;
       transition: all 0.2s;
     }
-    .btn-gold { background: var(--gold); color: #000; }
-    .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
-    .btn-dark { background: #0A0A0B; color: var(--gold); }
+    .btn-green { background: var(--frog-green); color: #000; }
+    .btn-green:hover { background: var(--frog-green-light); transform: translateY(-2px); }
+    .btn-white { background: var(--white); color: #000; }
+    .btn-white:hover { background: #EEE; transform: translateY(-2px); }
 
     /* Stats Bar */
     .stats-bar {
       margin: 0 20px 20px 20px;
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 14px;
+      border-radius: 18px;
+      padding: 16px;
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -237,17 +329,18 @@
     }
 
     .stat-val {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 900;
     }
     .stat-lbl {
       font-size: 11px;
       color: var(--text-muted);
+      font-weight: 700;
     }
 
     .stat-divider {
       width: 1px;
-      height: 28px;
+      height: 30px;
       background: var(--border-color);
     }
 
@@ -257,7 +350,7 @@
       gap: 10px;
       padding: 0 20px;
       overflow-x: auto;
-      margin-bottom: 15px;
+      margin-bottom: 16px;
       scrollbar-width: none;
     }
     .category-tabs::-webkit-scrollbar { display: none; }
@@ -276,17 +369,17 @@
     }
 
     .cat-tab.active {
-      background: var(--gold);
+      background: var(--frog-green);
       color: #000;
-      border-color: var(--gold);
+      border-color: var(--frog-green);
     }
 
     /* Prediction Cards (Multi-match Combinés) */
     .prediction-card {
-      margin: 0 20px 15px 20px;
+      margin: 0 20px 16px 20px;
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 18px;
+      border-radius: 20px;
       overflow: hidden;
       position: relative;
       transition: transform 0.2s, border-color 0.2s;
@@ -294,12 +387,12 @@
     }
 
     .prediction-card:hover {
-      border-color: var(--gold);
+      border-color: var(--frog-green);
       transform: translateY(-2px);
     }
 
     .prediction-card.locked {
-      border-color: rgba(229, 57, 53, 0.4);
+      border-color: rgba(255, 82, 82, 0.4);
     }
 
     .card-body {
@@ -317,7 +410,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      color: var(--gold);
+      color: var(--frog-green);
       font-size: 12px;
       font-weight: 800;
     }
@@ -328,9 +421,9 @@
     }
 
     .badge-combiné {
-      background: rgba(0, 200, 83, 0.18);
-      color: var(--green);
-      border: 1px solid var(--green);
+      background: rgba(0, 230, 118, 0.18);
+      color: var(--frog-green);
+      border: 1px solid var(--frog-green);
       padding: 3px 8px;
       border-radius: 6px;
       font-size: 10px;
@@ -344,9 +437,9 @@
       font-weight: 800;
     }
     .cat-cote5 { background: rgba(33, 150, 243, 0.2); color: #42A5F5; border: 1px solid #42A5F5; }
-    .cat-cote10 { background: rgba(212, 175, 55, 0.2); color: var(--gold); border: 1px solid var(--gold); }
-    .cat-cote50 { background: rgba(229, 57, 53, 0.2); color: var(--red); border: 1px solid var(--red); }
-    .cat-montante { background: rgba(0, 200, 83, 0.2); color: var(--green); border: 1px solid var(--green); }
+    .cat-cote10 { background: rgba(0, 230, 118, 0.2); color: var(--frog-green); border: 1px solid var(--frog-green); }
+    .cat-cote50 { background: rgba(255, 82, 82, 0.2); color: var(--red); border: 1px solid var(--red); }
+    .cat-montante { background: rgba(255, 171, 0, 0.2); color: var(--orange); border: 1px solid var(--orange); }
 
     .card-main {
       display: flex;
@@ -364,12 +457,13 @@
     }
 
     .odds-badge {
-      background: linear-gradient(135deg, var(--gold), var(--green));
+      background: linear-gradient(135deg, var(--frog-green), #00C853);
       color: #000;
       padding: 8px 14px;
       border-radius: 12px;
       text-align: center;
       min-width: 65px;
+      box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
     }
 
     .odds-val {
@@ -383,9 +477,9 @@
     }
 
     .card-selections-preview {
-      background: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.5);
       border: 1px solid var(--border-color);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 10px 12px;
       margin-bottom: 12px;
       font-size: 13px;
@@ -395,7 +489,7 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 4px;
-      color: #CCC;
+      color: #DDD;
     }
     .preview-item:last-child { margin-bottom: 0; }
 
@@ -410,7 +504,7 @@
     }
 
     .stars {
-      color: var(--gold);
+      color: var(--frog-green);
       font-size: 13px;
     }
 
@@ -421,7 +515,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.88);
+      background: rgba(6, 9, 7, 0.92);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -433,7 +527,7 @@
 
     .lock-overlay i {
       font-size: 38px;
-      color: var(--gold);
+      color: var(--frog-green);
       margin-bottom: 10px;
     }
 
@@ -456,7 +550,7 @@
       bottom: 0;
       width: 100%;
       max-width: 680px;
-      background: #111116;
+      background: #09100C;
       border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: space-around;
@@ -482,7 +576,7 @@
     }
 
     .nav-item.active {
-      color: var(--gold);
+      color: var(--frog-green);
     }
 
     /* Modal / Detail View */
@@ -502,7 +596,7 @@
 
     .modal-content {
       background: var(--bg-card);
-      border: 1px solid var(--gold);
+      border: 1px solid var(--frog-green);
       border-radius: 20px;
       width: 100%;
       max-width: 580px;
@@ -535,9 +629,9 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(0, 200, 83, 0.2);
-      color: var(--green);
-      border: 1px solid var(--green);
+      background: rgba(0, 230, 118, 0.2);
+      color: var(--frog-green);
+      border: 1px solid var(--frog-green);
       padding: 6px 12px;
       border-radius: 8px;
       font-size: 13px;
@@ -554,17 +648,17 @@
     }
 
     .toast {
-      background: #1C1C22;
-      border: 2px solid var(--gold);
+      background: #0D1610;
+      border: 2px solid var(--frog-green);
       border-radius: 14px;
       padding: 16px 20px;
       display: flex;
       align-items: center;
       gap: 14px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+      box-shadow: 0 8px 30px rgba(0, 230, 118, 0.35);
       animation: slideIn 0.3s ease;
       margin-top: 10px;
-      max-width: 360px;
+      max-width: 380px;
     }
 
     @keyframes slideIn {
@@ -577,21 +671,35 @@
 
   <!-- TOP BAR: DEMO ACCOUNT SWITCHER -->
   <div class="demo-switcher">
-    <div class="demo-title">
-      <i class="fa-solid fa-mobile-screen-button"></i>
+    <div class="demo-title" onclick="showFrogTip()">
+      <span class="frog-emoji" title="Cliquez sur Frogazz !">🐸</span>
       <div>
-        <h1>CLIENT UTILISATEUR (FLUTTER / WEB SIMULATOR)</h1>
+        <h1>FROGAZZ SPORT ANALYSE</h1>
       </div>
     </div>
 
     <div class="user-selector">
-      <span style="font-size: 12px; color: var(--text-muted);">Basculer d'utilisateur :</span>
+      <span style="font-size: 12px; color: var(--text-muted);">Compte de démo :</span>
       <select class="user-select-box" id="user-select" onchange="switchUser(this.value)">
-        <option value="trial">🎁 Fatima (Essai Gratuit 48h - Côte 5 autorisée)</option>
-        <option value="vip">👑 Amadou (Abonné VIP 2000 FCFA - Accès total 100%)</option>
-        <option value="montante">📈 Issa (Abonné Montante 2000 FCFA/sem)</option>
-        <option value="expired">🔒 Brahima (Essai 48h Expiré - Tout verrouillé)</option>
+        <option value="trial">🎁 Fatima (Essai Gratuit 48h - Côte 5)</option>
+        <option value="vip">👑 Amadou (Abonné VIP - 100% Débloqué)</option>
+        <option value="montante">📈 Issa (Abonné Montante 2000 FCFA/s)</option>
+        <option value="expired">🔒 Brahima (Essai Expiré - Tout verrouillé)</option>
       </select>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE FROG TOOLTIP MODAL -->
+  <div class="frog-tooltip-overlay" id="frog-tooltip" onclick="closeFrogTip()">
+    <div class="frog-tooltip-card" onclick="event.stopPropagation()">
+      <span class="big-frog">🐸</span>
+      <h3>FROGAZZ DIT : "COÂÂÂ !"</h3>
+      <p id="frog-tip-text">
+        "Sécurise ton combiné Côte 5 du jour et saute vers la victoire avec nos analyses d'experts !" 🏆
+      </p>
+      <button class="btn btn-green" style="width: 100%; justify-content: center;" onclick="closeFrogTip()">
+        <i class="fa-solid fa-check"></i> MERCI FROGAZZ !
+      </button>
     </div>
   </div>
 
@@ -600,16 +708,16 @@
 
     <!-- APP HEADER -->
     <header class="app-header">
-      <div class="app-logo">
-        <i class="fa-solid fa-crown"></i>
-        <span>PRONOSTICS VIP</span>
+      <div class="app-logo" onclick="showFrogTip()">
+        <span class="frog-icon">🐸</span>
+        <span>FROGAZZ <span class="green-text">SPORT</span></span>
       </div>
       <div class="header-icons">
-        <button class="icon-btn" onclick="openSubscribeModal()" title="Abonnements CinetPay">
-          <i class="fa-solid fa-star" style="color: var(--gold);"></i>
+        <button class="mascot-btn" onclick="showFrogTip()" title="Conseil de Frogazz la grenouille !">
+          <span>🐸</span> Conseil
         </button>
-        <button class="icon-btn" onclick="alert('Profil : ' + currentUser.name + '\\nEmail: ' + currentUser.email)" title="Mon Profil">
-          <i class="fa-solid fa-user"></i>
+        <button class="icon-btn" onclick="openSubscribeModal()" title="Abonnements CinetPay">
+          <i class="fa-solid fa-star" style="color: var(--frog-green);"></i>
         </button>
       </div>
     </header>
@@ -622,24 +730,24 @@
       <!-- BARRE DE STATISTIQUES -->
       <div class="stats-bar">
         <div class="stat-item">
-          <div class="stat-val" style="color: var(--green);">86%</div>
+          <div class="stat-val" style="color: var(--frog-green);">86%</div>
           <div class="stat-lbl">Réussite</div>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
-          <div class="stat-val" style="color: var(--gold);">54.00</div>
+          <div class="stat-val" style="color: var(--white);">54.00</div>
           <div class="stat-lbl">Cote Max</div>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
-          <div class="stat-val">15+</div>
+          <div class="stat-val" style="color: var(--frog-green);">🐸 15+</div>
           <div class="stat-lbl">Pronos / Sem.</div>
         </div>
       </div>
 
       <!-- ONGLET HORIZONTAL DES CATÉGORIES -->
       <div class="category-tabs">
-        <button class="cat-tab active" id="tab-ALL" onclick="filterCategory('ALL')">🔥 TOUS</button>
+        <button class="cat-tab active" id="tab-ALL" onclick="filterCategory('ALL')">🐸 TOUS</button>
         <button class="cat-tab" id="tab-MONTANTE" onclick="filterCategory('MONTANTE')">📈 MONTANTE</button>
         <button class="cat-tab" id="tab-COTE_5" onclick="filterCategory('COTE_5')">⚡ CÔTE 5</button>
         <button class="cat-tab" id="tab-COTE_10" onclick="filterCategory('COTE_10')">👑 CÔTE 10</button>
@@ -652,27 +760,27 @@
 
     <!-- TAB 2: SUBSCRIPTIONS SCREEN (ABONNEMENTS & CINETPAY) -->
     <main id="screen-subscriptions" style="display: none; padding: 20px;">
-      <h2 style="color: var(--gold); font-size: 20px; font-weight: 900; margin-bottom: 6px;">
-        👑 FORFAITS D'ABONNEMENT CINETPAY
+      <h2 style="color: var(--frog-green); font-size: 20px; font-weight: 900; margin-bottom: 6px;">
+        🐸 ABONNEMENTS FROGAZZ VIP & MONTANTE
       </h2>
       <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">
-        Paiement sécurisé par CinetPay • Mobile Money (Orange, MTN, Moov) & Carte Bancaire
+        Paiement sécurisé par CinetPay & PayDunya • Orange Money, MTN, Moov, Wave & CB
       </p>
 
       <!-- CARTE FORFAIT VIP -->
-      <div class="prediction-card" style="margin: 0 0 16px 0; border: 2px solid var(--gold); padding: 20px;">
+      <div class="prediction-card" style="margin: 0 0 16px 0; border: 2px solid var(--frog-green); padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <span style="font-size: 18px; font-weight: 900; color: #FFF;">👑 FORFAIT VIP MENSUEl</span>
-          <span style="background: rgba(212,175,55,0.2); color: var(--gold); padding: 6px 12px; border-radius: 8px; font-weight: 800;">2000 FCFA / MOIS</span>
+          <span style="background: rgba(0, 230, 118, 0.2); color: var(--frog-green); padding: 6px 12px; border-radius: 8px; font-weight: 800;">2000 FCFA / MOIS</span>
         </div>
         <ul style="list-style: none; color: #DDD; font-size: 14px; margin-bottom: 18px;">
-          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Accès garanti aux <strong>Combinés Côte 5</strong> quotidiens</li>
-          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Accès exclusif aux <strong>Combinés Côte 10</strong></li>
-          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Accès au <strong>Pronostic de la Semaine (Côte ≥ 50)</strong></li>
-          <li><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Analyses d'experts détaillées pour chaque match</li>
+          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--frog-green); margin-right: 8px;"></i> Accès garanti aux <strong>Combinés Côte 5</strong> quotidiens</li>
+          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--frog-green); margin-right: 8px;"></i> Accès exclusif aux <strong>Combinés Côte 10</strong></li>
+          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--frog-green); margin-right: 8px;"></i> Accès au <strong>Pronostic de la Semaine (Côte ≥ 50)</strong></li>
+          <li><i class="fa-solid fa-check-circle" style="color: var(--frog-green); margin-right: 8px;"></i> Analyses d'experts détaillées & conseils de mise Frogazz</li>
         </ul>
-        <button class="btn btn-gold" style="width: 100%; justify-content: center;" onclick="triggerCinetPayCheckout('VIP', 2000)">
-          <i class="fa-solid fa-shield-halved"></i> PAYER 2000 FCFA AVEC CINETPAY
+        <button class="btn btn-green" style="width: 100%; justify-content: center;" onclick="triggerCinetPayCheckout('VIP', 2000)">
+          <i class="fa-solid fa-shield-halved"></i> PAYER 2000 FCFA (ORANGE MONEY / WAVE / CB)
         </button>
       </div>
 
@@ -680,71 +788,71 @@
       <div class="prediction-card" style="margin: 0 0 20px 0; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <span style="font-size: 18px; font-weight: 900; color: #FFF;">📈 FORFAIT MONTANTE</span>
-          <span style="background: rgba(0,200,83,0.2); color: var(--green); padding: 6px 12px; border-radius: 8px; font-weight: 800;">2000 FCFA / SEMAINE</span>
+          <span style="background: rgba(255, 171, 0, 0.2); color: var(--orange); padding: 6px 12px; border-radius: 8px; font-weight: 800;">2000 FCFA / SEMAINE</span>
         </div>
         <ul style="list-style: none; color: #DDD; font-size: 14px; margin-bottom: 18px;">
-          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Accès exclusif à la <strong>stratégie Montante</strong> sur 7 jours</li>
-          <li><i class="fa-solid fa-check-circle" style="color: var(--green); margin-right: 8px;"></i> Gestion de mise pas-à-pas sécurisée</li>
+          <li style="margin-bottom: 8px;"><i class="fa-solid fa-check-circle" style="color: var(--frog-green); margin-right: 8px;"></i> Accès exclusif à la <strong>stratégie Montante</strong> sur 7 jours</li>
+          <li><i class="fa-solid fa-check-circle" style="color: var(--frog-green); margin-right: 8px;"></i> Gestion de mise pas-à-pas sécurisée par nos experts</li>
         </ul>
-        <button class="btn" style="width: 100%; justify-content: center; background: var(--green); color: #000;" onclick="triggerCinetPayCheckout('MONTANTE', 2000)">
-          <i class="fa-solid fa-shield-halved"></i> PAYER 2000 FCFA AVEC CINETPAY
+        <button class="btn btn-white" style="width: 100%; justify-content: center;" onclick="triggerCinetPayCheckout('MONTANTE', 2000)">
+          <i class="fa-solid fa-shield-halved"></i> PAYER 2000 FCFA (ORANGE MONEY / WAVE / CB)
         </button>
       </div>
 
       <!-- CODE PROMO INPUT -->
-      <div style="background: var(--bg-card); padding: 16px; border-radius: 14px; border: 1px solid var(--border-color);">
-        <label style="font-size: 13px; font-weight: 700; color: var(--gold); display: block; margin-bottom: 8px;">
-          🎟️ VOUS AVEZ UN CODE PROMO ?
+      <div style="background: var(--bg-card); padding: 16px; border-radius: 16px; border: 1px solid var(--border-color);">
+        <label style="font-size: 13px; font-weight: 700; color: var(--frog-green); display: block; margin-bottom: 8px;">
+          🎟️ CODE PROMO FROGAZZ
         </label>
         <div style="display: flex; gap: 10px;">
           <input type="text" id="promo-input" placeholder="Ex: WELCOME10 (-10%) ou VIP20" style="flex: 1; background: var(--bg-main); border: 1px solid var(--border-color); color: #FFF; padding: 10px 14px; border-radius: 10px;" />
-          <button class="btn btn-gold" onclick="testPromoCode()">APPLIQUER</button>
+          <button class="btn btn-green" onclick="testPromoCode()">APPLIQUER</button>
         </div>
       </div>
     </main>
 
     <!-- TAB 3: HISTORY SCREEN (HISTORIQUE) -->
     <main id="screen-history" style="display: none; padding: 20px;">
-      <h2 style="color: var(--gold); font-size: 20px; font-weight: 900; margin-bottom: 16px;">
-        📜 HISTORIQUE DES PRONOSTICS GAGNÉS
+      <h2 style="color: var(--frog-green); font-size: 20px; font-weight: 900; margin-bottom: 16px;">
+        🐸 HISTORIQUE DES COMBINÉS GAGNÉS
       </h2>
       <div id="history-list"></div>
     </main>
 
     <!-- TAB 4: SUPPORT SCREEN (SUPPORT WHATSAPP & FAQ) -->
     <main id="screen-support" style="display: none; padding: 20px;">
-      <h2 style="color: var(--gold); font-size: 20px; font-weight: 900; margin-bottom: 16px;">
-        💬 SUPPORT CLIENT WHATSAPP & FAQ
+      <h2 style="color: var(--frog-green); font-size: 20px; font-weight: 900; margin-bottom: 16px;">
+        💬 SUPPORT CLIENT FROGAZZ & FAQ
       </h2>
-      <a href="https://wa.me/22670000000?text=Bonjour%20Support%20Pronostics%20Sportifs" target="_blank" style="text-decoration: none;">
-        <div style="background: linear-gradient(135deg, #25D366, #128C7E); padding: 20px; border-radius: 16px; color: #FFF; display: flex; align-items: center; gap: 16px; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(37,211,102,0.3);">
-          <i class="fa-brands fa-whatsapp" style="font-size: 40px;"></i>
+      <a href="https://wa.me/22670000000?text=Bonjour%20Support%20Frogazz%20Sport%20Analyse" target="_blank" style="text-decoration: none;">
+        <div style="background: linear-gradient(135deg, #00E676, #00A855); padding: 20px; border-radius: 18px; color: #000; display: flex; align-items: center; gap: 16px; margin-bottom: 25px; box-shadow: 0 6px 20px rgba(0,230,118,0.35);">
+          <i class="fa-brands fa-whatsapp" style="font-size: 44px; color: #000;"></i>
           <div>
-            <div style="font-size: 16px; font-weight: 900;">SUPPORT WHATSAPP DIRECT</div>
-            <div style="font-size: 13px; color: rgba(255,255,255,0.8);">Assistance instantanée (7j/7, 08h - 22h GMT)</div>
+            <div style="font-size: 17px; font-weight: 900;">SUPPORT WHATSAPP DIRECT</div>
+            <div style="font-size: 13px; font-weight: 700; color: #0C2113;">Assistance instantanée (7j/7, 08h - 22h GMT)</div>
           </div>
         </div>
       </a>
 
       <!-- Parrainage Box -->
-      <div style="background: rgba(0,200,83,0.12); border: 1px solid var(--green); padding: 18px; border-radius: 16px; margin-bottom: 25px; text-align: center;">
-        <div style="font-size: 13px; font-weight: 800; color: var(--green); margin-bottom: 8px;">
-          🤝 VOTRE CODE DE PARRAINAGE PERSONNEL
+      <div style="background: rgba(0,230,118,0.12); border: 1.5px solid var(--frog-green); padding: 18px; border-radius: 18px; margin-bottom: 25px; text-align: center;">
+        <div style="font-size: 13px; font-weight: 800; color: var(--frog-green); margin-bottom: 8px;">
+          🐸 VOTRE CODE DE PARRAINAGE FROGAZZ
         </div>
-        <div style="font-size: 24px; font-weight: 900; color: #FFF; letter-spacing: 2px; margin-bottom: 6px;">SAWAD2026</div>
+        <div style="font-size: 24px; font-weight: 900; color: #FFF; letter-spacing: 2px; margin-bottom: 6px;">FROGAZZ2026</div>
         <div style="font-size: 12px; color: var(--text-muted);">
           Partagez ce code : gagnez +7 jours d'abonnement VIP gratuits pour chaque ami qui s'abonne !
         </div>
       </div>
 
-      <h3 style="color: var(--gold); font-size: 15px; margin-bottom: 10px;">❓ QUESTIONS FRÉQUENTES (FAQ)</h3>
+      <h3 style="color: var(--frog-green); font-size: 15px; margin-bottom: 10px;">❓ QUESTIONS FRÉQUENTES (FAQ)</h3>
       <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 15px; margin-bottom: 12px;">
         <div style="font-weight: 800; color: #FFF; margin-bottom: 4px;">1. Comment fonctionne l'essai gratuit de 48 heures ?</div>
         <div style="color: var(--text-muted); font-size: 13px;">Dès l'inscription, vous accédez gratuitement pendant 48h aux combinés de la catégorie Côte 5. Après 48h, l'abonnement VIP (2000 FCFA/mois) prend le relais.</div>
       </div>
       <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 15px;">
-        <div style="font-weight: 800; color: #FFF; margin-bottom: 4px;">2. Comment payer par Mobile Money avec CinetPay ?</div>
-        <div style="color: var(--text-muted); font-size: 13px;">Sélectionnez votre forfait, choisissez Orange Money, MTN, Moov ou Airtel, saisissez votre numéro de téléphone et validez directement !</div>
+        <div style="font-weight: 800; color: #FFF; margin-bottom: 4px;">2. Comment payer par Orange Money ou Wave avec PayDunya / CinetPay ?</div>
+        <div style="color: var(--text-muted); font-size: 13px;">Sélectionnez votre forfait, choisissez Orange Money, MTN, Moov ou Wave, saisissez votre numéro de téléphone et validez directement sur votre smartphone !</div>
       </div>
     </main>
 
@@ -786,7 +894,7 @@
       trial: {
         id: 3,
         name: "Fatima Kaboré",
-        email: "trial@pronostics.pro",
+        email: "trial@frogazz.pro",
         status: "FREE_TRIAL",
         badge: "🎁 ESSAI GRATUIT 48H",
         canAccess: ["COTE_5"]
@@ -794,15 +902,15 @@
       vip: {
         id: 1,
         name: "Amadou Sawadogo",
-        email: "vip@pronostics.pro",
+        email: "vip@frogazz.pro",
         status: "ACTIVE_VIP",
-        badge: "👑 ABONNÉ VIP ACTIF",
+        badge: "👑 ABONNÉ VIP FROGAZZ",
         canAccess: ["COTE_5", "COTE_10", "COTE_50"]
       },
       montante: {
         id: 2,
         name: "Issa Ouédraogo",
-        email: "montante@pronostics.pro",
+        email: "montante@frogazz.pro",
         status: "ACTIVE_MONTANTE",
         badge: "📈 ABONNÉ MONTANTE ACTIF",
         canAccess: ["MONTANTE"]
@@ -810,7 +918,7 @@
       expired: {
         id: 4,
         name: "Brahima Sanou",
-        email: "expired@pronostics.pro",
+        email: "expired@frogazz.pro",
         status: "EXPIRED",
         badge: "🔒 ESSAI EXPIRÉ (>48H)",
         canAccess: []
@@ -820,11 +928,19 @@
     let currentUser = USERS.trial;
     let currentCategory = 'ALL';
 
-    // Base de données des Combinés Multi-Matchs (reflète le Backend Laravel 12 / Flutter)
+    const FROG_TIPS = [
+      "Coâââ ! Sécurise ton combiné Côte 5 du jour et saute vers la victoire avec nos experts !",
+      "Ribbit ! Ne mise jamais plus de 5% de ta bankroll sur un seul combiné, joue comme un crapaud sage !",
+      "Coââ ! Utilise le code promo WELCOME10 pour obtenir -10% de réduction sur ton abonnement VIP !",
+      "Croââ ! Nos analystes ont repéré 3 matchs européens en or pour la Côte 5 de ce soir !",
+      "Ribbit ! La stratégie Montante se joue pas à pas : chaque victoire finance l'étape suivante !"
+    ];
+
+    // Base de données des Combinés Multi-Matchs Frogazz
     const PREDICTIONS = [
       {
         id: 1,
-        title: "⚡ COMBINÉ CÔTE 5 DU LUNDI (3 MATCHS)",
+        title: "🐸 COMBINÉ FROGAZZ CÔTE 5 DU LUNDI (3 MATCHS)",
         championship: "Combiné Europe",
         type: "COTE_5",
         odds: 5.18,
@@ -837,11 +953,11 @@
           { match: "PSG vs Olympique Lyonnais", championship: "Ligue 1", time: "20:45", tip: "Les deux équipes marquent (BTTS - Oui)", odds: 1.80 },
           { match: "Bayern Munich vs RB Leipzig", championship: "Bundesliga", time: "18:30", tip: "Plus de 2.5 buts dans le match", odds: 1.75 }
         ],
-        analysis: "Combiné de 3 matchs sélectionnés par nos algorithmes et nos experts. La cote cumulée (1.65 × 1.80 × 1.75 = 5.18) offre un ratio sécurité/gain optimal."
+        analysis: "Combiné de 3 matchs sélectionnés par les algorithmes Frogazz : 1.65 × 1.80 × 1.75 = 5.18 de cote totale. Ratio sécurité/gain optimal !"
       },
       {
         id: 2,
-        title: "⚡ COMBINÉ CÔTE 5 DU MARDI (3 MATCHS)",
+        title: "🐸 COMBINÉ FROGAZZ CÔTE 5 DU MARDI (3 MATCHS)",
         championship: "Combiné PL & Serie A",
         type: "COTE_5",
         odds: 5.04,
@@ -854,11 +970,11 @@
           { match: "Inter Milan vs AC Milan", championship: "Serie A", time: "20:45", tip: "Victoire Inter Milan (DNB 1)", odds: 1.75 },
           { match: "FC Porto vs Benfica", championship: "Liga Portugal", time: "21:00", tip: "Plus de 1.5 buts en 2e mi-temps", odds: 1.60 }
         ],
-        analysis: "Deuxième ticket Côte 5 de la semaine avec 3 sélections européennes à haute probabilité."
+        analysis: "Deuxième ticket Côte 5 Frogazz de la semaine avec 3 sélections européennes à haute probabilité."
       },
       {
         id: 3,
-        title: "👑 COMBINÉ CÔTE 10 - GRAND CHELEM (4 MATCHS)",
+        title: "👑 COMBINÉ FROGAZZ CÔTE 10 - SAUT DES CHAMPIONS (4 MATCHS)",
         championship: "Combiné Champions & Europa",
         type: "COTE_10",
         odds: 10.45,
@@ -872,11 +988,11 @@
           { match: "Borussia Dortmund vs Eintracht", championship: "Bundesliga", time: "17:30", tip: "Victoire Dortmund (1)", odds: 1.80 },
           { match: "FC Barcelone vs Atletico Madrid", championship: "La Liga", time: "21:00", tip: "Les deux équipes marquent (Oui)", odds: 1.85 }
         ],
-        analysis: "Combiné de 4 matchs pour atteindre notre cote 10 exclusive. Misez 2% de votre bankroll."
+        analysis: "Combiné de 4 matchs pour atteindre notre cote 10 exclusive. Allouez 2% de votre bankroll."
       },
       {
         id: 4,
-        title: "💎 MÉGA COMBINÉ SEMAINE VIP (6 MATCHS)",
+        title: "💎 MÉGA COMBINÉ FROGAZZ SEMAINE VIP (6 MATCHS)",
         championship: "Ligue des Champions",
         type: "COTE_50",
         odds: 54.20,
@@ -892,11 +1008,11 @@
           { match: "Inter Milan vs Shakhtar", championship: "UCL", time: "21:00", tip: "Inter Milan sans encaisser", odds: 2.05 },
           { match: "Arsenal vs PSV Eindhoven", championship: "UCL", time: "21:00", tip: "Arsenal gagne les deux MT", odds: 3.40 }
         ],
-        analysis: "Notre combiné phare de la semaine réunit 6 sélections pour une cote de 54.20. Réservé aux abonnés VIP."
+        analysis: "Notre combiné phare de la semaine réunit 6 sélections européennes pour une cote de 54.20. Réservé aux abonnés VIP Frogazz."
       },
       {
         id: 5,
-        title: "📈 MONTANTE ÉTAPE 1 : Inter Milan vs AS Roma",
+        title: "📈 MONTANTE FROGAZZ ÉTAPE 1 : Inter Milan vs AS Roma",
         championship: "Serie A - Italie",
         type: "MONTANTE",
         odds: 1.85,
@@ -907,11 +1023,11 @@
         selections: [
           { match: "Inter Milan vs AS Roma", championship: "Serie A", time: "20:45", tip: "Victoire Inter Milan (Remboursé si nul)", odds: 1.85 }
         ],
-        analysis: "Étape 1 de la montante en 5 jours. Victoire de l'Inter Milan (remboursé si match nul)."
+        analysis: "Étape 1 de notre montante en 5 jours. Victoire de l'Inter Milan (remboursé si match nul)."
       },
       {
         id: 6,
-        title: "⚡ COMBINÉ CÔTE 5 (HISTORIQUE GAGNÉ - 3 MATCHS)",
+        title: "🐸 COMBINÉ FROGAZZ CÔTE 5 (HISTORIQUE GAGNÉ - 3 MATCHS)",
         championship: "Combiné Premier League",
         type: "COTE_5",
         odds: 5.10,
@@ -924,7 +1040,7 @@
           { match: "Newcastle vs Everton", championship: "PL", time: "15:00", tip: "Victoire Newcastle (2-0)", odds: 1.70 },
           { match: "Tottenham vs Fulham", championship: "PL", time: "15:00", tip: "Plus de 2.5 buts (2-1)", odds: 1.72 }
         ],
-        analysis: "Ticket Côte 5 gagnant à 100% ! Les 3 sélections sont validées."
+        analysis: "Ticket Côte 5 gagnant à 100% ! Les 3 sélections Frogazz sont validées."
       }
     ];
 
@@ -934,12 +1050,21 @@
       renderHistory();
     };
 
+    function showFrogTip() {
+      const tip = FROG_TIPS[Math.floor(Math.random() * FROG_TIPS.length)];
+      document.getElementById('frog-tip-text').innerText = tip;
+      document.getElementById('frog-tooltip').style.display = 'flex';
+    }
+
+    function closeFrogTip() {
+      document.getElementById('frog-tooltip').style.display = 'none';
+    }
+
     function switchUser(key) {
       currentUser = USERS[key];
       renderBanner();
       renderPredictions();
-
-      showToast("👤 Compte basculé vers " + currentUser.name, currentUser.badge);
+      showToast("🐸 Compte basculé vers " + currentUser.name, currentUser.badge);
     }
 
     function switchNav(nav) {
@@ -970,27 +1095,31 @@
 
       let bgClass = isVip ? "vip-banner" : "";
       let badgeHtml = isVip
-        ? `<span class="hero-badge badge-gold-bg">👑 MEMBRE VIP ACTIF</span>`
+        ? `<span class="hero-badge badge-dark-bg">👑 MEMBRE VIP FROGAZZ ACTIF</span>`
         : (isTrial
             ? `<span class="hero-badge badge-green-bg">🎁 ESSAI GRATUIT 48H (Côte 5)</span>`
             : `<span class="hero-badge badge-red-bg">🔒 ESSAI EXPIRÉ - NON ABONNÉ</span>`);
 
       container.innerHTML = `
-        <div class="hero-banner ${bgClass}">
+        <div class="hero-banner ${bgClass}" onclick="showFrogTip()">
           ${badgeHtml}
           <div class="hero-title">
-            ${isVip ? "Accès 100% Débloqué à Nos Pronostics" : (isTrial ? "Essai 48h sur la catégorie Côte 5" : "Passez au Forfait VIP ou Montante")}
+            ${isVip ? "🐸 Accès 100% Débloqué à Nos Pronostics" : (isTrial ? "Essai 48h sur la catégorie Côte 5" : "Passez au Forfait Frogazz VIP ou Montante")}
           </div>
           <div class="hero-desc">
             ${isVip
-              ? "Vous bénéficiez de toutes les sélections précises, cotes individuelles et analyses d'experts."
-              : "Abonnez-vous à 2000 FCFA/mois avec CinetPay pour révéler les sélections des Côtes 10, 50 et Montante."}
+              ? "Vous bénéficiez de toutes les sélections précises, cotes individuelles et analyses Frogazz."
+              : "Abonnez-vous à 2000 FCFA/mois avec CinetPay / PayDunya pour révéler les sélections des Côtes 10, 50 et Montante."}
           </div>
           ${!isVip ? `
-            <button class="btn btn-gold" onclick="switchNav('subscriptions')">
+            <button class="btn btn-green" onclick="event.stopPropagation(); switchNav('subscriptions')">
               <i class="fa-solid fa-star"></i> S'ABONNER MAINTENANT (2000 FCFA)
             </button>
-          ` : ``}
+          ` : `
+            <button class="btn btn-white" onclick="event.stopPropagation(); showFrogTip()">
+              <span>🐸</span> Conseil du Jour Frogazz
+            </button>
+          `}
         </div>
       `;
     }
@@ -1001,7 +1130,7 @@
 
       const filtered = PREDICTIONS.filter(p => {
         if (currentCategory !== 'ALL' && p.type !== currentCategory) return false;
-        if (p.status !== 'PENDING') return false; // On n'affiche sur l'accueil que les paris en cours
+        if (p.status !== 'PENDING') return false;
         return true;
       });
 
@@ -1017,7 +1146,7 @@
           <div class="card-body">
             <div class="card-header">
               <div class="card-champ">
-                <i class="fa-solid fa-trophy"></i>
+                <span>🐸</span>
                 <span>${p.championship.toUpperCase()}</span>
               </div>
               <div class="card-tags">
@@ -1051,10 +1180,10 @@
 
           ${isLocked ? `
             <div class="lock-overlay">
-              <i class="fa-solid fa-lock"></i>
-              <div class="lock-title">🔒 COMBINÉ CÔTE ${p.odds.toFixed(2)} (${p.selections.length} MATCHS) - RÉSERVÉ</div>
+              <span style="font-size: 44px; margin-bottom: 6px;">🐸🔒</span>
+              <div class="lock-title">COMBINÉ CÔTE ${p.odds.toFixed(2)} (${p.selections.length} MATCHS) - RÉSERVÉ</div>
               <div class="lock-desc">Abonnez-vous (2000 FCFA/mois) pour voir le pari conseillé de chaque match du ticket.</div>
-              <button class="btn btn-gold" onclick="event.stopPropagation(); switchNav('subscriptions')">
+              <button class="btn btn-green" onclick="event.stopPropagation(); switchNav('subscriptions')">
                 <i class="fa-solid fa-key"></i> Débloquer ce ticket (2000 FCFA)
               </button>
             </div>
@@ -1083,12 +1212,12 @@
       const modalBody = document.getElementById('modal-body-content');
       modalBody.innerHTML = `
         <div style="text-align: center; margin-bottom: 20px;">
-          <span class="badge-combiné">TICKET COMBINÉ (${p.selections.length} MATCHS)</span>
-          <h2 style="color: var(--gold); font-size: 20px; font-weight: 900; margin: 10px 0 6px 0;">${p.title}</h2>
-          <div style="color: var(--text-muted); font-size: 13px;">Cote Cumulée : <strong style="color: var(--green); font-size: 16px;">${p.odds.toFixed(2)}</strong> • Confiance ${"⭐".repeat(p.confidence)}</div>
+          <span class="badge-combiné">TICKET COMBINÉ FROGAZZ (${p.selections.length} MATCHS)</span>
+          <h2 style="color: var(--frog-green); font-size: 20px; font-weight: 900; margin: 10px 0 6px 0;">${p.title}</h2>
+          <div style="color: var(--text-muted); font-size: 13px;">Cote Cumulée : <strong style="color: var(--white); font-size: 16px;">${p.odds.toFixed(2)}</strong> • Confiance ${"⭐".repeat(p.confidence)}</div>
         </div>
 
-        <h3 style="color: var(--gold); font-size: 15px; margin-bottom: 12px;">🎯 SÉLECTIONS INDIVIDUELLES DU TICKET</h3>
+        <h3 style="color: var(--frog-green); font-size: 15px; margin-bottom: 12px;">🎯 SÉLECTIONS INDIVIDUELLES DU TICKET</h3>
         ${p.selections.map((sel, idx) => `
           <div class="selection-box">
             <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
@@ -1097,19 +1226,19 @@
             </div>
             <div style="font-size: 16px; font-weight: 800; color: #FFF; margin: 4px 0;">${sel.match}</div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span class="tip-badge"><i class="fa-solid fa-check"></i> PARI : ${sel.tip.toUpperCase()}</span>
-              <span style="color: var(--gold); font-weight: 900; font-size: 15px;">@${sel.odds.toFixed(2)}</span>
+              <span class="tip-badge">🐸 PARI : ${sel.tip.toUpperCase()}</span>
+              <span style="color: var(--frog-green); font-weight: 900; font-size: 15px;">@${sel.odds.toFixed(2)}</span>
             </div>
           </div>
         `).join('')}
 
-        <h3 style="color: var(--gold); font-size: 15px; margin: 18px 0 8px 0;">📝 ANALYSE D'EXPERT & CONSEIL DE MISE</h3>
+        <h3 style="color: var(--frog-green); font-size: 15px; margin: 18px 0 8px 0;">📝 ANALYSE D'EXPERT FROGAZZ & CONSEIL DE MISE</h3>
         <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 14px; padding: 15px; color: #DDD; font-size: 14px; line-height: 1.6;">
           ${p.analysis}
         </div>
-        <div style="background: rgba(0,200,83,0.12); border: 1px solid var(--green); padding: 14px; border-radius: 12px; margin-top: 15px; color: #FFF; font-size: 13px;">
-          <i class="fa-solid fa-shield-halved" style="color: var(--green); margin-right: 8px;"></i>
-          <strong>Conseil de gestion :</strong> Ne misez pas plus de 5% de votre bankroll sur ce combiné.
+        <div style="background: rgba(0, 230, 118, 0.15); border: 1.5px solid var(--frog-green); padding: 14px; border-radius: 14px; margin-top: 15px; color: #FFF; font-size: 13px; display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;">🐸</span>
+          <span><strong>Conseil de gestion Frogazz :</strong> Ne misez pas plus de 5% de votre bankroll sur ce combiné. Sautez prudemment !</span>
         </div>
       `;
 
@@ -1132,12 +1261,12 @@
         div.innerHTML = `
           <div class="card-body">
             <div class="card-header">
-              <span style="color: var(--green); font-weight: 900; font-size: 13px;"><i class="fa-solid fa-check-circle"></i> TICKET GAGNÉ À 100%</span>
+              <span style="color: var(--frog-green); font-weight: 900; font-size: 13px;">🐸 TICKET GAGNÉ À 100%</span>
               <span class="badge-combiné">COMBINÉ ${p.selections.length} MATCHS</span>
             </div>
             <div class="card-main">
               <div class="card-title">${p.title}</div>
-              <div class="odds-badge" style="background: var(--green); color: #000;">
+              <div class="odds-badge" style="background: var(--frog-green); color: #000;">
                 <div class="odds-val">${p.odds.toFixed(2)}</div>
                 <div class="odds-lbl">COTE</div>
               </div>
@@ -1147,7 +1276,7 @@
             </div>
             <div class="card-footer">
               <div>Validé le ${p.matchDate}</div>
-              <div style="color: var(--green); font-weight: bold;">+100% DE GAIN</div>
+              <div style="color: var(--frog-green); font-weight: bold;">+100% DE GAIN</div>
             </div>
           </div>
         `;
@@ -1162,22 +1291,20 @@
     function testPromoCode() {
       const code = document.getElementById('promo-input').value.trim().toUpperCase();
       if (code === 'WELCOME10') {
-        showToast("🎟️ CODE PROMO APPLIQUÉ !", "-10% de réduction : Nouveau total = 1800 FCFA");
+        showToast("🎟️ CODE PROMO FROGAZZ APPLIQUÉ !", "-10% de réduction : Nouveau total = 1800 FCFA");
       } else if (code === 'VIP20') {
-        showToast("🎟️ CODE PROMO APPLIQUÉ !", "-20% de réduction : Nouveau total = 1600 FCFA");
+        showToast("🎟️ CODE PROMO FROGAZZ APPLIQUÉ !", "-20% de réduction : Nouveau total = 1600 FCFA");
       } else {
         showToast("❌ CODE INVALIDE", "Ce code promo n'existe pas ou est expiré.");
       }
     }
 
-    // SIMULATION DU PAIEMENT CINETPAY ET DÉBLOCAGE DU COMPTE !
     function triggerCinetPayCheckout(planCode, amount) {
-      const txId = "CP-20260803-" + Math.floor(Math.random() * 89999 + 10000);
+      const txId = "CP-FROGAZZ-" + Math.floor(Math.random() * 89999 + 10000);
 
-      showToast("💳 INITIALISATION CINETPAY...", "Connexion à Orange Money / MTN / Moov...");
+      showToast("💳 INITIALISATION CINETPAY / PAYDUNYA...", "Connexion à Orange Money / Wave / CB...");
 
       setTimeout(() => {
-        // Upgrade automatique de l'utilisateur actuel vers VIP ou Montante !
         if (planCode === 'VIP') {
           currentUser = USERS.vip;
           document.getElementById('user-select').value = 'vip';
@@ -1190,7 +1317,7 @@
         renderPredictions();
         switchNav('home');
 
-        showToast("✅ PAIEMENT CINETPAY CONFIRMÉ !", `${amount} FCFA encaissés • ID: ${txId} — ACCÈS ${planCode} DÉBLOQUÉ !`);
+        showToast("🐸 PAIEMENT CONFIRMÉ !", `${amount} FCFA encaissés • ID: ${txId} — ACCÈS ${planCode} DÉBLOQUÉ !`);
       }, 1500);
     }
 
@@ -1199,9 +1326,9 @@
       const toast = document.createElement('div');
       toast.className = 'toast';
       toast.innerHTML = `
-        <div style="font-size: 24px; color: var(--gold);"><i class="fa-solid fa-bell"></i></div>
+        <div style="font-size: 26px;">🐸</div>
         <div>
-          <div style="font-weight: 800; color: var(--gold); font-size: 13px;">${title}</div>
+          <div style="font-weight: 900; color: var(--frog-green); font-size: 13px;">${title}</div>
           <div style="font-size: 12px; color: #FFF;">${message}</div>
         </div>
       `;

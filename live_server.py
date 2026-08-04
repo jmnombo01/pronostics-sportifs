@@ -13,8 +13,8 @@ DIRECTORY = "/home/user"
 PREDICTIONS_DATA = [
     {
         "id": 1,
-        "title": "⚡ COMBINÉ CÔTE 5 DU LUNDI (3 MATCHS)",
-        "competition": "Europe - Combiné VIP",
+        "title": "🐸 COMBINÉ FROGAZZ CÔTE 5 DU LUNDI (3 MATCHS)",
+        "competition": "Europe - Combiné VIP Frogazz",
         "country": "Europe",
         "championship": "Combiné Europe",
         "match_date": "2026-08-03",
@@ -31,12 +31,12 @@ PREDICTIONS_DATA = [
             {"match": "PSG vs Olympique Lyonnais", "championship": "Ligue 1", "time": "20:45", "tip": "Les deux équipes marquent (BTTS - Oui)", "odds": 1.80},
             {"match": "Bayern Munich vs RB Leipzig", "championship": "Bundesliga", "time": "18:30", "tip": "Plus de 2.5 buts dans le match", "odds": 1.75}
         ],
-        "analysis": "Combiné de 3 matchs sélectionnés par nos algorithmes : 1.65 × 1.80 × 1.75 = 5.18 de cote totale."
+        "analysis": "Combiné de 3 matchs sélectionnés par les algorithmes Frogazz : 1.65 × 1.80 × 1.75 = 5.18 de cote totale. Ratio sécurité/gain optimal !"
     },
     {
         "id": 2,
-        "title": "⚡ COMBINÉ CÔTE 5 DU MARDI (3 MATCHS)",
-        "competition": "Europe - Combiné VIP",
+        "title": "🐸 COMBINÉ FROGAZZ CÔTE 5 DU MARDI (3 MATCHS)",
+        "competition": "Europe - Combiné VIP Frogazz",
         "country": "Europe",
         "championship": "Combiné PL & Serie A",
         "match_date": "2026-08-04",
@@ -53,12 +53,12 @@ PREDICTIONS_DATA = [
             {"match": "Inter Milan vs AC Milan", "championship": "Serie A", "time": "20:45", "tip": "Victoire Inter Milan (DNB 1)", "odds": 1.75},
             {"match": "FC Porto vs Benfica", "championship": "Liga Portugal", "time": "21:00", "tip": "Plus de 1.5 buts en 2e mi-temps", "odds": 1.60}
         ],
-        "analysis": "Deuxième ticket Côte 5 de la semaine avec 3 sélections européennes à haute probabilité."
+        "analysis": "Deuxième ticket Côte 5 Frogazz de la semaine avec 3 sélections européennes à haute probabilité."
     },
     {
         "id": 3,
-        "title": "👑 COMBINÉ CÔTE 10 - GRAND CHELEM (4 MATCHS)",
-        "competition": "Europe - Combiné VIP",
+        "title": "👑 COMBINÉ FROGAZZ CÔTE 10 - SAUT DES CHAMPIONS (4 MATCHS)",
+        "competition": "Europe - Combiné VIP Frogazz",
         "country": "Europe",
         "championship": "Combiné Champions & Europa",
         "match_date": "2026-08-05",
@@ -76,11 +76,11 @@ PREDICTIONS_DATA = [
             {"match": "Borussia Dortmund vs Eintracht", "championship": "Bundesliga", "time": "17:30", "tip": "Victoire Dortmund (1)", "odds": 1.80},
             {"match": "FC Barcelone vs Atl. Madrid", "championship": "La Liga", "time": "21:00", "tip": "BTTS - Oui", "odds": 1.85}
         ],
-        "analysis": "Combiné de 4 matchs pour atteindre notre cote 10 exclusive. Allouer 2% de bankroll."
+        "analysis": "Combiné de 4 matchs pour atteindre notre cote 10 exclusive Frogazz. Allouez 2% de bankroll."
     },
     {
         "id": 4,
-        "title": "💎 MÉGA COMBINÉ SEMAINE VIP (6 MATCHS)",
+        "title": "💎 MÉGA COMBINÉ FROGAZZ SEMAINE VIP (6 MATCHS)",
         "competition": "Ligue des Champions",
         "country": "Europe",
         "championship": "Ligue des Champions",
@@ -96,11 +96,11 @@ PREDICTIONS_DATA = [
         "selections": [
             {"match": "6 Matchs UCL sélectionnés", "championship": "UCL", "time": "21:00", "tip": "Combiné 6 vainqueurs", "odds": 54.20}
         ],
-        "analysis": "Notre combiné phare de la semaine réunit 6 sélections pour une cote de 54.20. Réservé aux VIP."
+        "analysis": "Notre combiné phare de la semaine réunit 6 sélections pour une cote de 54.20. Réservé aux VIP Frogazz."
     },
     {
         "id": 5,
-        "title": "📈 MONTANTE ÉTAPE 1 : Inter Milan vs AS Roma",
+        "title": "📈 MONTANTE FROGAZZ ÉTAPE 1 : Inter Milan vs AS Roma",
         "competition": "Serie A",
         "country": "Italie",
         "championship": "Serie A",

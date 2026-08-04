@@ -49,7 +49,7 @@ class _PronosticsAppState extends ConsumerState<PronosticsApp> {
     final themeMode = ref.watch(themeProvider);
 
     return MaterialApp.router(
-      title: 'Pronostics Sportifs VIP & Montante',
+      title: 'Frogazz Sport Analyse - VIP & Montante',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

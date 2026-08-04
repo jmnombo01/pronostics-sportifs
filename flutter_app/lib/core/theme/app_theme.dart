@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Palette officielle Premium : Noir, Blanc, Or, Vert
-  static const Color black = Color(0xFF0A0A0B);
-  static const Color darkCard = Color(0xFF16161A);
+  // Palette officielle Frogazz Sport Analyse : Vert Grenouille & Blanc
+  static const Color black = Color(0xFF060907);
+  static const Color darkCard = Color(0xFF0F1711);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color gold = Color(0xFFD4AF37);
-  static const Color goldLight = Color(0xFFF3E5AB);
-  static const Color green = Color(0xFF00C853);
-  static const Color red = Color(0xFFE53935);
-  static const Color grey = Color(0xFF8E8E93);
-  static const Color darkBorder = Color(0xFF2C2C35);
+  static const Color frogGreen = Color(0xFF00E676);
+  static const Color frogGreenDark = Color(0xFF00B248);
+  static const Color frogGreenLight = Color(0xFF66FFA6);
+  static const Color red = Color(0xFFFF5252);
+  static const Color grey = Color(0xFF8EAE96);
+  static const Color darkBorder = Color(0xFF1F3325);
 
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: black,
-      primaryColor: gold,
+      primaryColor: frogGreen,
       colorScheme: const ColorScheme.dark(
-        primary: gold,
-        secondary: green,
+        primary: frogGreen,
+        secondary: frogGreenLight,
         surface: darkCard,
         error: red,
         onPrimary: black,
@@ -32,26 +32,26 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
-          color: gold,
+          color: frogGreen,
           fontSize: 20,
           fontWeight: FontWeight.bold,
           letterSpacing: 0.5,
         ),
-        iconTheme: IconThemeData(color: gold),
+        iconTheme: IconThemeData(color: frogGreen),
       ),
       cardTheme: CardTheme(
         color: darkCard,
         elevation: 4,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: darkBorder, width: 1),
+          borderRadius: BorderRadius.circular(18),
+          side: const BorderSide(color: darkBorder, width: 1.2),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: gold,
+          backgroundColor: frogGreen,
           foregroundColor: black,
-          elevation: 3,
+          elevation: 4,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
@@ -77,7 +77,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: gold, width: 2),
+          borderSide: const BorderSide(color: frogGreen, width: 2),
         ),
       ),
     );
@@ -87,11 +87,11 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: const Color(0xFFF8F9FA),
-      primaryColor: gold,
+      scaffoldBackgroundColor: const Color(0xFFF4FAF6),
+      primaryColor: frogGreen,
       colorScheme: const ColorScheme.light(
-        primary: gold,
-        secondary: green,
+        primary: frogGreen,
+        secondary: frogGreenDark,
         surface: white,
         error: red,
         onPrimary: black,
