@@ -21,6 +21,20 @@ use App\Http\Controllers\Api\v1\Admin\AdminPromoCodeController;
 | Authentification Sanctum + RBAC + Middlewares d'abonnement & d'essai gratuit
 */
 
+// Route de santé (Healthcheck pour Render.com / Docker)
+Route::get('/', function () {
+    return response()->json([
+        'status' => 'ok',
+        'service' => 'Pronostics Sportifs VIP API',
+        'version' => '1.0.0',
+        'timestamp' => now()->toIso8601String()
+    ], 200);
+});
+
+Route::get('healthz', function () {
+    return response()->json(['status' => 'ok'], 200);
+});
+
 Route::prefix('v1')->group(function () {
 
     // ---------------------------------------------------------------------
