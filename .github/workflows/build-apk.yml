@@ -16,24 +16,62 @@ jobs:
       - name: Setup Java JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Flutter SDK (Latest Stable)
+      - name: Setup Flutter SDK (Stable)
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
 
-      - name: Generate Official Android Wrapper & Build APK
+      - name: Accept Android Licenses
+        run: |
+          yes | flutter doctor --android-licenses || true
+
+      - name: Generate Official Android Wrapper & Configure App
         run: |
           cd flutter_app
           rm -rf android
           flutter create . --platforms=android --org=pro.frogazz
-          # Ajouter les permissions Internet et le nom officiel dans le manifeste Android
+          cat << 'EOF' > android/app/google-services.json
+          {
+            "project_info": {
+              "project_number": "123456789012",
+              "project_id": "frogazz-sport-analyse",
+              "storage_bucket": "frogazz-sport-analyse.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:123456789012:android:abcdef1234567890",
+                  "android_client_info": {
+                    "package_name": "pro.frogazz.frogazz_sport_analyse"
+                  }
+                },
+                "oauth_client": [],
+                "api_key": [
+                  {
+                    "current_key": "AIzaSyDummyKeyForFlutterBuildApk12345"
+                  }
+                ],
+                "services": {
+                  "appinvite_service": {
+                    "other_platform_oauth_client": []
+                  }
+                }
+              }
+            ],
+            "configuration_version": "1"
+          }
+          EOF
           sed -i 's/<application/<uses-permission android:name="android.permission.INTERNET"\/>\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"\/>\n    <application/g' android/app/src/main/AndroidManifest.xml
           sed -i 's/android:label=".*"/android:label="Frogazz Sport Analyse"/g' android/app/src/main/AndroidManifest.xml
           flutter pub get
+
+      - name: Build APK Release
+        run: |
+          cd flutter_app
           flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK Artifact
