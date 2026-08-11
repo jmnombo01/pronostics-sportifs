@@ -12,6 +12,11 @@ class AppTheme {
   static const Color grey = Color(0xFF8EAE96);
   static const Color darkBorder = Color(0xFF1F3325);
 
+  // Alias de rétrocompatibilité pour assurer 100% de compilation dans tous les widgets
+  static const Color green = frogGreen;
+  static const Color gold = frogGreen;
+  static const Color goldLight = frogGreenLight;
+
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
