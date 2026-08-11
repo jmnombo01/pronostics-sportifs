@@ -71,7 +71,8 @@ class PredictionModel {
     required this.analysis,
   });
 
-  bool get isCombiné => selections.length > 1;
+  bool get isCombined => selections.length > 1;
+  bool get isCombine => selections.length > 1;
 
   factory PredictionModel.fromJson(Map<String, dynamic> json) {
     final rawSelections = json['selections'] as List<dynamic>? ?? [];

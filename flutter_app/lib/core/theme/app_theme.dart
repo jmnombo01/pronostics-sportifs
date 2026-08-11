@@ -44,7 +44,7 @@ class AppTheme {
         ),
         iconTheme: IconThemeData(color: frogGreen),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: darkCard,
         elevation: 4,
         shape: RoundedRectangleBorder(
