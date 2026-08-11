@@ -76,6 +76,7 @@ class PredictionCardWidget extends StatelessWidget {
                         const SizedBox(width: 8),
                         Row(
                           mainAxisSize: MainAxisSize.min,
+                          children: [
                             if (prediction.matchesCount > 1) ...[
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
@@ -87,7 +88,8 @@ class PredictionCardWidget extends StatelessWidget {
                                 ),
                                 child: Text(
                                   'COMBINÉ ${prediction.matchesCount} MATCHS',
-                                  style: const TextStyle(inherit: true, 
+                                  style: const TextStyle(
+                                    inherit: true,
                                     color: AppTheme.green,
                                     fontSize: 9,
                                     fontWeight: FontWeight.w800,
