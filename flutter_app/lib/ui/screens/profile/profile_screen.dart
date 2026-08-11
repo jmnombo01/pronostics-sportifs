@@ -183,8 +183,15 @@ class ProfileScreen extends ConsumerWidget {
                   const SizedBox(height: 18),
 
                   // PARAMÈTRES (THEME SOMBRE)
-                  Card(
+                  Container(
+                    key: const ValueKey('switch_dark_mode_box'),
+                    decoration: BoxDecoration(
+                      color: AppTheme.darkCard,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppTheme.darkBorder),
+                    ),
                     child: SwitchListTile(
+                      key: const ValueKey('switch_dark_mode_tile'),
                       title: const Text(
                         'Mode Sombre (Dark Mode)',
                         style: TextStyle(fontWeight: FontWeight.w600, inherit: true),
@@ -200,10 +207,17 @@ class ProfileScreen extends ConsumerWidget {
                       },
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
 
-                  Card(
+                  Container(
+                    key: const ValueKey('support_faq_box'),
+                    decoration: BoxDecoration(
+                      color: AppTheme.darkCard,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppTheme.darkBorder),
+                    ),
                     child: ListTile(
+                      key: const ValueKey('support_faq_tile'),
                       leading: const Icon(Icons.help_outline, color: AppTheme.frogGreen),
                       title: const Text(
                         'Support & FAQ',

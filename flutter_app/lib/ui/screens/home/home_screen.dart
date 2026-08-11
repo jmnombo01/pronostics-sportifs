@@ -19,19 +19,18 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('🐸 ', style: TextStyle(inherit: true, fontSize: 22)),
-            Text('FROGAZZ ', style: TextStyle(inherit: true, color: Colors.white, fontWeight: FontWeight.w900)),
-            Text('SPORT', style: TextStyle(inherit: true, color: AppTheme.frogGreen, fontWeight: FontWeight.w900)),
-          ],
+        title: const FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('🐸 ', style: TextStyle(inherit: true, fontSize: 20)),
+              Text('FROGAZZ ', style: TextStyle(inherit: true, color: Colors.white, fontWeight: FontWeight.w900, fontSize: 18)),
+              Text('SPORT', style: TextStyle(inherit: true, color: AppTheme.frogGreen, fontWeight: FontWeight.w900, fontSize: 18)),
+            ],
+          ),
         ),
         actions: [
-          const Padding(
-            padding: EdgeInsets.only(right: 8.0),
-            child: FrogMascotWidget(compact: true),
-          ),
           IconButton(
             icon: const Icon(Icons.search, color: AppTheme.frogGreen),
             onPressed: () => context.push('/search'),
