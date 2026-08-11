@@ -58,7 +58,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                               ),
                               child: Text(
                                 'TICKET COMBINÉ (${pred.matchesCount} MATCHS)',
-                                style: const TextStyle(
+                                style: const TextStyle(inherit: true, 
                                   color: AppTheme.green,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w800,
@@ -68,7 +68,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                           ],
                           Text(
                             pred.championship.toUpperCase(),
-                            style: const TextStyle(
+                            style: const TextStyle(inherit: true, 
                               color: AppTheme.gold,
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
@@ -80,7 +80,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                       const SizedBox(height: 12),
                       Text(
                         pred.title.isNotEmpty ? pred.title : '${pred.homeTeam} vs ${pred.awayTeam}',
-                        style: const TextStyle(
+                        style: const TextStyle(inherit: true, 
                           fontSize: 22,
                           fontWeight: FontWeight.w900,
                           color: Colors.white,
@@ -90,7 +90,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                       const SizedBox(height: 8),
                       Text(
                         '${pred.matchDate} à ${pred.matchTime}',
-                        style: const TextStyle(color: AppTheme.grey, fontSize: 14),
+                        style: const TextStyle(inherit: true, color: AppTheme.grey, fontSize: 14),
                       ),
                       const SizedBox(height: 18),
                       Row(
@@ -125,7 +125,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                           pred.matchesCount > 1
                               ? '🔒 COMBINÉ CÔTE ${pred.odds.toStringAsFixed(2)} (${pred.matchesCount} MATCHS) - RÉSERVÉ'
                               : '🔒 Réservé aux abonnés VIP / Montante',
-                          style: const TextStyle(
+                          style: const TextStyle(inherit: true, 
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -137,7 +137,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                           pred.matchesCount > 1
                               ? 'Pour débloquer la liste des ${pred.matchesCount} matchs de ce combiné, voir le pronostic précis de chaque match (1X2, buts, buteur) et notre conseil de mise, veuillez souscrire à un abonnement.'
                               : 'Pour accéder à l\'analyse détaillée du match, veuillez vous abonner.',
-                          style: const TextStyle(color: AppTheme.grey, fontSize: 14),
+                          style: const TextStyle(inherit: true, color: AppTheme.grey, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 24),
@@ -155,7 +155,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                   if (pred.selections.isNotEmpty) ...[
                     Text(
                       '🎯 MATCHS DU TICKET COMBINÉ (${pred.selections.length} SÉLECTIONS)',
-                      style: const TextStyle(
+                      style: const TextStyle(inherit: true, 
                         color: AppTheme.gold,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -184,26 +184,26 @@ class PredictionDetailScreen extends ConsumerWidget {
                                       backgroundColor: AppTheme.gold.withOpacity(0.2),
                                       child: Text(
                                         '#${sel.index}',
-                                        style: const TextStyle(color: AppTheme.gold, fontSize: 11, fontWeight: FontWeight.bold),
+                                        style: const TextStyle(inherit: true, color: AppTheme.gold, fontSize: 11, fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
                                       sel.championship,
-                                      style: const TextStyle(color: AppTheme.grey, fontSize: 12, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(inherit: true, color: AppTheme.grey, fontSize: 12, fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
                                 Text(
                                   sel.matchTime,
-                                  style: const TextStyle(color: AppTheme.grey, fontSize: 12),
+                                  style: const TextStyle(inherit: true, color: AppTheme.grey, fontSize: 12),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 10),
                             Text(
                               sel.match,
-                              style: const TextStyle(
+                              style: const TextStyle(inherit: true, 
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
@@ -226,7 +226,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                                       const SizedBox(width: 6),
                                       Text(
                                         'PARI : ${sel.tip.toUpperCase()}',
-                                        style: const TextStyle(
+                                        style: const TextStyle(inherit: true, 
                                           color: AppTheme.green,
                                           fontWeight: FontWeight.w900,
                                           fontSize: 13,
@@ -244,7 +244,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                                     ),
                                     child: Text(
                                       '@${sel.odds!.toStringAsFixed(2)}',
-                                      style: const TextStyle(
+                                      style: const TextStyle(inherit: true, 
                                         color: AppTheme.gold,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15,
@@ -263,7 +263,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                   // ANALYSE ET STRATÉGIE DE MISE
                   const Text(
                     'ANALYSE & CONSEIL DE MISE',
-                    style: TextStyle(
+                    style: TextStyle(inherit: true, 
                       color: AppTheme.gold,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -280,7 +280,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                     ),
                     child: Text(
                       pred.analysis,
-                      style: const TextStyle(
+                      style: const TextStyle(inherit: true, 
                         color: Colors.white,
                         fontSize: 15,
                         height: 1.6,
@@ -302,7 +302,7 @@ class PredictionDetailScreen extends ConsumerWidget {
                         Expanded(
                           child: Text(
                             'Conseil de gestion : Ne misez pas plus de 5% de votre bankroll sur ce combiné. Jouez responsable.',
-                            style: TextStyle(color: Colors.white, fontSize: 13),
+                            style: TextStyle(inherit: true, color: Colors.white, fontSize: 13),
                           ),
                         ),
                       ],
@@ -324,7 +324,7 @@ class PredictionDetailScreen extends ConsumerWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(color: AppTheme.grey, fontSize: 11),
+          style: const TextStyle(inherit: true, color: AppTheme.grey, fontSize: 11),
         ),
         const SizedBox(height: 4),
         Container(
@@ -335,7 +335,7 @@ class PredictionDetailScreen extends ConsumerWidget {
           ),
           child: Text(
             val,
-            style: TextStyle(
+            style: TextStyle(inherit: true, 
               color: color,
               fontWeight: FontWeight.bold,
               fontSize: 14,

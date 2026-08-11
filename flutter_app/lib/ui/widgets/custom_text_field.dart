@@ -30,7 +30,7 @@ class CustomTextField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: const TextStyle(inherit: true, 
             color: Colors.white70,
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -42,7 +42,7 @@ class CustomTextField extends StatelessWidget {
           obscureText: obscureText,
           keyboardType: keyboardType,
           validator: validator,
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(inherit: true, color: Colors.white),
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: prefixIcon,

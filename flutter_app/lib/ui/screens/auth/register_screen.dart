@@ -82,21 +82,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: AppTheme.green.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppTheme.green),
+                    color: AppTheme.frogGreen.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AppTheme.frogGreen),
                   ),
                   child: const Row(
                     children: [
-                      Icon(Icons.card_giftcard, color: AppTheme.green, size: 28),
-                      SizedBox(width: 12),
+                      Text('🐸 ', style: TextStyle(inherit: true, fontSize: 26)),
                       Expanded(
                         child: Text(
-                          '🎁 CADEAU : 48 Heures d\'accès gratuit à la catégorie Côte 5 offertes dès l\'inscription !',
+                          'CADEAU : 48 Heures d\'accès gratuit à la catégorie Côte 5 offertes dès l\'inscription (aucune vérification d\'email requise) !',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
+                            inherit: true,
                           ),
                         ),
                       ),

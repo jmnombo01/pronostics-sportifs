@@ -87,7 +87,7 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
               const SizedBox(height: 16),
               const Text(
                 'PAIEMENT CINETPAY CONFIRMÉ !',
-                style: TextStyle(
+                style: TextStyle(inherit: true, 
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -96,13 +96,13 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
               const SizedBox(height: 8),
               Text(
                 'Transaction ID: $txId',
-                style: const TextStyle(color: AppTheme.gold, fontSize: 13),
+                style: const TextStyle(inherit: true, color: AppTheme.gold, fontSize: 13),
               ),
               const SizedBox(height: 12),
               const Text(
                 'Votre abonnement a été activé automatiquement. Vous avez désormais accès à tous les pronostics réservés.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppTheme.grey),
+                style: TextStyle(inherit: true, color: AppTheme.grey),
               ),
               const SizedBox(height: 24),
               CustomButton(
@@ -140,7 +140,7 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
           children: [
             const Text(
               'CHOISISSEZ VOTRE OFFRE',
-              style: TextStyle(
+              style: TextStyle(inherit: true, 
                 color: AppTheme.gold,
                 fontSize: 18,
                 fontWeight: FontWeight.w900,
@@ -149,7 +149,7 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
             const SizedBox(height: 6),
             const Text(
               'Débloquez les pronostics Côte 5, 10, 50 ou Montante et maximisez vos gains.',
-              style: TextStyle(color: AppTheme.grey, fontSize: 14),
+              style: TextStyle(inherit: true, color: AppTheme.grey, fontSize: 14),
             ),
             const SizedBox(height: 20),
 
@@ -183,7 +183,7 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
             // 3. CODE PROMO
             const Text(
               'CODE PROMO OR PARRAINAGE',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(inherit: true, color: Colors.white, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Row(
@@ -212,7 +212,7 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
             // 4. METHODE DE PAIEMENT CINETPAY
             const Text(
               'MOYEN DE PAIEMENT (CINETPAY)',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(inherit: true, color: Colors.white, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Row(
@@ -253,7 +253,7 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
             const Center(
               child: Text(
                 'Paiement sécurisé par CinetPay • Orange Money, MTN, Moov, Airtel, Visa, Mastercard',
-                style: TextStyle(color: AppTheme.grey, fontSize: 11),
+                style: TextStyle(inherit: true, color: AppTheme.grey, fontSize: 11),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -293,7 +293,7 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: const TextStyle(inherit: true, 
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w900,
@@ -307,7 +307,7 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
                   ),
                   child: Text(
                     priceLabel,
-                    style: const TextStyle(
+                    style: const TextStyle(inherit: true, 
                       color: AppTheme.gold,
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
@@ -329,7 +329,7 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
                     Expanded(
                       child: Text(
                         feat,
-                        style: const TextStyle(color: Colors.white70, fontSize: 14),
+                        style: const TextStyle(inherit: true, color: Colors.white70, fontSize: 14),
                       ),
                     ),
                   ],
@@ -367,7 +367,7 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
               const SizedBox(width: 8),
               Text(
                 label,
-                style: TextStyle(
+                style: TextStyle(inherit: true, 
                   color: isSelected ? AppTheme.gold : Colors.white70,
                   fontWeight: FontWeight.bold,
                 ),

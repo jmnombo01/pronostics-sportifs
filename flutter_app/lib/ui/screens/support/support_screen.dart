@@ -89,7 +89,7 @@ class SupportScreen extends StatelessWidget {
                         children: [
                           Text(
                             'SUPPORT WHATSAPP DIRECT',
-                            style: TextStyle(
+                            style: TextStyle(inherit: true, 
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w900,
@@ -98,7 +98,7 @@ class SupportScreen extends StatelessWidget {
                           SizedBox(height: 4),
                           Text(
                             'Discutez en direct avec notre équipe (7j/7, 08h - 22h GMT)',
-                            style: TextStyle(color: Colors.white70, fontSize: 13),
+                            style: TextStyle(inherit: true, color: Colors.white70, fontSize: 13),
                           ),
                         ],
                       ),
@@ -113,7 +113,7 @@ class SupportScreen extends StatelessWidget {
             // SECTION FAQ
             const Text(
               'QUESTIONS FRÉQUENTES (FAQ)',
-              style: TextStyle(
+              style: TextStyle(inherit: true, 
                 color: AppTheme.gold,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -128,7 +128,7 @@ class SupportScreen extends StatelessWidget {
                   iconColor: AppTheme.gold,
                   title: Text(
                     faq.question,
-                    style: const TextStyle(
+                    style: const TextStyle(inherit: true, 
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
                       fontSize: 15,
@@ -139,7 +139,7 @@ class SupportScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                       child: Text(
                         faq.answer,
-                        style: const TextStyle(color: AppTheme.grey, height: 1.5),
+                        style: const TextStyle(inherit: true, color: AppTheme.grey, height: 1.5),
                       ),
                     ),
                   ],
@@ -152,7 +152,7 @@ class SupportScreen extends StatelessWidget {
             // CGU & POLITIQUE DE CONFIDENTIALITÉ
             const Text(
               'INFORMATIONS LÉGALES',
-              style: TextStyle(
+              style: TextStyle(inherit: true, 
                 color: AppTheme.gold,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -193,14 +193,14 @@ class SupportScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.darkCard,
-        title: Text(title, style: const TextStyle(color: AppTheme.gold)),
+        title: Text(title, style: const TextStyle(inherit: true, color: AppTheme.gold)),
         content: SingleChildScrollView(
-          child: Text(content, style: const TextStyle(color: Colors.white70)),
+          child: Text(content, style: const TextStyle(inherit: true, color: Colors.white70)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('FERMER', style: TextStyle(color: AppTheme.gold)),
+            child: const Text('FERMER', style: TextStyle(inherit: true, color: AppTheme.gold)),
           ),
         ],
       ),

@@ -50,10 +50,10 @@ class _FrogMascotWidgetState extends State<FrogMascotWidget>
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('🐸 ', style: TextStyle(fontSize: 28)),
+            Text('🐸 ', style: TextStyle(inherit: true, fontSize: 28)),
             Text(
               'FROGAZZ DIT :',
-              style: TextStyle(
+              style: TextStyle(inherit: true, 
                 color: AppTheme.frogGreen,
                 fontWeight: FontWeight.w900,
               ),
@@ -63,7 +63,7 @@ class _FrogMascotWidgetState extends State<FrogMascotWidget>
         content: Text(
           '"$tip"',
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: const TextStyle(inherit: true, 
             color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -78,7 +78,7 @@ class _FrogMascotWidgetState extends State<FrogMascotWidget>
               icon: const Icon(Icons.check, color: Colors.black),
               label: const Text(
                 'MERCI FROGAZZ !',
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                style: TextStyle(inherit: true, color: Colors.black, fontWeight: FontWeight.bold),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.frogGreen,
@@ -119,11 +119,11 @@ class _FrogMascotWidgetState extends State<FrogMascotWidget>
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('🐸', style: TextStyle(fontSize: 18)),
+                    Text('🐸', style: TextStyle(inherit: true, fontSize: 18)),
                     SizedBox(width: 6),
                     Text(
                       'Conseil',
-                      style: TextStyle(
+                      style: TextStyle(inherit: true, 
                         color: AppTheme.frogGreen,
                         fontWeight: FontWeight.w900,
                         fontSize: 12,
@@ -145,7 +145,7 @@ class _FrogMascotWidgetState extends State<FrogMascotWidget>
         builder: (context, child) {
           return Transform.translate(
             offset: Offset(0, _bounceAnimation.value),
-            child: const Text('🐸', style: TextStyle(fontSize: 32)),
+            child: const Text('🐸', style: TextStyle(inherit: true, fontSize: 32)),
           );
         },
       ),

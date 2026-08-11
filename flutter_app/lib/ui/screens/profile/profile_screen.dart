@@ -23,46 +23,86 @@ class ProfileScreen extends ConsumerWidget {
         ),
       ),
       body: user == null
-          ? const Center(child: Text('Aucun utilisateur connecté'))
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('🐸', style: TextStyle(inherit: true, fontSize: 48)),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Aucun compte actif connecté',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        inherit: true,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      'Veuillez vous inscrire ou vous connecter pour accéder à votre profil et à vos abonnements VIP.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: AppTheme.grey, inherit: true),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () => context.go('/login'),
+                      child: const Text('SE CONNECTER / S\'INSCRIRE'),
+                    ),
+                  ],
+                ),
+              ),
+            )
           : SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
                   // AVATAR & NOM
                   Container(
-                    width: 90,
-                    height: 90,
+                    width: 86,
+                    height: 86,
                     decoration: BoxDecoration(
-                      color: AppTheme.gold.withOpacity(0.2),
+                      color: AppTheme.frogGreen.withOpacity(0.2),
                       shape: BoxShape.circle,
-                      border: Border.all(color: AppTheme.gold, width: 2),
+                      border: Border.all(color: AppTheme.frogGreen, width: 2),
                     ),
-                    child: const Icon(Icons.person, color: AppTheme.gold, size: 48),
+                    child: const Center(
+                      child: Text('🐸', style: TextStyle(inherit: true, fontSize: 42)),
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    user.fullName,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  const SizedBox(height: 14),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      user.fullName,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        inherit: true,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     user.email,
-                    style: const TextStyle(color: AppTheme.grey, fontSize: 14),
+                    style: const TextStyle(color: AppTheme.grey, fontSize: 14, inherit: true),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                  const SizedBox(height: 2),
                   Text(
                     user.phone,
-                    style: const TextStyle(color: AppTheme.grey, fontSize: 13),
+                    style: const TextStyle(color: AppTheme.grey, fontSize: 13, inherit: true),
                   ),
                   const SizedBox(height: 24),
 
                   // BADGES D'ABONNEMENT
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(18),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: AppTheme.darkCard,
                       borderRadius: BorderRadius.circular(16),
@@ -74,53 +114,53 @@ class ProfileScreen extends ConsumerWidget {
                         const Text(
                           'STATUT D\'ABONNEMENT',
                           style: TextStyle(
-                            color: AppTheme.gold,
+                            color: AppTheme.frogGreen,
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
+                            inherit: true,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 14),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _buildSubBadge('VIP (Côte 5/10/50)', user.hasVip),
-                            _buildSubBadge('Montante', user.hasMontante),
-                            _buildSubBadge('Essai 48h', user.hasFreeTrialCote5),
+                            Expanded(child: _buildSubBadge('VIP (5/10/50)', user.hasVip)),
+                            Expanded(child: _buildSubBadge('Montante', user.hasMontante)),
+                            Expanded(child: _buildSubBadge('Essai 48h', user.hasFreeTrialCote5)),
                           ],
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 18),
 
                   // CODE DE PARRAINAGE
                   if (user.referralCode != null)
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(18),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppTheme.green.withOpacity(0.12),
+                        color: AppTheme.frogGreen.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppTheme.green),
+                        border: Border.all(color: AppTheme.frogGreen),
                       ),
                       child: Column(
                         children: [
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.share, color: AppTheme.green, size: 20),
-                              SizedBox(width: 8),
+                              Text('🐸 ', style: TextStyle(inherit: true, fontSize: 18)),
                               Text(
                                 'VOTRE CODE DE PARRAINAGE',
                                 style: TextStyle(
-                                  color: AppTheme.green,
+                                  color: AppTheme.frogGreen,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 13,
+                                  inherit: true,
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
                           SelectableText(
                             user.referralCode!,
                             style: const TextStyle(
@@ -128,26 +168,33 @@ class ProfileScreen extends ConsumerWidget {
                               fontWeight: FontWeight.w900,
                               color: Colors.white,
                               letterSpacing: 2.0,
+                              inherit: true,
                             ),
                           ),
                           const SizedBox(height: 6),
                           const Text(
                             'Invitez vos amis et gagnez des jours d\'accès VIP offerts !',
-                            style: TextStyle(color: AppTheme.grey, fontSize: 12),
+                            style: TextStyle(color: AppTheme.grey, fontSize: 12, inherit: true),
                             textAlign: TextAlign.center,
                           ),
                         ],
                       ),
                     ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 18),
 
                   // PARAMÈTRES (THEME SOMBRE)
                   Card(
                     child: SwitchListTile(
-                      title: const Text('Mode Sombre (Dark Mode)'),
-                      subtitle: const Text('Interface Noir, Or et Vert'),
+                      title: const Text(
+                        'Mode Sombre (Dark Mode)',
+                        style: TextStyle(fontWeight: FontWeight.w600, inherit: true),
+                      ),
+                      subtitle: const Text(
+                        'Interface Noir, Or et Vert',
+                        style: TextStyle(color: AppTheme.grey, inherit: true),
+                      ),
                       value: themeMode == ThemeMode.dark,
-                      activeColor: AppTheme.gold,
+                      activeColor: AppTheme.frogGreen,
                       onChanged: (val) {
                         ref.read(themeProvider.notifier).toggleTheme();
                       },
@@ -157,13 +204,16 @@ class ProfileScreen extends ConsumerWidget {
 
                   Card(
                     child: ListTile(
-                      leading: const Icon(Icons.help_outline, color: AppTheme.gold),
-                      title: const Text('Support & FAQ'),
+                      leading: const Icon(Icons.help_outline, color: AppTheme.frogGreen),
+                      title: const Text(
+                        'Support & FAQ',
+                        style: TextStyle(fontWeight: FontWeight.w600, inherit: true),
+                      ),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                       onTap: () => context.push('/support'),
                     ),
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 24),
 
                   // BOUTON DECONNEXION
                   SizedBox(
@@ -178,12 +228,16 @@ class ProfileScreen extends ConsumerWidget {
                       icon: const Icon(Icons.logout, color: AppTheme.red),
                       label: const Text(
                         'SE DÉCONNECTER',
-                        style: TextStyle(color: AppTheme.red, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: AppTheme.red,
+                          fontWeight: FontWeight.bold,
+                          inherit: true,
+                        ),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.red.withOpacity(0.15),
                         elevation: 0,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                     ),
                   ),
@@ -196,19 +250,24 @@ class ProfileScreen extends ConsumerWidget {
 
   Widget _buildSubBadge(String name, bool active) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           active ? Icons.check_circle : Icons.cancel,
-          color: active ? AppTheme.green : AppTheme.grey,
-          size: 26,
+          color: active ? AppTheme.frogGreen : AppTheme.grey,
+          size: 24,
         ),
         const SizedBox(height: 4),
         Text(
           name,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: active ? Colors.white : AppTheme.grey,
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: active ? FontWeight.bold : FontWeight.normal,
+            inherit: true,
           ),
         ),
       ],

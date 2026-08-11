@@ -74,7 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 16),
                   const Text(
                     'PRONOSTICS SPORTIFS',
-                    style: TextStyle(
+                    style: TextStyle(inherit: true, 
                       color: AppTheme.gold,
                       fontSize: 22,
                       fontWeight: FontWeight.w900,
@@ -84,7 +84,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 6),
                   const Text(
                     'Analyses VIP & Stratégie Montante',
-                    style: TextStyle(color: AppTheme.grey, fontSize: 14),
+                    style: TextStyle(inherit: true, color: AppTheme.grey, fontSize: 14),
                   ),
                   const SizedBox(height: 36),
 
@@ -109,7 +109,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       onPressed: () => context.push('/forgot-password'),
                       child: const Text(
                         'Mot de passe oublié ?',
-                        style: TextStyle(color: AppTheme.gold),
+                        style: TextStyle(inherit: true, color: AppTheme.gold),
                       ),
                     ),
                   ),
@@ -125,12 +125,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Pas encore de compte ? ', style: TextStyle(color: AppTheme.grey)),
+                      const Text('Pas encore de compte ? ', style: TextStyle(inherit: true, color: AppTheme.grey)),
                       GestureDetector(
                         onTap: () => context.push('/register'),
                         child: const Text(
                           'S\'inscrire (48h Offertes)',
-                          style: TextStyle(
+                          style: TextStyle(inherit: true, 
                             color: AppTheme.gold,
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline,

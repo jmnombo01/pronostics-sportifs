@@ -22,9 +22,9 @@ class HomeScreen extends ConsumerWidget {
         title: const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('🐸 ', style: TextStyle(fontSize: 22)),
-            Text('FROGAZZ ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900)),
-            Text('SPORT', style: TextStyle(color: AppTheme.frogGreen, fontWeight: FontWeight.w900)),
+            Text('🐸 ', style: TextStyle(inherit: true, fontSize: 22)),
+            Text('FROGAZZ ', style: TextStyle(inherit: true, color: Colors.white, fontWeight: FontWeight.w900)),
+            Text('SPORT', style: TextStyle(inherit: true, color: AppTheme.frogGreen, fontWeight: FontWeight.w900)),
           ],
         ),
         actions: [
@@ -71,7 +71,7 @@ class HomeScreen extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           'Aucun pronostic disponible dans cette catégorie pour le moment.',
-                          style: TextStyle(color: AppTheme.grey),
+                          style: TextStyle(inherit: true, color: AppTheme.grey),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -95,7 +95,7 @@ class HomeScreen extends ConsumerWidget {
                   child: Center(
                     child: Text(
                       'Erreur lors du chargement des pronostics: $err',
-                      style: const TextStyle(color: AppTheme.red),
+                      style: const TextStyle(inherit: true, color: AppTheme.red),
                     ),
                   ),
                 ),
@@ -151,14 +151,14 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 child: Text(
                   isVip ? '👑 MEMBRE VIP FROGAZZ ACTIF' : (isTrial ? '🎁 ESSAI GRATUIT 48H (Côte 5)' : '🔒 NON ABONNÉ'),
-                  style: const TextStyle(
+                  style: const TextStyle(inherit: true, 
                     color: AppTheme.frogGreen,
                     fontSize: 11,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
               ),
-              const Text('🐸', style: TextStyle(fontSize: 28)),
+              const Text('🐸', style: TextStyle(inherit: true, fontSize: 28)),
             ],
           ),
           const SizedBox(height: 12),
@@ -166,7 +166,7 @@ class HomeScreen extends ConsumerWidget {
             isVip
                 ? '🐸 Accès 100% Débloqué à Nos Pronostics'
                 : 'Passez au Forfait Frogazz VIP ou Montante',
-            style: TextStyle(
+            style: TextStyle(inherit: true, 
               color: isVip ? Colors.black : Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.w900,
@@ -177,7 +177,7 @@ class HomeScreen extends ConsumerWidget {
             isVip
                 ? 'Profitez des Côtes 5, 10, 50 et de nos analyses d\'experts Frogazz.'
                 : 'Débloquez toutes les côtes et sautez vers les gains avec nos analystes.',
-            style: TextStyle(
+            style: TextStyle(inherit: true, 
               color: isVip ? Colors.black87 : AppTheme.grey,
               fontSize: 13,
             ),
@@ -229,7 +229,7 @@ class HomeScreen extends ConsumerWidget {
       children: [
         Text(
           val,
-          style: TextStyle(
+          style: TextStyle(inherit: true, 
             color: color,
             fontSize: 18,
             fontWeight: FontWeight.w900,
@@ -238,7 +238,7 @@ class HomeScreen extends ConsumerWidget {
         const SizedBox(height: 2),
         Text(
           label,
-          style: const TextStyle(color: AppTheme.grey, fontSize: 11),
+          style: const TextStyle(inherit: true, color: AppTheme.grey, fontSize: 11),
         ),
       ],
     );
@@ -289,7 +289,7 @@ class HomeScreen extends ConsumerWidget {
               ),
               child: Text(
                 cat['label']!,
-                style: TextStyle(
+                style: TextStyle(inherit: true, 
                   color: isSelected ? Colors.black : Colors.white,
                   fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
                   fontSize: 13,

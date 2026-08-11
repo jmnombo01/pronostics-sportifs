@@ -48,13 +48,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   const SizedBox(height: 20),
                   const Text(
                     'Email envoyé !',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(inherit: true, fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   const SizedBox(height: 10),
                   const Text(
                     'Un lien de réinitialisation a été envoyé à votre adresse email.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppTheme.grey),
+                    style: TextStyle(inherit: true, color: AppTheme.grey),
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton(
@@ -68,12 +68,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 children: [
                   const Text(
                     'Mot de passe oublié ?',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.gold),
+                    style: TextStyle(inherit: true, fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.gold),
                   ),
                   const SizedBox(height: 10),
                   const Text(
                     'Saisissez votre adresse email pour recevoir votre code de réinitialisation de mot de passe.',
-                    style: TextStyle(color: AppTheme.grey),
+                    style: TextStyle(inherit: true, color: AppTheme.grey),
                   ),
                   const SizedBox(height: 24),
                   CustomTextField(

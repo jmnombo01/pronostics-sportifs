@@ -47,27 +47,35 @@ class PredictionCardWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // En-tête : Championnat / Type + Badge Catégorie + Badge "COMBINÉ X MATCHS"
+                    // En-tête : Championnat + Badge Catégorie
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            const Text('🐸 ', style: TextStyle(fontSize: 14)),
-                            const SizedBox(width: 4),
-                            Text(
-                              prediction.championship.toUpperCase(),
-                              style: const TextStyle(
-                                color: AppTheme.frogGreen,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 0.8,
+                        Expanded(
+                          child: Row(
+                            children: [
+                              const Text('🐸 ', style: TextStyle(inherit: true, fontSize: 14)),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  prediction.championship.toUpperCase(),
+                                  style: const TextStyle(
+                                    color: AppTheme.frogGreen,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.5,
+                                    inherit: true,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+                        const SizedBox(width: 8),
                         Row(
-                          children: [
+                          mainAxisSize: MainAxisSize.min,
                             if (prediction.matchesCount > 1) ...[
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
@@ -79,7 +87,7 @@ class PredictionCardWidget extends StatelessWidget {
                                 ),
                                 child: Text(
                                   'COMBINÉ ${prediction.matchesCount} MATCHS',
-                                  style: const TextStyle(
+                                  style: const TextStyle(inherit: true, 
                                     color: AppTheme.green,
                                     fontSize: 9,
                                     fontWeight: FontWeight.w800,
@@ -101,7 +109,7 @@ class PredictionCardWidget extends StatelessWidget {
                         Expanded(
                           child: Text(
                             prediction.title.isNotEmpty ? prediction.title : '${prediction.homeTeam} vs ${prediction.awayTeam}',
-                            style: const TextStyle(
+                            style: const TextStyle(inherit: true, 
                               color: Colors.white,
                               fontSize: 17,
                               fontWeight: FontWeight.w800,
@@ -124,7 +132,7 @@ class PredictionCardWidget extends StatelessWidget {
                             children: [
                               Text(
                                 prediction.odds.toStringAsFixed(2),
-                                style: const TextStyle(
+                                style: const TextStyle(inherit: true, 
                                   color: Colors.black,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w900,
@@ -132,7 +140,7 @@ class PredictionCardWidget extends StatelessWidget {
                               ),
                               const Text(
                                 'COTE',
-                                style: TextStyle(
+                                style: TextStyle(inherit: true, 
                                   color: Colors.black87,
                                   fontSize: 9,
                                   fontWeight: FontWeight.bold,
@@ -166,7 +174,7 @@ class PredictionCardWidget extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       '${sel.index}. ${sel.match}',
-                                      style: const TextStyle(color: Colors.white70, fontSize: 13),
+                                      style: const TextStyle(inherit: true, color: Colors.white70, fontSize: 13),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -174,7 +182,7 @@ class PredictionCardWidget extends StatelessWidget {
                                   if (sel.odds != null)
                                     Text(
                                       '(@${sel.odds!.toStringAsFixed(2)})',
-                                      style: const TextStyle(color: AppTheme.gold, fontSize: 12, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(inherit: true, color: AppTheme.gold, fontSize: 12, fontWeight: FontWeight.bold),
                                     ),
                                 ],
                               ),
@@ -198,7 +206,7 @@ class PredictionCardWidget extends StatelessWidget {
                             const SizedBox(width: 4),
                             Text(
                               '${prediction.matchDate} à ${prediction.matchTime}',
-                              style: const TextStyle(color: AppTheme.grey, fontSize: 12),
+                              style: const TextStyle(inherit: true, color: AppTheme.grey, fontSize: 12),
                             ),
                           ],
                         ),
@@ -226,13 +234,13 @@ class PredictionCardWidget extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('🐸🔒', style: TextStyle(fontSize: 40)),
+                        const Text('🐸🔒', style: TextStyle(inherit: true, fontSize: 40)),
                         const SizedBox(height: 8),
                         Text(
                           prediction.matchesCount > 1
                               ? '🔒 COMBINÉ CÔTE ${prediction.odds.toStringAsFixed(2)} (${prediction.matchesCount} MATCHS)'
                               : '🔒 PRONOSTIC RÉSERVÉ AUX ABONNÉS',
-                          style: const TextStyle(
+                          style: const TextStyle(inherit: true, 
                             color: Colors.white,
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -241,7 +249,7 @@ class PredictionCardWidget extends StatelessWidget {
                         const SizedBox(height: 4),
                         const Text(
                           'Abonnez-vous pour révéler les sélections Frogazz.',
-                          style: TextStyle(color: AppTheme.grey, fontSize: 13),
+                          style: TextStyle(inherit: true, color: AppTheme.grey, fontSize: 13),
                         ),
                         const SizedBox(height: 12),
                         ElevatedButton.icon(
@@ -299,7 +307,7 @@ class PredictionCardWidget extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(
+        style: TextStyle(inherit: true, 
           color: bg,
           fontSize: 10,
           fontWeight: FontWeight.w800,
@@ -351,7 +359,7 @@ class PredictionCardWidget extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(
+        style: TextStyle(inherit: true, 
           color: color,
           fontSize: 10,
           fontWeight: FontWeight.bold,

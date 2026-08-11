@@ -86,7 +86,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
             const Text(
               'Statut du Pronostic',
-              style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w600),
+              style: TextStyle(inherit: true, color: Colors.white70, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Row(
@@ -126,7 +126,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         selected: isSelected,
         selectedColor: AppTheme.gold,
         backgroundColor: AppTheme.darkCard,
-        labelStyle: TextStyle(
+        labelStyle: TextStyle(inherit: true, 
           color: isSelected ? Colors.black : Colors.white,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),

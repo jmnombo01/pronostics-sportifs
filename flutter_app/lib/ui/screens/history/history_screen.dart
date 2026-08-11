@@ -47,7 +47,7 @@ class HistoryScreen extends ConsumerWidget {
           return const Center(
             child: Text(
               'Aucun pronostic passé disponible.',
-              style: TextStyle(color: AppTheme.grey),
+              style: TextStyle(inherit: true, color: AppTheme.grey),
             ),
           );
         }
@@ -59,7 +59,7 @@ class HistoryScreen extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.gold)),
-      error: (err, _) => Center(child: Text('Erreur: $err', style: const TextStyle(color: AppTheme.red))),
+      error: (err, _) => Center(child: Text('Erreur: $err', style: const TextStyle(inherit: true, color: AppTheme.red))),
     );
   }
 
@@ -73,7 +73,7 @@ class HistoryScreen extends ConsumerWidget {
           return const Center(
             child: Text(
               'Aucun paiement enregistré pour l\'instant.',
-              style: TextStyle(color: AppTheme.grey),
+              style: TextStyle(inherit: true, color: AppTheme.grey),
             ),
           );
         }
@@ -88,11 +88,11 @@ class HistoryScreen extends ConsumerWidget {
                 leading: const Icon(Icons.monetization_on, color: AppTheme.gold, size: 36),
                 title: Text(
                   '${pay.amount} ${pay.currency}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(inherit: true, fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 subtitle: Text(
                   'ID: ${pay.transactionId}\nMéthode: ${pay.paymentMethod}',
-                  style: const TextStyle(color: AppTheme.grey, fontSize: 12),
+                  style: const TextStyle(inherit: true, color: AppTheme.grey, fontSize: 12),
                 ),
                 trailing: _buildPayStatusBadge(pay.status),
               ),
@@ -101,7 +101,7 @@ class HistoryScreen extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.gold)),
-      error: (err, _) => Center(child: Text('Erreur: $err', style: const TextStyle(color: AppTheme.red))),
+      error: (err, _) => Center(child: Text('Erreur: $err', style: const TextStyle(inherit: true, color: AppTheme.red))),
     );
   }
 
@@ -129,7 +129,7 @@ class HistoryScreen extends ConsumerWidget {
       ),
       child: Text(
         txt,
-        style: TextStyle(color: col, fontWeight: FontWeight.bold, fontSize: 11),
+        style: TextStyle(inherit: true, color: col, fontWeight: FontWeight.bold, fontSize: 11),
       ),
     );
   }
@@ -146,13 +146,13 @@ class HistoryScreen extends ConsumerWidget {
             SizedBox(height: 16),
             Text(
               'Gérez vos abonnements',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(inherit: true, fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             SizedBox(height: 8),
             Text(
               'Vos abonnements actifs (VIP et Montante) ainsi que vos périodes d\'essai 48h apparaissent sur votre profil et sont pris en compte automatiquement en temps réel.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppTheme.grey),
+              style: TextStyle(inherit: true, color: AppTheme.grey),
             ),
           ],
         ),
