@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = 'https://api.pronostics-sportifs.pro/api/v1';
+  static const String baseUrl = 'https://pronostics-api-server.onrender.com/api/v1';
 
   // Auth endpoints
   static const String register = '/auth/register';
