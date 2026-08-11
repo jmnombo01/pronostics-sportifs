@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'core/theme/app_theme.dart';
 import 'providers/theme_provider.dart';
 import 'providers/auth_provider.dart';
@@ -9,11 +8,6 @@ import 'ui/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    debugPrint('Firebase initialisé en mode simulation ou hors ligne : $e');
-  }
 
   runApp(
     const ProviderScope(

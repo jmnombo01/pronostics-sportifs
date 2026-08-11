@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-apk:
-    name: Build Frogazz Sport Analyse APK
+    name: Build Frogazz Sport Analyse APK (Release & Debug)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -34,37 +34,6 @@ jobs:
           cd flutter_app
           rm -rf android
           flutter create . --platforms=android --org=pro.frogazz
-          cat << 'EOF' > android/app/google-services.json
-          {
-            "project_info": {
-              "project_number": "123456789012",
-              "project_id": "frogazz-sport-analyse",
-              "storage_bucket": "frogazz-sport-analyse.appspot.com"
-            },
-            "client": [
-              {
-                "client_info": {
-                  "mobilesdk_app_id": "1:123456789012:android:abcdef1234567890",
-                  "android_client_info": {
-                    "package_name": "pro.frogazz.frogazz_sport_analyse"
-                  }
-                },
-                "oauth_client": [],
-                "api_key": [
-                  {
-                    "current_key": "AIzaSyDummyKeyForFlutterBuildApk12345"
-                  }
-                ],
-                "services": {
-                  "appinvite_service": {
-                    "other_platform_oauth_client": []
-                  }
-                }
-              }
-            ],
-            "configuration_version": "1"
-          }
-          EOF
           sed -i 's/<application/<uses-permission android:name="android.permission.INTERNET"\/>\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"\/>\n    <application/g' android/app/src/main/AndroidManifest.xml
           sed -i 's/android:label=".*"/android:label="Frogazz Sport Analyse"/g' android/app/src/main/AndroidManifest.xml
           flutter pub get
@@ -74,9 +43,21 @@ jobs:
           cd flutter_app
           flutter build apk --release --no-tree-shake-icons
 
-      - name: Upload APK Artifact
+      - name: Build APK Debug
+        run: |
+          cd flutter_app
+          flutter build apk --debug --no-tree-shake-icons
+
+      - name: Upload APK Release Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Frogazz-Sport-Analyse-APK
+          name: Frogazz-Sport-Analyse-APK-Release
           path: flutter_app/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+
+      - name: Upload APK Debug Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Frogazz-Sport-Analyse-APK-Debug
+          path: flutter_app/build/app/outputs/flutter-apk/app-debug.apk
           retention-days: 30
