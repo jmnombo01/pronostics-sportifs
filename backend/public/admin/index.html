@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🐸 Frogazz Sport Analyse - Tableau de Bord Admin (VIP & Montante)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg-main: #060907;
+      --bg-card: #0F1711;
+      --bg-card-hover: #16221A;
+      --border-color: #1F3325;
+      --gold: #00E676;
+      --gold-light: #66FFA6;
+      --green: #00C853;
+      --red: #FF5252;
+      --orange: #FFAB00;
+      --text-main: #FFFFFF;
+      --text-muted: #8EAE96;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* Top Navigation Bar */
+    .topbar {
+      background-color: #111115;
+      border-bottom: 2px solid var(--gold);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar-brand i {
+      color: var(--gold);
+      font-size: 26px;
+    }
+
+    .topbar-brand h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--gold);
+    }
+
+    .topbar-brand span {
+      font-size: 12px;
+      background: rgba(212, 175, 55, 0.15);
+      color: var(--gold);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--gold);
+      font-weight: 700;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(0, 200, 83, 0.15);
+      color: var(--green);
+      border: 1px solid var(--green);
+      font-weight: 600;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: none;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #000;
+    }
+    .btn-gold:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #000;
+    }
+    .btn-green:hover {
+      background: #00E676;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 25px 30px;
+    }
+
+    /* KPI Dashboard Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--gold);
+    }
+
+    .stat-card-icon {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(212, 175, 55, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 20px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--text-main);
+      margin: 8px 0 4px 0;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .stat-badge {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge-green { background: rgba(0, 200, 83, 0.18); color: var(--green); }
+    .badge-gold { background: rgba(212, 175, 55, 0.18); color: var(--gold); }
+    .badge-orange { background: rgba(255, 152, 0, 0.18); color: var(--orange); }
+
+    /* Navigation Tabs */
+    .tabs-bar {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .tab-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn.active {
+      background: var(--gold);
+      color: #000;
+      border-color: var(--gold);
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      padding: 16px 20px;
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .select-input, .search-input {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .select-input:focus, .search-input:focus {
+      border-color: var(--gold);
+    }
+
+    /* Tables */
+    .table-container {
+      background: var(--bg-card);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: #111115;
+      padding: 16px 20px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--gold);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 16px 20px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background: var(--bg-card-hover);
+    }
+
+    /* Badges */
+    .tag {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      display: inline-block;
+    }
+    .tag-montante { background: rgba(0, 200, 83, 0.2); color: var(--green); border: 1px solid var(--green); }
+    .tag-cote5 { background: rgba(33, 150, 243, 0.2); color: #42A5F5; border: 1px solid #42A5F5; }
+    .tag-cote10 { background: rgba(212, 175, 55, 0.2); color: var(--gold); border: 1px solid var(--gold); }
+    .tag-cote50 { background: rgba(229, 57, 53, 0.2); color: var(--red); border: 1px solid var(--red); }
+
+    .status-won { color: var(--green); font-weight: bold; }
+    .status-lost { color: var(--red); font-weight: bold; }
+    .status-pending { color: var(--gold); font-weight: bold; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 700px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 15px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 22px;
+      cursor: pointer;
+    }
+    .close-btn:hover { color: var(--red); }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--gold);
+    }
+
+    /* FCM Toast Notification Pop-up */
+    .toast-container {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 9999;
+    }
+
+    .toast {
+      background: #1C1C22;
+      border: 2px solid var(--gold);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+      animation: slideIn 0.3s ease;
+      margin-top: 10px;
+      max-width: 380px;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(212, 175, 55, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span style="font-size: 30px; cursor: pointer;" onclick="alert('🐸 Coâââ ! Bienvenue sur Frogazz Sport Analyse Admin !')" title="Mascotte Frogazz">🐸</span>
+      <div>
+        <h1 style="color: #FFFFFF;">FROGAZZ <span style="color: var(--gold);">SPORT ANALYSE</span></h1>
+      </div>
+      <span>ADMIN FROGAZZ v2.0</span>
+    </div>
+
+    <div class="topbar-actions">
+      <div class="status-badge">
+        <i class="fa-solid fa-circle"></i>
+        <span>API Laravel 12 & PayDunya LIVE</span>
+      </div>
+      <button class="btn btn-gold" onclick="openCreateModal()">
+        <i class="fa-solid fa-plus"></i> Nouveau Pronostic
+      </button>
+      <button class="btn btn-outline" onclick="simulateCinetPayWebhook()">
+        <i class="fa-solid fa-bolt"></i> Simuler Webhook CinetPay
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container">
+
+    <!-- KPI STATS CARDS -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-icon"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-label">UTILISATEURS TOTAL</div>
+        <div class="stat-value" id="kpi-users">1,420</div>
+        <span class="stat-badge badge-green">+42 aujourd'hui</span>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-icon"><i class="fa-solid fa-crown"></i></div>
+        <div class="stat-label">ABONNÉS VIP (2000 FCFA/M)</div>
+        <div class="stat-value" id="kpi-vip">640</div>
+        <span class="stat-badge badge-gold">Côte 5 • 10 • 50</span>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-icon"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="stat-label">ABONNÉS MONTANTE (2000 FCFA/S)</div>
+        <div class="stat-value" id="kpi-montante">310</div>
+        <span class="stat-badge badge-green">Stratégie Hebdo</span>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-icon"><i class="fa-solid fa-wallet"></i></div>
+        <div class="stat-label">PAIEMENTS DU JOUR</div>
+        <div class="stat-value" id="kpi-pay-today">36,000 FCFA</div>
+        <span class="stat-badge badge-gold">18 transactions</span>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-icon"><i class="fa-solid fa-coins"></i></div>
+        <div class="stat-label">CHIFFRE D'AFFAIRES (CUMUL)</div>
+        <div class="stat-value" id="kpi-revenue">4,850,000 FCFA</div>
+        <span class="stat-badge badge-green">CinetPay Mobile Money</span>
+      </div>
+    </section>
+
+    <!-- NAVIGATION TABS -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" id="tab-btn-predictions" onclick="switchTab('predictions')">
+        <i class="fa-solid fa-trophy"></i> Gestion des Pronostics (<span id="count-pred">0</span>)
+      </button>
+      <button class="tab-btn" id="tab-btn-users" onclick="switchTab('users')">
+        <i class="fa-solid fa-user-check"></i> Utilisateurs (<span id="count-users">4</span>)
+      </button>
+      <button class="tab-btn" id="tab-btn-promos" onclick="switchTab('promos')">
+        <i class="fa-solid fa-ticket"></i> Codes Promo (<span id="count-promos">2</span>)
+      </button>
+      <button class="tab-btn" id="tab-btn-accounting" onclick="switchTab('accounting')">
+        <i class="fa-solid fa-file-invoice-dollar"></i> Comptabilité CinetPay & Parrainages
+      </button>
+    </div>
+
+    <!-- PREDICTIONS SECTION -->
+    <section id="section-predictions">
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label class="stat-label">Catégorie :</label>
+          <select class="select-input" id="filter-type" onchange="renderPredictions()">
+            <option value="ALL">Toutes les catégories</option>
+            <option value="MONTANTE">📈 Montante</option>
+            <option value="COTE_5">⚡ Côte 5</option>
+            <option value="COTE_10">👑 Côte 10</option>
+            <option value="COTE_50">💎 Côte 50 (Semaine)</option>
+          </select>
+
+          <label class="stat-label">Statut :</label>
+          <select class="select-input" id="filter-status" onchange="renderPredictions()">
+            <option value="ALL">Tous les statuts</option>
+            <option value="PENDING">En cours</option>
+            <option value="WON">Gagné</option>
+            <option value="LOST">Perdu</option>
+          </select>
+        </div>
+
+        <div>
+          <input type="text" class="search-input" id="search-pred" placeholder="Rechercher équipe ou championnat..." oninput="renderPredictions()" />
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Championnat</th>
+              <th>Match (Domicile vs Extérieur)</th>
+              <th>Catégorie</th>
+              <th>Cote</th>
+              <th>Confiance</th>
+              <th>Date & Heure</th>
+              <th>Statut</th>
+              <th>Publié</th>
+              <th>Actions Administrateur</th>
+            </tr>
+          </thead>
+          <tbody id="predictions-table-body">
+            <!-- Dynamiquement généré en JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- USERS SECTION -->
+    <section id="section-users" style="display: none;">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Utilisateur</th>
+              <th>Téléphone</th>
+              <th>Email</th>
+              <th>Statut Abonnement</th>
+              <th>Période d'essai 48h</th>
+              <th>Date d'expiration</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-table-body">
+            <!-- Dynamiquement généré en JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PROMO CODES SECTION -->
+    <section id="section-promos" style="display: none;">
+      <div class="filter-bar">
+        <div>
+          <span style="font-weight: 800; color: var(--gold); font-size: 15px;">🎟️ GESTION DES CODES PROMOTIONNELS</span>
+          <span style="font-size: 13px; color: var(--text-muted); margin-left: 10px;">Réduction appliquée au checkout CinetPay</span>
+        </div>
+        <button class="btn btn-gold" onclick="openPromoModal()">
+          <i class="fa-solid fa-plus"></i> Nouveau Code Promo
+        </button>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Code Promo</th>
+              <th>Réduction (%)</th>
+              <th>Utilisations / Max</th>
+              <th>Date d'Expiration</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="promos-table-body">
+            <!-- Dynamiquement généré en JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ACCOUNTING & REFERRAL SECTION -->
+    <section id="section-accounting" style="display: none;">
+      <div class="filter-bar">
+        <div>
+          <span style="font-weight: 800; color: var(--gold); font-size: 15px;">📊 BILAN COMPTABLE CINETPAY & STATISTIQUES DE PARRAINAGE</span>
+          <span style="font-size: 13px; color: var(--text-muted); margin-left: 10px;">Rapports d'encaissement réels et export Excel (.xlsx)</span>
+        </div>
+        <a href="../bilan_comptable_cinetpay.xlsx" download="bilan_comptable_cinetpay.xlsx" class="btn btn-green" style="text-decoration: none;">
+          <i class="fa-solid fa-file-excel"></i> Télécharger Bilan Excel (.xlsx)
+        </a>
+      </div>
+
+      <!-- KPI Opérateurs CinetPay -->
+      <div class="stats-grid" style="margin-bottom: 30px;">
+        <div class="stat-card">
+          <div class="stat-card-icon" style="color: #FF6600; background: rgba(255,102,0,0.15);"><i class="fa-solid fa-mobile-screen"></i></div>
+          <div class="stat-label">ORANGE MONEY (41.2%)</div>
+          <div class="stat-value" style="font-size: 24px;">840,000 FCFA</div>
+          <span class="stat-badge badge-gold">420 Transactions</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon" style="color: #FFCC00; background: rgba(255,204,0,0.15);"><i class="fa-solid fa-wallet"></i></div>
+          <div class="stat-label">MTN MOBILE MONEY (30.4%)</div>
+          <div class="stat-value" style="font-size: 24px;">620,000 FCFA</div>
+          <span class="stat-badge badge-green">310 Transactions</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon" style="color: #00A3E0; background: rgba(0,163,224,0.15);"><i class="fa-solid fa-money-bill-transfer"></i></div>
+          <div class="stat-label">MOOV MONEY (17.6%)</div>
+          <div class="stat-value" style="font-size: 24px;">360,000 FCFA</div>
+          <span class="stat-badge badge-gold">180 Transactions</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon" style="color: #E53935; background: rgba(229,57,53,0.15);"><i class="fa-solid fa-credit-card"></i></div>
+          <div class="stat-label">CARTE BANCAIRE (4.9%)</div>
+          <div class="stat-value" style="font-size: 24px;">100,000 FCFA</div>
+          <span class="stat-badge badge-green">50 Transactions</span>
+        </div>
+      </div>
+
+      <!-- Tableau Leaderboard des Parrains -->
+      <h3 style="color: var(--gold); margin-bottom: 15px; font-size: 16px;">👑 CLASSEMENT DES MEILLEURS PARRAINS DE LA COMMUNAUTÉ</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Rang</th>
+              <th>Parrain</th>
+              <th>Code Parrainage</th>
+              <th>Filleuls Inscrits</th>
+              <th>Filleuls Abonnés VIP</th>
+              <th>Récompense Acquise</th>
+              <th>Statut Compte</th>
+            </tr>
+          </thead>
+          <tbody id="referrals-table-body">
+            <!-- Dynamiquement généré en JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODALE DE CRÉATION / ÉDITION DE PRONOSTIC -->
+  <div class="modal-overlay" id="pred-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">CRÉER UN NOUVEAU PRONOSTIC</h2>
+        <button class="close-btn" onclick="closeCreateModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="pred-form" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="pred-id" value="" />
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label class="form-label">Titre du Match</label>
+            <input type="text" class="form-input" id="input-title" placeholder="Ex: Real Madrid vs FC Barcelone" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Compétition / Championnat</label>
+            <input type="text" class="form-input" id="input-championship" placeholder="Ex: La Liga" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Pays</label>
+            <input type="text" class="form-input" id="input-country" placeholder="Ex: Espagne" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Équipe Domicile</label>
+            <input type="text" class="form-input" id="input-home" placeholder="Ex: Real Madrid" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Équipe Extérieure</label>
+            <input type="text" class="form-input" id="input-away" placeholder="Ex: FC Barcelone" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Type de Pronostic</label>
+            <select class="form-select" id="input-type" required>
+              <option value="COTE_5">⚡ CÔTE 5 (Essai 48h + VIP)</option>
+              <option value="COTE_10">👑 CÔTE 10 (VIP)</option>
+              <option value="COTE_50">💎 CÔTE 50 - SEMAINE (VIP)</option>
+              <option value="MONTANTE">📈 MONTANTE (Abonnement Montante)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Cote Totale</label>
+            <input type="number" step="0.01" class="form-input" id="input-odds" placeholder="Ex: 5.20" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Date du Match</label>
+            <input type="date" class="form-input" id="input-date" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Heure du Match</label>
+            <input type="time" class="form-input" id="input-time" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Indice de Confiance (1 à 5)</label>
+            <select class="form-select" id="input-confidence">
+              <option value="5">5 ⭐ - Très Haute Confiance</option>
+              <option value="4">4 ⭐ - Haute Confiance</option>
+              <option value="3">3 ⭐ - Confiance Moyenne</option>
+              <option value="2">2 ⭐ - Coup de Poker</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Statut du Match</label>
+            <select class="form-select" id="input-status">
+              <option value="PENDING">En cours (PENDING)</option>
+              <option value="WON">Gagné (WON)</option>
+              <option value="LOST">Perdu (LOST)</option>
+              <option value="VOID">Remboursé (VOID)</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label">Analyse détaillée d'expert (Affichée uniquement aux abonnés)</label>
+            <textarea class="form-textarea" id="input-analysis" rows="4" placeholder="Ex: Match favorable en raison de la forme offensive des 5 dernières rencontres..."></textarea>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px;">
+          <button type="button" class="btn btn-outline" onclick="closeCreateModal()">Annuler</button>
+          <button type="submit" class="btn btn-gold"><i class="fa-solid fa-check"></i> Enregistrer le Pronostic</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODALE DE CRÉATION DE CODE PROMO -->
+  <div class="modal-overlay" id="promo-modal">
+    <div class="modal" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2 class="modal-title">CRÉER UN CODE PROMO</h2>
+        <button class="close-btn" onclick="closePromoModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="promo-form" onsubmit="handlePromoSubmit(event)">
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label class="form-label">Code Promotionnel</label>
+            <input type="text" class="form-input" id="input-promo-code" placeholder="Ex: WELCOME10, VIP20..." required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Réduction (%)</label>
+            <input type="number" class="form-input" id="input-promo-discount" placeholder="Ex: 10" min="1" max="100" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Utilisations Max</label>
+            <input type="number" class="form-input" id="input-promo-max" placeholder="Ex: 500" min="1" required />
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label">Date d'Expiration</label>
+            <input type="date" class="form-input" id="input-promo-expiry" />
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px;">
+          <button type="button" class="btn btn-outline" onclick="closePromoModal()">Annuler</button>
+          <button type="submit" class="btn btn-gold"><i class="fa-solid fa-check"></i> Enregistrer le Code</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER POUR LE PUSH FCM SIMULÉ -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // Base de données simulée pour le Dashboard (reprend les pronostics et utilisateurs du seeder Laravel 12)
+    let predictionsData = [
+      {
+        id: 1,
+        title: "⚡ COMBINÉ CÔTE 5 DU LUNDI (3 MATCHS)",
+        competition: "Europe - Combiné VIP",
+        country: "Europe",
+        championship: "Combiné Europe",
+        matchDate: "2026-08-03",
+        matchTime: "19:30",
+        homeTeam: "Real Madrid / PSG / Bayern",
+        awayTeam: "Séville / Lyon / Leipzig",
+        type: "COTE_5",
+        odds: 5.18,
+        confidence: 5,
+        status: "PENDING",
+        isPublished: true,
+        selections: [
+          { match: "Real Madrid vs FC Séville", championship: "La Liga", tip: "Victoire Real Madrid (1)", odds: 1.65 },
+          { match: "PSG vs Olympique Lyonnais", championship: "Ligue 1", tip: "Les deux équipes marquent (Oui)", odds: 1.80 },
+          { match: "Bayern Munich vs RB Leipzig", championship: "Bundesliga", tip: "Plus de 2.5 buts", odds: 1.75 }
+        ],
+        analysis: "Combiné de 3 matchs sélectionnés par nos algorithmes : 1.65 × 1.80 × 1.75 = 5.18 de cote totale."
+      },
+      {
+        id: 2,
+        title: "⚡ COMBINÉ CÔTE 5 DU MARDI (3 MATCHS)",
+        competition: "Europe - Combiné VIP",
+        country: "Europe",
+        championship: "Combiné PL & Serie A",
+        matchDate: "2026-08-04",
+        matchTime: "16:30",
+        homeTeam: "Arsenal / Inter Milan / FC Porto",
+        awayTeam: "Chelsea / AC Milan / Benfica",
+        type: "COTE_5",
+        odds: 5.04,
+        confidence: 5,
+        status: "PENDING",
+        isPublished: true,
+        selections: [
+          { match: "Arsenal vs Chelsea", championship: "Premier League", tip: "Victoire Arsenal", odds: 1.80 },
+          { match: "Inter Milan vs AC Milan", championship: "Serie A", tip: "Victoire Inter Milan (DNB 1)", odds: 1.75 },
+          { match: "FC Porto vs Benfica", championship: "Liga Portugal", tip: "Plus de 1.5 buts en 2e MT", odds: 1.60 }
+        ],
+        analysis: "Deuxième ticket Côte 5 de la semaine avec 3 sélections européennes à haute probabilité."
+      },
+      {
+        id: 3,
+        title: "👑 COMBINÉ CÔTE 10 - GRAND CHELEM (4 MATCHS)",
+        competition: "Europe - Combiné VIP",
+        country: "Europe",
+        championship: "Combiné Champions & Europa",
+        matchDate: "2026-08-05",
+        matchTime: "18:30",
+        homeTeam: "Man City / Juventus / Dortmund / Barça",
+        awayTeam: "Aston Villa / Naples / Francfort / Atl. Madrid",
+        type: "COTE_10",
+        odds: 10.45,
+        confidence: 4,
+        status: "PENDING",
+        isPublished: true,
+        selections: [
+          { match: "Manchester City vs Aston Villa", championship: "Premier League", tip: "Man City & Haaland Buteur", odds: 1.85 },
+          { match: "Juventus vs Naples", championship: "Serie A", tip: "Moins de 3.5 buts", odds: 1.70 },
+          { match: "Borussia Dortmund vs Eintracht", championship: "Bundesliga", tip: "Victoire Dortmund (1)", odds: 1.80 },
+          { match: "FC Barcelone vs Atl. Madrid", championship: "La Liga", tip: "BTTS - Oui", odds: 1.85 }
+        ],
+        analysis: "Combiné de 4 matchs pour atteindre notre cote 10 exclusive. Allouer 2% de bankroll."
+      },
+      {
+        id: 4,
+        title: "💎 MÉGA COMBINÉ SEMAINE VIP (6 MATCHS)",
+        competition: "Ligue des Champions",
+        country: "Europe",
+        championship: "Ligue des Champions",
+        matchDate: "2026-08-06",
+        matchTime: "21:00",
+        homeTeam: "Sélection 6 Équipes Européennes",
+        awayTeam: "Ligue des Champions",
+        type: "COTE_50",
+        odds: 54.20,
+        confidence: 4,
+        status: "PENDING",
+        isPublished: true,
+        selections: [
+          { match: "6 Matchs UCL sélectionnés", championship: "UCL", tip: "Combiné 6 vainqueurs", odds: 54.20 }
+        ],
+        analysis: "Notre combiné phare de la semaine réunit 6 sélections pour une cote de 54.20. Réservé aux VIP."
+      },
+      {
+        id: 5,
+        title: "📈 MONTANTE ÉTAPE 1 : Inter Milan vs AS Roma",
+        competition: "Serie A",
+        country: "Italie",
+        championship: "Serie A",
+        matchDate: "2026-08-03",
+        matchTime: "20:45",
+        homeTeam: "Inter Milan",
+        awayTeam: "AS Roma",
+        type: "MONTANTE",
+        odds: 1.85,
+        confidence: 5,
+        status: "PENDING",
+        isPublished: true,
+        selections: [
+          { match: "Inter Milan vs AS Roma", championship: "Serie A", tip: "Victoire Inter Milan (DNB)", odds: 1.85 }
+        ],
+        analysis: "Étape 1 de notre montante en 5 jours. Victoire de l'Inter Milan (remboursé si match nul)."
+      },
+      {
+        id: 6,
+        title: "⚡ COMBINÉ CÔTE 5 (HISTORIQUE GAGNÉ - 3 MATCHS)",
+        competition: "Premier League",
+        country: "Angleterre",
+        championship: "Combiné Premier League",
+        matchDate: "2026-08-01",
+        matchTime: "17:30",
+        homeTeam: "Liverpool / Newcastle / Tottenham",
+        awayTeam: "Chelsea / Everton / Fulham",
+        type: "COTE_5",
+        odds: 5.10,
+        confidence: 5,
+        status: "WON",
+        isPublished: true,
+        selections: [
+          { match: "Liverpool vs Chelsea", championship: "PL", tip: "Victoire Liverpool (3-1)", odds: 1.75 },
+          { match: "Newcastle vs Everton", championship: "PL", tip: "Victoire Newcastle (2-0)", odds: 1.70 },
+          { match: "Tottenham vs Fulham", championship: "PL", tip: "Plus de 2.5 buts (2-1)", odds: 1.72 }
+        ],
+        analysis: "Ticket Côte 5 gagnant à 100% !"
+      }
+    ];
+
+    let usersData = [
+      {
+        id: 1,
+        name: "Amadou Sawadogo (VIP)",
+        phone: "+22670000002",
+        email: "vip@pronostics.pro",
+        status: "ACTIVE",
+        plan: "👑 VIP MENSUEl (2000 FCFA)",
+        trialValid: true,
+        expiresAt: "2026-08-28"
+      },
+      {
+        id: 2,
+        name: "Issa Ouédraogo (Montante)",
+        phone: "+22670000003",
+        email: "montante@pronostics.pro",
+        status: "ACTIVE",
+        plan: "📈 MONTANTE HEBDO (2000 FCFA)",
+        trialValid: true,
+        expiresAt: "2026-08-10"
+      },
+      {
+        id: 3,
+        name: "Fatima Kaboré (Essai Gratuit)",
+        phone: "+22670000004",
+        email: "trial@pronostics.pro",
+        status: "FREE_TRIAL",
+        plan: "🎁 ESSAI 48H (Côte 5)",
+        trialValid: true,
+        expiresAt: "2026-08-05"
+      },
+      {
+        id: 4,
+        name: "Brahima Sanou (Expiré)",
+        phone: "+22670000005",
+        email: "expired@pronostics.pro",
+        status: "EXPIRED",
+        plan: "🔒 ESSAI EXPIRÉ (>48h)",
+        trialValid: false,
+        expiresAt: "2026-08-01"
+      }
+    ];
+
+    let promoCodesData = [
+      { id: 1, code: "WELCOME10", discount: 10, used: 12, max: 500, expiry: "2026-12-31", active: true },
+      { id: 2, code: "VIP20", discount: 20, used: 5, max: 100, expiry: "2026-09-30", active: true }
+    ];
+
+    let referralsLeaderboardData = [
+      { rank: 1, name: "Amadou Sawadogo", code: "SAWAD2026", total: 24, activeVip: 14, reward: "+98 jours VIP offerts", status: "ACTIVE" },
+      { rank: 2, name: "Issa Ouédraogo", code: "ISSA2026", total: 16, activeVip: 9, reward: "+63 jours VIP offerts", status: "ACTIVE" },
+      { rank: 3, name: "Sidi Traoré", code: "ADMINVIP", total: 12, activeVip: 6, reward: "+42 jours VIP offerts", status: "ACTIVE" },
+      { rank: 4, name: "Fatim Kone", code: "FATIM48", total: 8, activeVip: 3, reward: "+21 jours VIP offerts", status: "ACTIVE" }
+    ];
+
+    // Initialisation
+    window.onload = function() {
+      renderPredictions();
+      renderUsers();
+      renderPromos();
+      renderReferrals();
+      document.getElementById('input-date').value = "2026-08-03";
+      document.getElementById('input-time').value = "20:00";
+    };
+
+    function renderPredictions() {
+      const typeFilter = document.getElementById('filter-type').value;
+      const statusFilter = document.getElementById('filter-status').value;
+      const searchQuery = document.getElementById('search-pred').value.toLowerCase();
+
+      const tbody = document.getElementById('predictions-table-body');
+      tbody.innerHTML = "";
+
+      const filtered = predictionsData.filter(p => {
+        if (typeFilter !== 'ALL' && p.type !== typeFilter) return false;
+        if (statusFilter !== 'ALL' && p.status !== statusFilter) return false;
+        if (searchQuery) {
+          const combined = (p.homeTeam + " " + p.awayTeam + " " + p.championship).toLowerCase();
+          if (!combined.includes(searchQuery)) return false;
+        }
+        return true;
+      });
+
+      document.getElementById('count-pred').innerText = filtered.length;
+
+      filtered.forEach(p => {
+        const selectionsHtml = p.selections && p.selections.length > 1
+          ? `<div style="margin-top: 6px; padding: 6px; background: rgba(0,0,0,0.3); border-radius: 6px; font-size: 11px;">
+              <span style="color: var(--green); font-weight: bold;">🎯 COMBINÉ ${p.selections.length} MATCHS :</span>
+              ${p.selections.map((s, idx) => `<div style="color: var(--text-muted);">${idx + 1}. ${s.match} (@${s.odds || '-'})</div>`).join('')}
+             </div>`
+          : '';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>#${p.id}</strong></td>
+          <td>${p.championship}</td>
+          <td>
+            <div style="font-weight: 700;">${p.homeTeam} vs ${p.awayTeam}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">${p.title}</div>
+            ${selectionsHtml}
+          </td>
+          <td>${getCategoryTag(p.type)}</td>
+          <td>
+            <span style="background: rgba(212,175,55,0.2); color: var(--gold); padding: 4px 10px; border-radius: 8px; font-weight: 900;">
+              ${p.odds.toFixed(2)}
+            </span>
+          </td>
+          <td>${"⭐".repeat(p.confidence)}</td>
+          <td>
+            <div>${p.matchDate}</div>
+            <div style="font-size: 11px; color: var(--text-muted);">${p.matchTime}</div>
+          </td>
+          <td>${getStatusLabel(p.status)}</td>
+          <td>
+            <span class="stat-badge ${p.isPublished ? 'badge-green' : 'badge-orange'}">
+              ${p.isPublished ? 'PUBIÉ' : 'BROUILLON'}
+            </span>
+          </td>
+          <td>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-outline" style="padding: 6px 10px;" onclick="editPrediction(${p.id})" title="Modifier">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button class="btn ${p.isPublished ? 'btn-outline' : 'btn-green'}" style="padding: 6px 10px;" onclick="togglePublish(${p.id})" title="Publier / Dépublier">
+                <i class="fa-solid ${p.isPublished ? 'fa-eye-slash' : 'fa-paper-plane'}"></i>
+              </button>
+              <button class="btn btn-outline" style="padding: 6px 10px; color: var(--red);" onclick="deletePrediction(${p.id})" title="Supprimer">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderUsers() {
+      const tbody = document.getElementById('users-table-body');
+      tbody.innerHTML = "";
+      document.getElementById('count-users').innerText = usersData.length;
+
+      usersData.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>#${u.id}</strong></td>
+          <td><strong>${u.name}</strong></td>
+          <td>${u.phone}</td>
+          <td>${u.email}</td>
+          <td>
+            <span class="tag ${u.status === 'ACTIVE' ? 'tag-montante' : (u.status === 'FREE_TRIAL' ? 'tag-cote5' : 'tag-cote50')}">
+              ${u.plan}
+            </span>
+          </td>
+          <td>
+            <span class="stat-badge ${u.trialValid ? 'badge-green' : 'badge-orange'}">
+              ${u.trialValid ? '✔️ AUTORISÉ (<48H/VIP)' : '🔒 BLOQUÉ (>48H)'}
+            </span>
+          </td>
+          <td>${u.expiresAt}</td>
+          <td>
+            <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;" onclick="alert('Détails de l\'utilisateur : ${u.name}\\nEmail: ${u.email}\\nStatut: ${u.status}')">
+              Détails
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function getCategoryTag(type) {
+      switch(type) {
+        case 'MONTANTE': return `<span class="tag tag-montante">MONTANTE</span>`;
+        case 'COTE_10': return `<span class="tag tag-cote10">CÔTE 10</span>`;
+        case 'COTE_50': return `<span class="tag tag-cote50">CÔTE 50</span>`;
+        default: return `<span class="tag tag-cote5">CÔTE 5</span>`;
+      }
+    }
+
+    function getStatusLabel(status) {
+      switch(status) {
+        case 'WON': return `<span class="status-won"><i class="fa-solid fa-check-circle"></i> GAGNÉ</span>`;
+        case 'LOST': return `<span class="status-lost"><i class="fa-solid fa-times-circle"></i> PERDU</span>`;
+        case 'VOID': return `<span style="color: var(--orange); font-weight: bold;">REMBOURSÉ</span>`;
+        default: return `<span class="status-pending"><i class="fa-solid fa-clock"></i> EN COURS</span>`;
+      }
+    }
+
+    function switchTab(tab) {
+      const tabs = ['predictions', 'users', 'promos', 'accounting'];
+      tabs.forEach(t => {
+        document.getElementById(`tab-btn-${t}`).classList.remove('active');
+        document.getElementById(`section-${t}`).style.display = 'none';
+      });
+
+      document.getElementById(`tab-btn-${tab}`).classList.add('active');
+      document.getElementById(`section-${tab}`).style.display = 'block';
+    }
+
+    function renderPromos() {
+      const tbody = document.getElementById('promos-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = "";
+      document.getElementById('count-promos').innerText = promoCodesData.length;
+
+      promoCodesData.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>#${p.id}</strong></td>
+          <td><span style="font-weight: 900; color: var(--gold); background: rgba(212,175,55,0.18); padding: 6px 12px; border-radius: 8px; letter-spacing: 1px;">${p.code}</span></td>
+          <td><strong style="color: var(--green); font-size: 16px;">-${p.discount}%</strong></td>
+          <td>${p.used} / <strong>${p.max}</strong></td>
+          <td>${p.expiry}</td>
+          <td>
+            <span class="stat-badge ${p.active ? 'badge-green' : 'badge-orange'}">
+              ${p.active ? 'ACTIF' : 'INACTIF'}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-outline" style="padding: 6px 10px;" onclick="togglePromo(${p.id})" title="Activer / Désactiver">
+              <i class="fa-solid ${p.active ? 'fa-toggle-on' : 'fa-toggle-off'}"></i>
+            </button>
+            <button class="btn btn-outline" style="padding: 6px 10px; color: var(--red);" onclick="deletePromo(${p.id})" title="Supprimer">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function togglePromo(id) {
+      const p = promoCodesData.find(item => item.id === id);
+      if (p) {
+        p.active = !p.active;
+        renderPromos();
+      }
+    }
+
+    function deletePromo(id) {
+      if (confirm("Confirmez-vous la suppression du code promo #" + id + " ?")) {
+        promoCodesData = promoCodesData.filter(item => item.id !== id);
+        renderPromos();
+      }
+    }
+
+    function openPromoModal() {
+      document.getElementById('promo-form').reset();
+      document.getElementById('promo-modal').style.display = 'flex';
+    }
+
+    function closePromoModal() {
+      document.getElementById('promo-modal').style.display = 'none';
+    }
+
+    function handlePromoSubmit(event) {
+      event.preventDefault();
+      const codeVal = document.getElementById('input-promo-code').value.toUpperCase().trim();
+      const discVal = parseInt(document.getElementById('input-promo-discount').value);
+      const maxVal = parseInt(document.getElementById('input-promo-max').value);
+      const expVal = document.getElementById('input-promo-expiry').value || "Sans expiration";
+
+      const newId = promoCodesData.length ? Math.max(...promoCodesData.map(p => p.id)) + 1 : 1;
+      promoCodesData.unshift({
+        id: newId,
+        code: codeVal,
+        discount: discVal,
+        used: 0,
+        max: maxVal,
+        expiry: expVal,
+        active: true
+      });
+
+      closePromoModal();
+      renderPromos();
+
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <div class="toast-icon" style="color: var(--gold);"><i class="fa-solid fa-ticket"></i></div>
+        <div>
+          <div style="font-weight: 800; color: var(--gold); font-size: 13px;">CODE PROMO CRÉÉ !</div>
+          <div style="font-size: 13px; font-weight: 700; color: var(--text-main);">${codeVal} (-${discVal}%)</div>
+        </div>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 400);
+      }, 5000);
+    }
+
+    function renderReferrals() {
+      const tbody = document.getElementById('referrals-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      referralsLeaderboardData.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong style="color: var(--gold); font-size: 16px;">#${r.rank}</strong></td>
+          <td><strong>${r.name}</strong></td>
+          <td><span style="background: rgba(0,200,83,0.15); color: var(--green); padding: 4px 8px; border-radius: 6px; font-weight: 800;">${r.code}</span></td>
+          <td><strong>${r.total}</strong> filleuls</td>
+          <td><strong style="color: var(--gold); font-size: 15px;">${r.activeVip}</strong> abonnés</td>
+          <td><span style="color: var(--green); font-weight: 900;">${r.reward}</span></td>
+          <td><span class="stat-badge badge-green">ACTIF VIP</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Gestion du Modale
+    function openCreateModal() {
+      document.getElementById('modal-title').innerText = "CRÉER UN NOUVEAU PRONOSTIC";
+      document.getElementById('pred-id').value = "";
+      document.getElementById('pred-form').reset();
+      document.getElementById('input-date').value = "2026-08-03";
+      document.getElementById('input-time').value = "20:00";
+      document.getElementById('pred-modal').style.display = 'flex';
+    }
+
+    function closeCreateModal() {
+      document.getElementById('pred-modal').style.display = 'none';
+    }
+
+    function editPrediction(id) {
+      const p = predictionsData.find(item => item.id === id);
+      if (!p) return;
+
+      document.getElementById('modal-title').innerText = "MODIFIER LE PRONOSTIC #" + id;
+      document.getElementById('pred-id').value = p.id;
+      document.getElementById('input-title').value = p.title;
+      document.getElementById('input-championship').value = p.championship;
+      document.getElementById('input-country').value = p.country;
+      document.getElementById('input-home').value = p.homeTeam;
+      document.getElementById('input-away').value = p.awayTeam;
+      document.getElementById('input-type').value = p.type;
+      document.getElementById('input-odds').value = p.odds;
+      document.getElementById('input-date').value = p.matchDate;
+      document.getElementById('input-time').value = p.matchTime;
+      document.getElementById('input-confidence').value = p.confidence;
+      document.getElementById('input-status').value = p.status;
+      document.getElementById('input-analysis').value = p.analysis;
+
+      document.getElementById('pred-modal').style.display = 'flex';
+    }
+
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      const idVal = document.getElementById('pred-id').value;
+      const typeVal = document.getElementById('input-type').value;
+      const homeVal = document.getElementById('input-home').value;
+      const awayVal = document.getElementById('input-away').value;
+      const oddsVal = parseFloat(document.getElementById('input-odds').value);
+
+      if (idVal) {
+        // Modification
+        const idx = predictionsData.findIndex(item => item.id === parseInt(idVal));
+        if (idx !== -1) {
+          predictionsData[idx] = {
+            ...predictionsData[idx],
+            title: document.getElementById('input-title').value,
+            championship: document.getElementById('input-championship').value,
+            country: document.getElementById('input-country').value,
+            homeTeam: homeVal,
+            awayTeam: awayVal,
+            type: typeVal,
+            odds: oddsVal,
+            matchDate: document.getElementById('input-date').value,
+            matchTime: document.getElementById('input-time').value,
+            confidence: parseInt(document.getElementById('input-confidence').value),
+            status: document.getElementById('input-status').value,
+            analysis: document.getElementById('input-analysis').value,
+          };
+        }
+      } else {
+        // Création + Notification Push Firebase
+        const newId = predictionsData.length ? Math.max(...predictionsData.map(p => p.id)) + 1 : 1;
+        const newPred = {
+          id: newId,
+          title: document.getElementById('input-title').value,
+          competition: document.getElementById('input-championship').value,
+          country: document.getElementById('input-country').value,
+          championship: document.getElementById('input-championship').value,
+          homeTeam: homeVal,
+          awayTeam: awayVal,
+          type: typeVal,
+          odds: oddsVal,
+          matchDate: document.getElementById('input-date').value,
+          matchTime: document.getElementById('input-time').value,
+          confidence: parseInt(document.getElementById('input-confidence').value),
+          status: document.getElementById('input-status').value,
+          analysis: document.getElementById('input-analysis').value,
+          isPublished: true
+        };
+        predictionsData.unshift(newPred);
+
+        // Déclencher une simulation visuelle de notification push Firebase FCM !
+        showFcmNotification(newPred);
+      }
+
+      closeCreateModal();
+      renderPredictions();
+    }
+
+    function togglePublish(id) {
+      const p = predictionsData.find(item => item.id === id);
+      if (p) {
+        p.isPublished = !p.isPublished;
+        renderPredictions();
+        if (p.isPublished) {
+          showFcmNotification(p);
+        }
+      }
+    }
+
+    function deletePrediction(id) {
+      if (confirm("Confirmez-vous la suppression du pronostic #" + id + " ?")) {
+        predictionsData = predictionsData.filter(item => item.id !== id);
+        renderPredictions();
+      }
+    }
+
+    // Simuler le Webhook asynchrone de CinetPay
+    function simulateCinetPayWebhook() {
+      const txId = "CP-20260803-" + Math.floor(Math.random() * 899999 + 100000);
+      const user = usersData[3]; // Brahima Sanou (Expiré)
+      user.status = "ACTIVE";
+      user.plan = "👑 VIP MENSUEl (2000 FCFA)";
+      user.trialValid = true;
+      user.expiresAt = "2026-09-03";
+
+      renderUsers();
+
+      // Afficher la notification de confirmation Webhook
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <div class="toast-icon" style="color: var(--green); background: rgba(0,200,83,0.2);"><i class="fa-solid fa-check"></i></div>
+        <div>
+          <div style="font-weight: 800; color: var(--green); font-size: 14px;">WEBHOOK CINETPAY VALIDÉ !</div>
+          <div style="font-size: 12px; color: var(--text-main);">Paiement 2000 FCFA (Orange Money) • ID: ${txId}</div>
+          <div style="font-size: 11px; color: var(--gold);">Abonnement VIP activé instantanément pour ${user.name}</div>
+        </div>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 400);
+      }, 5000);
+    }
+
+    // Simuler la notification push Firebase Cloud Messaging (FCM)
+    function showFcmNotification(pred) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <div class="toast-icon"><i class="fa-solid fa-bell"></i></div>
+        <div>
+          <div style="font-weight: 800; color: var(--gold); font-size: 13px;">📲 PUSH FCM ENVOYÉ [topic_${pred.type.toLowerCase()}]</div>
+          <div style="font-size: 13px; font-weight: 700; color: var(--text-main);">${pred.homeTeam} vs ${pred.awayTeam}</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Cote : ${pred.odds.toFixed(2)} ⭐ Confiance ${pred.confidence}/5</div>
+        </div>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 400);
+      }, 5000);
+    }
+  </script>
+</body>
+</html>

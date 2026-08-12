@@ -37,21 +37,35 @@ if ($uri === '/' || $uri === '' || $uri === '/healthz' || $uri === '/api' || $ur
 // 2. INTERFACE ADMINISTRATEUR WEB & EXPORT EXCEL
 // -----------------------------------------------------------------------------
 if ($uri === '/admin' || $uri === '/admin/' || $uri === '/admin/index.html') {
-    $adminHtml = dirname(__DIR__, 2) . '/admin_dashboard/index.html';
-    if (file_exists($adminHtml)) {
-        header('Content-Type: text/html; charset=utf-8');
-        readfile($adminHtml);
-        exit;
+    $adminPaths = [
+        __DIR__ . '/admin/index.html',
+        dirname(__DIR__) . '/public/admin/index.html',
+        dirname(__DIR__) . '/admin_dashboard/index.html',
+        dirname(__DIR__, 2) . '/admin_dashboard/index.html'
+    ];
+    foreach ($adminPaths as $path) {
+        if (file_exists($path)) {
+            header('Content-Type: text/html; charset=utf-8');
+            readfile($path);
+            exit;
+        }
     }
 }
 
 if ($uri === '/bilan_comptable_cinetpay.xlsx') {
-    $xlsxFile = dirname(__DIR__, 2) . '/bilan_comptable_cinetpay.xlsx';
-    if (file_exists($xlsxFile)) {
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="bilan_comptable_cinetpay.xlsx"');
-        readfile($xlsxFile);
-        exit;
+    $xlsxPaths = [
+        __DIR__ . '/bilan_comptable_cinetpay.xlsx',
+        dirname(__DIR__) . '/public/bilan_comptable_cinetpay.xlsx',
+        dirname(__DIR__) . '/bilan_comptable_cinetpay.xlsx',
+        dirname(__DIR__, 2) . '/bilan_comptable_cinetpay.xlsx'
+    ];
+    foreach ($xlsxPaths as $path) {
+        if (file_exists($path)) {
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="bilan_comptable_cinetpay.xlsx"');
+            readfile($path);
+            exit;
+        }
     }
 }
 
