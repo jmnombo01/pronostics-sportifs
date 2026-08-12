@@ -843,202 +843,59 @@
 
   <script>
     // Base de données simulée pour le Dashboard (reprend les pronostics et utilisateurs du seeder Laravel 12)
-    let predictionsData = [
-      {
-        id: 1,
-        title: "⚡ COMBINÉ CÔTE 5 DU LUNDI (3 MATCHS)",
-        competition: "Europe - Combiné VIP",
-        country: "Europe",
-        championship: "Combiné Europe",
-        matchDate: "2026-08-03",
-        matchTime: "19:30",
-        homeTeam: "Real Madrid / PSG / Bayern",
-        awayTeam: "Séville / Lyon / Leipzig",
-        type: "COTE_5",
-        odds: 5.18,
-        confidence: 5,
-        status: "PENDING",
-        isPublished: true,
-        selections: [
-          { match: "Real Madrid vs FC Séville", championship: "La Liga", tip: "Victoire Real Madrid (1)", odds: 1.65 },
-          { match: "PSG vs Olympique Lyonnais", championship: "Ligue 1", tip: "Les deux équipes marquent (Oui)", odds: 1.80 },
-          { match: "Bayern Munich vs RB Leipzig", championship: "Bundesliga", tip: "Plus de 2.5 buts", odds: 1.75 }
-        ],
-        analysis: "Combiné de 3 matchs sélectionnés par nos algorithmes : 1.65 × 1.80 × 1.75 = 5.18 de cote totale."
-      },
-      {
-        id: 2,
-        title: "⚡ COMBINÉ CÔTE 5 DU MARDI (3 MATCHS)",
-        competition: "Europe - Combiné VIP",
-        country: "Europe",
-        championship: "Combiné PL & Serie A",
-        matchDate: "2026-08-04",
-        matchTime: "16:30",
-        homeTeam: "Arsenal / Inter Milan / FC Porto",
-        awayTeam: "Chelsea / AC Milan / Benfica",
-        type: "COTE_5",
-        odds: 5.04,
-        confidence: 5,
-        status: "PENDING",
-        isPublished: true,
-        selections: [
-          { match: "Arsenal vs Chelsea", championship: "Premier League", tip: "Victoire Arsenal", odds: 1.80 },
-          { match: "Inter Milan vs AC Milan", championship: "Serie A", tip: "Victoire Inter Milan (DNB 1)", odds: 1.75 },
-          { match: "FC Porto vs Benfica", championship: "Liga Portugal", tip: "Plus de 1.5 buts en 2e MT", odds: 1.60 }
-        ],
-        analysis: "Deuxième ticket Côte 5 de la semaine avec 3 sélections européennes à haute probabilité."
-      },
-      {
-        id: 3,
-        title: "👑 COMBINÉ CÔTE 10 - GRAND CHELEM (4 MATCHS)",
-        competition: "Europe - Combiné VIP",
-        country: "Europe",
-        championship: "Combiné Champions & Europa",
-        matchDate: "2026-08-05",
-        matchTime: "18:30",
-        homeTeam: "Man City / Juventus / Dortmund / Barça",
-        awayTeam: "Aston Villa / Naples / Francfort / Atl. Madrid",
-        type: "COTE_10",
-        odds: 10.45,
-        confidence: 4,
-        status: "PENDING",
-        isPublished: true,
-        selections: [
-          { match: "Manchester City vs Aston Villa", championship: "Premier League", tip: "Man City & Haaland Buteur", odds: 1.85 },
-          { match: "Juventus vs Naples", championship: "Serie A", tip: "Moins de 3.5 buts", odds: 1.70 },
-          { match: "Borussia Dortmund vs Eintracht", championship: "Bundesliga", tip: "Victoire Dortmund (1)", odds: 1.80 },
-          { match: "FC Barcelone vs Atl. Madrid", championship: "La Liga", tip: "BTTS - Oui", odds: 1.85 }
-        ],
-        analysis: "Combiné de 4 matchs pour atteindre notre cote 10 exclusive. Allouer 2% de bankroll."
-      },
-      {
-        id: 4,
-        title: "💎 MÉGA COMBINÉ SEMAINE VIP (6 MATCHS)",
-        competition: "Ligue des Champions",
-        country: "Europe",
-        championship: "Ligue des Champions",
-        matchDate: "2026-08-06",
-        matchTime: "21:00",
-        homeTeam: "Sélection 6 Équipes Européennes",
-        awayTeam: "Ligue des Champions",
-        type: "COTE_50",
-        odds: 54.20,
-        confidence: 4,
-        status: "PENDING",
-        isPublished: true,
-        selections: [
-          { match: "6 Matchs UCL sélectionnés", championship: "UCL", tip: "Combiné 6 vainqueurs", odds: 54.20 }
-        ],
-        analysis: "Notre combiné phare de la semaine réunit 6 sélections pour une cote de 54.20. Réservé aux VIP."
-      },
-      {
-        id: 5,
-        title: "📈 MONTANTE ÉTAPE 1 : Inter Milan vs AS Roma",
-        competition: "Serie A",
-        country: "Italie",
-        championship: "Serie A",
-        matchDate: "2026-08-03",
-        matchTime: "20:45",
-        homeTeam: "Inter Milan",
-        awayTeam: "AS Roma",
-        type: "MONTANTE",
-        odds: 1.85,
-        confidence: 5,
-        status: "PENDING",
-        isPublished: true,
-        selections: [
-          { match: "Inter Milan vs AS Roma", championship: "Serie A", tip: "Victoire Inter Milan (DNB)", odds: 1.85 }
-        ],
-        analysis: "Étape 1 de notre montante en 5 jours. Victoire de l'Inter Milan (remboursé si match nul)."
-      },
-      {
-        id: 6,
-        title: "⚡ COMBINÉ CÔTE 5 (HISTORIQUE GAGNÉ - 3 MATCHS)",
-        competition: "Premier League",
-        country: "Angleterre",
-        championship: "Combiné Premier League",
-        matchDate: "2026-08-01",
-        matchTime: "17:30",
-        homeTeam: "Liverpool / Newcastle / Tottenham",
-        awayTeam: "Chelsea / Everton / Fulham",
-        type: "COTE_5",
-        odds: 5.10,
-        confidence: 5,
-        status: "WON",
-        isPublished: true,
-        selections: [
-          { match: "Liverpool vs Chelsea", championship: "PL", tip: "Victoire Liverpool (3-1)", odds: 1.75 },
-          { match: "Newcastle vs Everton", championship: "PL", tip: "Victoire Newcastle (2-0)", odds: 1.70 },
-          { match: "Tottenham vs Fulham", championship: "PL", tip: "Plus de 2.5 buts (2-1)", odds: 1.72 }
-        ],
-        analysis: "Ticket Côte 5 gagnant à 100% !"
-      }
-    ];
+    let predictionsData = [];
 
-    let usersData = [
-      {
-        id: 1,
-        name: "Amadou Sawadogo (VIP)",
-        phone: "+22670000002",
-        email: "vip@pronostics.pro",
-        status: "ACTIVE",
-        plan: "👑 VIP MENSUEl (2000 FCFA)",
-        trialValid: true,
-        expiresAt: "2026-08-28"
-      },
-      {
-        id: 2,
-        name: "Issa Ouédraogo (Montante)",
-        phone: "+22670000003",
-        email: "montante@pronostics.pro",
-        status: "ACTIVE",
-        plan: "📈 MONTANTE HEBDO (2000 FCFA)",
-        trialValid: true,
-        expiresAt: "2026-08-10"
-      },
-      {
-        id: 3,
-        name: "Fatima Kaboré (Essai Gratuit)",
-        phone: "+22670000004",
-        email: "trial@pronostics.pro",
-        status: "FREE_TRIAL",
-        plan: "🎁 ESSAI 48H (Côte 5)",
-        trialValid: true,
-        expiresAt: "2026-08-05"
-      },
-      {
-        id: 4,
-        name: "Brahima Sanou (Expiré)",
-        phone: "+22670000005",
-        email: "expired@pronostics.pro",
-        status: "EXPIRED",
-        plan: "🔒 ESSAI EXPIRÉ (>48h)",
-        trialValid: false,
-        expiresAt: "2026-08-01"
-      }
-    ];
-
-    let promoCodesData = [
-      { id: 1, code: "WELCOME10", discount: 10, used: 12, max: 500, expiry: "2026-12-31", active: true },
-      { id: 2, code: "VIP20", discount: 20, used: 5, max: 100, expiry: "2026-09-30", active: true }
-    ];
-
-    let referralsLeaderboardData = [
-      { rank: 1, name: "Amadou Sawadogo", code: "SAWAD2026", total: 24, activeVip: 14, reward: "+98 jours VIP offerts", status: "ACTIVE" },
-      { rank: 2, name: "Issa Ouédraogo", code: "ISSA2026", total: 16, activeVip: 9, reward: "+63 jours VIP offerts", status: "ACTIVE" },
-      { rank: 3, name: "Sidi Traoré", code: "ADMINVIP", total: 12, activeVip: 6, reward: "+42 jours VIP offerts", status: "ACTIVE" },
-      { rank: 4, name: "Fatim Kone", code: "FATIM48", total: 8, activeVip: 3, reward: "+21 jours VIP offerts", status: "ACTIVE" }
-    ];
+    // Base de données réelle chargée depuis le serveur (PostgreSQL Aiven via l'API)
+    let predictionsData = [];
+    let usersData = [];
+    let promoCodesData = [];
+    let referralsLeaderboardData = [];
 
     // Initialisation
-    window.onload = function() {
+    window.onload = async function() {
+      await loadRealDataFromServer();
       renderPredictions();
       renderUsers();
       renderPromos();
       renderReferrals();
-      document.getElementById('input-date').value = "2026-08-03";
+      document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
       document.getElementById('input-time').value = "20:00";
     };
+
+    async function loadRealDataFromServer() {
+      try {
+        const resPred = await fetch('/api/v1/predictions');
+        const jsonPred = await resPred.json();
+        if (jsonPred && jsonPred.success && Array.isArray(jsonPred.data)) {
+          predictionsData = jsonPred.data.map(p => ({
+            id: p.id,
+            title: p.title || '',
+            competition: p.competition || '',
+            country: p.country || 'Europe',
+            championship: p.championship || '',
+            matchDate: p.match_date || '',
+            matchTime: p.match_time || '',
+            homeTeam: p.home_team || '',
+            awayTeam: p.away_team || '',
+            type: p.type || 'COTE_5',
+            odds: parseFloat(p.odds) || 1.50,
+            confidence: parseInt(p.confidence) || 4,
+            status: p.status || 'PENDING',
+            isPublished: p.is_published,
+            selections: p.selections || [],
+            analysis: p.analysis || ''
+          }));
+        }
+
+        const resUsers = await fetch('/api/v1/admin/users');
+        const jsonUsers = await resUsers.json();
+        if (jsonUsers && jsonUsers.success && Array.isArray(jsonUsers.data)) {
+          usersData = jsonUsers.data;
+        }
+      } catch (e) {
+        console.warn('Erreur chargement données réels:', e);
+      }
+    }
 
     function renderPredictions() {
       const typeFilter = document.getElementById('filter-type').value;

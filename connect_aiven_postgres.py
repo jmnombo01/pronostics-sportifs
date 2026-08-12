@@ -190,17 +190,16 @@ def main():
         Json(["Pronostics Montante exclusifs", "Gestion de mise pas-à-pas", "Statistiques de progression sur 7 jours"])
     ))
 
-    # 2. Utilisateurs : Admin, VIP, Montante, Essai Gratuit, Expiré
+    # 2. Utilisateur Administrateur unique pour la production
     cur.execute("""
         INSERT INTO users (last_name, first_name, phone, email, password, is_admin, subscription_status, free_trial_expires_at, referral_code)
         VALUES
-        ('Traoré', 'Sidi (Admin)', '+22670000001', 'admin@pronostics.pro', '$2y$12$kS6Gv2zY3pE...', TRUE, 'ACTIVE', NOW() + INTERVAL '10 years', 'ADMINVIP'),
-        ('Sawadogo', 'Amadou (VIP)', '+22670000002', 'vip@pronostics.pro', '$2y$12$kS6Gv2zY3pE...', FALSE, 'ACTIVE', NOW() + INTERVAL '25 days', 'SAWAD2026'),
-        ('Ouédraogo', 'Issa (Montante)', '+22670000003', 'montante@pronostics.pro', '$2y$12$kS6Gv2zY3pE...', FALSE, 'ACTIVE', NOW() + INTERVAL '5 days', 'ISSA2026'),
-        ('Kaboré', 'Fatima (Essai 48h)', '+22670000004', 'trial@pronostics.pro', '$2y$12$kS6Gv2zY3pE...', FALSE, 'FREE_TRIAL', NOW() + INTERVAL '36 hours', 'FATIMA48'),
-        ('Sanou', 'Brahima (Expiré)', '+22670000005', 'expired@pronostics.pro', '$2y$12$kS6Gv2zY3pE...', FALSE, 'EXPIRED', NOW() - INTERVAL '3 days', 'SANOUEXP')
+        ('Traoré', 'Sidi (Admin)', '+22670000001', 'admin@frogazz.pro', '$2y$12$kS6Gv2zY3pE...', TRUE, 'ACTIVE', NOW() + INTERVAL '10 years', 'ADMINVIP')
         RETURNING id, email;
     """)
+
+    # 3. Mode Réel : 0 pronostic fictif inséré au démarrage. Les pronostics réels seront publiés par l'admin.
+    print("✅ Schéma réel créé avec succès — 0 pronostic fictif inséré.")
 
     # 3. Pronostics Combinés (Côte 5, Côte 10, Côte 50, Montante)
     predictions_data = [

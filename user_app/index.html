@@ -669,40 +669,6 @@
 </head>
 <body>
 
-  <!-- TOP BAR: DEMO ACCOUNT SWITCHER -->
-  <div class="demo-switcher">
-    <div class="demo-title" onclick="showFrogTip()">
-      <span class="frog-emoji" title="Cliquez sur Frogazz !">🐸</span>
-      <div>
-        <h1>FROGAZZ SPORT ANALYSE</h1>
-      </div>
-    </div>
-
-    <div class="user-selector">
-      <span style="font-size: 12px; color: var(--text-muted);">Compte de démo :</span>
-      <select class="user-select-box" id="user-select" onchange="switchUser(this.value)">
-        <option value="trial">🎁 Fatima (Essai Gratuit 48h - Côte 5)</option>
-        <option value="vip">👑 Amadou (Abonné VIP - 100% Débloqué)</option>
-        <option value="montante">📈 Issa (Abonné Montante 2000 FCFA/s)</option>
-        <option value="expired">🔒 Brahima (Essai Expiré - Tout verrouillé)</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- INTERACTIVE FROG TOOLTIP MODAL -->
-  <div class="frog-tooltip-overlay" id="frog-tooltip" onclick="closeFrogTip()">
-    <div class="frog-tooltip-card" onclick="event.stopPropagation()">
-      <span class="big-frog">🐸</span>
-      <h3>FROGAZZ DIT : "COÂÂÂ !"</h3>
-      <p id="frog-tip-text">
-        "Sécurise ton combiné Côte 5 du jour et saute vers la victoire avec nos analyses d'experts !" 🏆
-      </p>
-      <button class="btn btn-green" style="width: 100%; justify-content: center;" onclick="closeFrogTip()">
-        <i class="fa-solid fa-check"></i> MERCI FROGAZZ !
-      </button>
-    </div>
-  </div>
-
   <!-- APP VIEWPORT CONTAINER -->
   <div class="app-container">
 
@@ -929,6 +895,20 @@
     <div class="modal-content">
       <button class="modal-close" onclick="closeDetailModal()"><i class="fa-solid fa-xmark"></i></button>
       <div id="modal-body-content"></div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE FROG TOOLTIP MODAL -->
+  <div class="frog-tooltip-overlay" id="frog-tooltip" onclick="closeFrogTip()">
+    <div class="frog-tooltip-card" onclick="event.stopPropagation()">
+      <span class="big-frog">🐸</span>
+      <h3>FROGAZZ DIT : "COÂÂÂ !"</h3>
+      <p id="frog-tip-text">
+        "Sécurise ton combiné Côte 5 du jour et saute vers la victoire avec nos analyses d'experts !" 🏆
+      </p>
+      <button class="btn btn-green" style="width: 100%; justify-content: center;" onclick="closeFrogTip()">
+        <i class="fa-solid fa-check"></i> MERCI FROGAZZ !
+      </button>
     </div>
   </div>
 
