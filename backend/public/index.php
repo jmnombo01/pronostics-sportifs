@@ -104,7 +104,7 @@ if (str_starts_with($uri, '/api/v1')) {
     // A. AUTHENTIFICATION RÉELLE EN BASE DE DONNÉES
     // =========================================================================
 
-    // 1. INSCRIPTION (/api/v1/auth/register) -> Statut GRATUIT par défaut (Accès au combiné gratuit du jour)
+    // 1. INSCRIPTION (/api/v1/auth/register) -> Mode 100% Réel en base de données Aiven
     if ($uri === '/api/v1/auth/register' && $method === 'POST') {
         $email = strtolower(trim($input['email'] ?? ''));
         $phone = trim($input['phone'] ?? '');
@@ -121,109 +121,118 @@ if (str_starts_with($uri, '/api/v1')) {
             exit;
         }
 
-        if ($pdo) {
-            $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? OR phone = ?");
-            $stmt->execute([$email, $phone]);
-            if ($stmt->fetch()) {
-                http_response_code(422);
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Cette adresse email ou ce numéro de téléphone est déjà inscrit.'
-                ], JSON_UNESCAPED_UNICODE);
-                exit;
-            }
-
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-            $refCode = strtoupper(substr(md5(uniqid()), 0, 8));
-            $token = '1|' . bin2hex(random_bytes(32));
-
-            $insert = $pdo->prepare("
-                INSERT INTO users (last_name, first_name, phone, email, password, is_admin, subscription_status, free_trial_expires_at, referral_code, created_at)
-                VALUES (?, ?, ?, ?, ?, FALSE, 'FREE', NULL, ?, NOW())
-                RETURNING id, last_name, first_name, phone, email, is_admin, subscription_status, free_trial_expires_at, referral_code, created_at
-            ");
-            $insert->execute([$lastName, $firstName, $phone, $email, $hashedPassword, $refCode]);
-            $user = $insert->fetch();
-
-            http_response_code(201);
+        if (!$pdo) {
+            http_response_code(500);
             echo json_encode([
-                'success' => true,
-                'message' => "Inscription réussie ! Vous avez accès à vie à la section Gratuit (3 Matchs). Abonnez-vous pour débloquer les Côtes 5, 10, 50 et Montante.",
-                'token' => $token,
-                'user' => [
-                    'id' => (int) $user['id'],
-                    'last_name' => $user['last_name'],
-                    'first_name' => $user['first_name'],
-                    'phone' => $user['phone'],
-                    'email' => $user['email'],
-                    'is_admin' => (bool) $user['is_admin'],
-                    'subscription_status' => $user['subscription_status'],
-                    'subscription_expires_at' => null,
-                    'free_trial_expires_at' => null,
-                    'referral_code' => $user['referral_code'],
-                    'has_vip' => false,
-                    'has_montante' => false,
-                    'has_free_trial_cote_5' => false,
-                    'created_at' => $user['created_at']
-                ]
+                'success' => false,
+                'code' => 'DB_CONNECTION_ERROR',
+                'message' => 'Erreur de connexion à la base de données réelle (Aiven PostgreSQL). Veuillez configurer la variable DB_PASSWORD sur Render.com.'
             ], JSON_UNESCAPED_UNICODE);
             exit;
         }
 
-        http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Erreur de connexion à la base de données réelle.'], JSON_UNESCAPED_UNICODE);
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? OR phone = ?");
+        $stmt->execute([$email, $phone]);
+        if ($stmt->fetch()) {
+            http_response_code(422);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Cette adresse email ou ce numéro de téléphone est déjà inscrit.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $refCode = strtoupper(substr(md5(uniqid()), 0, 8));
+        $token = '1|' . bin2hex(random_bytes(32));
+
+        $insert = $pdo->prepare("
+            INSERT INTO users (last_name, first_name, phone, email, password, is_admin, subscription_status, free_trial_expires_at, referral_code, created_at)
+            VALUES (?, ?, ?, ?, ?, FALSE, 'FREE', NULL, ?, NOW())
+            RETURNING id, last_name, first_name, phone, email, is_admin, subscription_status, free_trial_expires_at, referral_code, created_at
+        ");
+        $insert->execute([$lastName, $firstName, $phone, $email, $hashedPassword, $refCode]);
+        $user = $insert->fetch();
+
+        http_response_code(201);
+        echo json_encode([
+            'success' => true,
+            'message' => "Inscription réussie ! Vous avez accès à vie à la section Gratuit (3 Matchs). Abonnez-vous pour débloquer les Côtes 5, 10, 50 et Montante.",
+            'token' => $token,
+            'user' => [
+                'id' => (int) $user['id'],
+                'last_name' => $user['last_name'],
+                'first_name' => $user['first_name'],
+                'phone' => $user['phone'],
+                'email' => $user['email'],
+                'is_admin' => (bool) $user['is_admin'],
+                'subscription_status' => $user['subscription_status'],
+                'subscription_expires_at' => null,
+                'free_trial_expires_at' => null,
+                'referral_code' => $user['referral_code'],
+                'has_vip' => false,
+                'has_montante' => false,
+                'has_free_trial_cote_5' => false,
+                'created_at' => $user['created_at']
+            ]
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
-    // 2. CONNEXION (/api/v1/auth/login)
+    // 2. CONNEXION (/api/v1/auth/login) -> Mode 100% Réel (Strict, aucune connexion fictive tolérée)
     if ($uri === '/api/v1/auth/login' && $method === 'POST') {
         $email = strtolower(trim($input['email'] ?? ''));
         $password = trim($input['password'] ?? '');
 
-        if ($pdo) {
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? OR phone = ?");
-            $stmt->execute([$email, $email]);
-            $user = $stmt->fetch();
-
-            if (!$user || !password_verify($password, $user['password'])) {
-                http_response_code(401);
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Adresse email ou mot de passe incorrect.'
-                ], JSON_UNESCAPED_UNICODE);
-                exit;
-            }
-
-            $token = '1|' . bin2hex(random_bytes(32));
-            $isVip = $user['subscription_status'] === 'ACTIVE';
-            $isMontante = $user['subscription_status'] === 'ACTIVE_MONTANTE';
-
+        if (!$pdo) {
+            http_response_code(500);
             echo json_encode([
-                'success' => true,
-                'message' => 'Connexion réussie',
-                'token' => $token,
-                'user' => [
-                    'id' => (int) $user['id'],
-                    'last_name' => $user['last_name'],
-                    'first_name' => $user['first_name'],
-                    'phone' => $user['phone'],
-                    'email' => $user['email'],
-                    'is_admin' => (bool) $user['is_admin'],
-                    'subscription_status' => $user['subscription_status'],
-                    'subscription_expires_at' => $user['subscription_expires_at'],
-                    'free_trial_expires_at' => $user['free_trial_expires_at'],
-                    'referral_code' => $user['referral_code'],
-                    'has_vip' => $isVip,
-                    'has_montante' => $isMontante,
-                    'has_free_trial_cote_5' => false,
-                    'created_at' => $user['created_at']
-                ]
+                'success' => false,
+                'code' => 'DB_CONNECTION_ERROR',
+                'message' => 'Erreur serveur : impossible de contacter la base de données réelle. Vérifiez votre variable DB_PASSWORD sur Render.com.'
             ], JSON_UNESCAPED_UNICODE);
             exit;
         }
 
-        http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Erreur de connexion à la base de données.'], JSON_UNESCAPED_UNICODE);
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? OR phone = ?");
+        $stmt->execute([$email, $email]);
+        $user = $stmt->fetch();
+
+        if (!$user || !password_verify($password, $user['password'])) {
+            http_response_code(401);
+            echo json_encode([
+                'success' => false,
+                'code' => 'INVALID_CREDENTIALS',
+                'message' => 'Adresse email ou mot de passe incorrect. Compte introuvable dans la base de données.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $token = '1|' . bin2hex(random_bytes(32));
+        $isVip = $user['subscription_status'] === 'ACTIVE';
+        $isMontante = $user['subscription_status'] === 'ACTIVE_MONTANTE';
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Connexion réussie',
+            'token' => $token,
+            'user' => [
+                'id' => (int) $user['id'],
+                'last_name' => $user['last_name'],
+                'first_name' => $user['first_name'],
+                'phone' => $user['phone'],
+                'email' => $user['email'],
+                'is_admin' => (bool) $user['is_admin'],
+                'subscription_status' => $user['subscription_status'],
+                'subscription_expires_at' => $user['subscription_expires_at'],
+                'free_trial_expires_at' => $user['free_trial_expires_at'],
+                'referral_code' => $user['referral_code'],
+                'has_vip' => $isVip,
+                'has_montante' => $isMontante,
+                'has_free_trial_cote_5' => false,
+                'created_at' => $user['created_at']
+            ]
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
