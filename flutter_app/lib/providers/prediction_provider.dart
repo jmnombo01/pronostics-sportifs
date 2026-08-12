@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/prediction_model.dart';
 import 'auth_provider.dart';
 
-// Catégorie actuellement sélectionnée (ALL, MONTANTE, COTE_5, COTE_10, COTE_50)
-final selectedCategoryProvider = StateProvider<String>((ref) => 'ALL');
+// Catégorie actuellement sélectionnée (FREE_3_MATCHS par défaut, ALL, MONTANTE, COTE_5, COTE_10, COTE_50)
+final selectedCategoryProvider = StateProvider<String>((ref) => 'FREE_3_MATCHS');
 
 // Filtres de recherche
 class SearchFilterState {

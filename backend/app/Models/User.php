@@ -123,9 +123,13 @@ class User extends Authenticatable
             return true;
         }
 
+        // Le mode gratuit (Combiné de 3 matchs par jour) est accessible à tous à vie !
+        if ($prediction->type === 'FREE_3_MATCHS' || $prediction->type === 'FREE') {
+            return true;
+        }
+
         return match ($prediction->type) {
-            'COTE_5' => $this->hasActiveVip() || $this->hasFreeTrialCote5(),
-            'COTE_10', 'COTE_50' => $this->hasActiveVip(),
+            'COTE_5', 'COTE_10', 'COTE_50' => $this->hasActiveVip(),
             'MONTANTE' => $this->hasActiveMontante(),
             default => false,
         };

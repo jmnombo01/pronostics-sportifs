@@ -129,8 +129,51 @@ class DatabaseSeeder extends Seeder
             'referral_code' => 'SANOUEXP',
         ]);
 
-        // 7. Création de Pronostics réalistes de chaque catégorie (Combinés Frogazz Côte 5, 10, 50)
+        // 7. Création de Pronostics réalistes de chaque catégorie (Combiné gratuit 3 matchs par jour + Combinés VIP)
         $predictions = [
+            [
+                'title' => '🐸 COMBINÉ GRATUIT DU JOUR (3 MATCHS OFFERTS)',
+                'competition' => 'Europe - Combiné Gratuit Frogazz',
+                'country' => 'Europe',
+                'championship' => 'Combiné Gratuit du Jour',
+                'match_date' => $now->copy()->format('Y-m-d'),
+                'match_time' => '19:30',
+                'home_team' => 'Real Madrid / Arsenal / Bayern',
+                'away_team' => 'Séville / Chelsea / Leipzig',
+                'type' => 'FREE_3_MATCHS',
+                'odds' => 4.15,
+                'confidence' => 5,
+                'selections_json' => [
+                    [
+                        'match' => 'Real Madrid vs FC Séville',
+                        'championship' => 'La Liga - Espagne',
+                        'match_time' => '19:30',
+                        'tip' => 'Victoire Real Madrid (1)',
+                        'odds' => 1.55,
+                        'status' => 'PENDING',
+                    ],
+                    [
+                        'match' => 'Arsenal vs Chelsea',
+                        'championship' => 'Premier League - Angleterre',
+                        'match_time' => '20:45',
+                        'tip' => 'Victoire Arsenal (DNB)',
+                        'odds' => 1.65,
+                        'status' => 'PENDING',
+                    ],
+                    [
+                        'match' => 'Bayern Munich vs RB Leipzig',
+                        'championship' => 'Bundesliga - Allemagne',
+                        'match_time' => '18:30',
+                        'tip' => 'Plus de 2.5 buts dans le match',
+                        'odds' => 1.62,
+                        'status' => 'PENDING',
+                    ],
+                ],
+                'analysis' => 'Combiné de 3 matchs offert gratuitement chaque jour à toute la communauté Frogazz Sport Analyse (1.55 × 1.65 × 1.62 = 4.15 de cote totale). Bon gain à tous !',
+                'status' => 'PENDING',
+                'image_url' => 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80',
+                'is_published' => true,
+            ],
             [
                 'title' => '🐸 COMBINÉ FROGAZZ CÔTE 5 DU LUNDI (3 MATCHS)',
                 'competition' => 'Europe - Combiné VIP Frogazz',

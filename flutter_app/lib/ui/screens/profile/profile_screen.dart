@@ -182,29 +182,42 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   const SizedBox(height: 18),
 
-                  // PARAMÈTRES (THEME SOMBRE)
+                  // PARAMÈTRES (THEME SOMBRE UNIQUE)
                   Container(
                     key: const ValueKey('switch_dark_mode_box'),
                     decoration: BoxDecoration(
                       color: AppTheme.darkCard,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppTheme.darkBorder),
+                      border: Border.all(color: AppTheme.frogGreen),
                     ),
-                    child: SwitchListTile(
-                      key: const ValueKey('switch_dark_mode_tile'),
-                      title: const Text(
-                        'Mode Sombre (Dark Mode)',
-                        style: TextStyle(fontWeight: FontWeight.w600, inherit: true),
-                      ),
-                      subtitle: const Text(
-                        'Interface Noir, Or et Vert',
-                        style: TextStyle(color: AppTheme.grey, inherit: true),
-                      ),
-                      value: themeMode == ThemeMode.dark,
-                      activeColor: AppTheme.frogGreen,
-                      onChanged: (val) {
-                        ref.read(themeProvider.notifier).toggleTheme();
-                      },
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    child: const Row(
+                      children: [
+                        Text('🐸 ', style: TextStyle(fontSize: 24, inherit: true)),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Thème Unique : Frogazz Dark Mode',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  inherit: true,
+                                ),
+                              ),
+                              SizedBox(height: 2),
+                              Text(
+                                'Interface Noir, Vert Grenouille & Blanc optimisée',
+                                style: TextStyle(color: AppTheme.grey, fontSize: 12, inherit: true),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.check_circle, color: AppTheme.frogGreen, size: 22),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 12),

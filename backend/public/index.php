@@ -134,7 +134,7 @@ if (str_starts_with($uri, '/api/v1')) {
 
             $insert = $pdo->prepare("
                 INSERT INTO users (last_name, first_name, phone, email, password, is_admin, subscription_status, free_trial_expires_at, referral_code, created_at)
-                VALUES (?, ?, ?, ?, ?, FALSE, 'FREE_TRIAL', NOW() + INTERVAL '48 hours', ?, NOW())
+                VALUES (?, ?, ?, ?, ?, FALSE, 'FREE', NULL, ?, NOW())
                 RETURNING id, last_name, first_name, phone, email, is_admin, subscription_status, free_trial_expires_at, referral_code, created_at
             ");
             $insert->execute([$lastName, $firstName, $phone, $email, $hashedPassword, $refCode]);
@@ -143,7 +143,7 @@ if (str_starts_with($uri, '/api/v1')) {
             http_response_code(201);
             echo json_encode([
                 'success' => true,
-                'message' => "Inscription réussie ! Vous bénéficiez de 48 heures d'essai gratuit sur les combinés Côte 5.",
+                'message' => "Inscription réussie ! Vous avez accès à vie au Combiné Gratuit 3 Matchs du Jour. Abonnez-vous pour débloquer les Côtes 5, 10, 50 et Montante.",
                 'token' => $token,
                 'user' => [
                     'id' => (int) $user['id'],
@@ -158,7 +158,7 @@ if (str_starts_with($uri, '/api/v1')) {
                     'referral_code' => $user['referral_code'],
                     'has_vip' => false,
                     'has_montante' => false,
-                    'has_free_trial_cote_5' => true,
+                    'has_free_trial_cote_5' => false,
                     'created_at' => $user['created_at']
                 ]
             ], JSON_UNESCAPED_UNICODE);
@@ -169,7 +169,7 @@ if (str_starts_with($uri, '/api/v1')) {
         http_response_code(201);
         echo json_encode([
             'success' => true,
-            'message' => "Inscription réussie ! 48h d'essai offertes sur Côte 5.",
+            'message' => "Inscription réussie ! Accès au Combiné Gratuit 3 Matchs du Jour.",
             'token' => '1|token_local_' . bin2hex(random_bytes(16)),
             'user' => [
                 'id' => time(),
@@ -178,12 +178,12 @@ if (str_starts_with($uri, '/api/v1')) {
                 'phone' => $phone,
                 'email' => $email,
                 'is_admin' => false,
-                'subscription_status' => 'FREE_TRIAL',
-                'free_trial_expires_at' => gmdate('Y-m-d\TH:i:s\Z', time() + 3600 * 48),
+                'subscription_status' => 'FREE',
+                'free_trial_expires_at' => null,
                 'referral_code' => 'FROG' . rand(1000, 9999),
                 'has_vip' => false,
                 'has_montante' => false,
-                'has_free_trial_cote_5' => true,
+                'has_free_trial_cote_5' => false,
                 'created_at' => gmdate('Y-m-d\TH:i:s\Z')
             ]
         ], JSON_UNESCAPED_UNICODE);
@@ -304,8 +304,33 @@ if (str_starts_with($uri, '/api/v1')) {
         $isHistory = str_contains($uri, 'history');
         $predictions = [
             [
+                'id' => 100,
+                'title' => '🐸 COMBINÉ GRATUIT DU JOUR (3 MATCHS OFFERTS)',
+                'competition' => 'Europe - Combiné Gratuit Frogazz',
+                'country' => 'Europe',
+                'championship' => 'Combiné Gratuit du Jour',
+                'match_date' => gmdate('Y-m-d'),
+                'match_time' => '19:30',
+                'home_team' => 'Real Madrid / Arsenal / Bayern',
+                'away_team' => 'Séville / Chelsea / Leipzig',
+                'type' => 'FREE_3_MATCHS',
+                'odds' => 4.15,
+                'confidence' => 5,
+                'status' => 'PENDING',
+                'is_published' => true,
+                'is_locked' => false,
+                'selections' => [
+                    ['index' => 1, 'match' => 'Real Madrid vs FC Séville', 'championship' => 'La Liga', 'time' => '19:30', 'tip' => 'Victoire Real Madrid (1)', 'odds' => 1.55, 'status' => 'PENDING'],
+                    ['index' => 2, 'match' => 'Arsenal vs Chelsea', 'championship' => 'Premier League', 'time' => '20:45', 'tip' => 'Victoire Arsenal (DNB)', 'odds' => 1.65, 'status' => 'PENDING'],
+                    ['index' => 3, 'match' => 'Bayern Munich vs RB Leipzig', 'championship' => 'Bundesliga', 'time' => '18:30', 'tip' => 'Plus de 2.5 buts dans le match', 'odds' => 1.62, 'status' => 'PENDING']
+                ],
+                'matches_count' => 3,
+                'analysis' => 'Combiné de 3 matchs offert gratuitement chaque jour à toute la communauté Frogazz Sport Analyse (1.55 × 1.65 × 1.62 = 4.15 de cote totale). Bon gain à tous !',
+                'created_at' => gmdate('Y-m-d\TH:i:s\Z')
+            ],
+            [
                 'id' => 1,
-                'title' => '🐸 COMBINÉ FROGAZZ CÔTE 5 DU LUNDI (3 MATCHS)',
+                'title' => '🐸 COMBINÉ FROGAZZ CÔTE 5 DU LUNDI (3 MATCHS VIP)',
                 'competition' => 'Europe - Combiné VIP Frogazz',
                 'country' => 'Europe',
                 'championship' => 'Combiné Europe',

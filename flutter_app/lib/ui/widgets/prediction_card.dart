@@ -281,22 +281,27 @@ class PredictionCardWidget extends StatelessWidget {
     Color bg;
     String label;
     switch (type) {
+      case 'FREE_3_MATCHS':
+      case 'FREE':
+        bg = AppTheme.frogGreen;
+        label = '🐸 GRATUIT DU JOUR';
+        break;
       case 'MONTANTE':
         bg = AppTheme.green;
-        label = 'MONTANTE';
+        label = 'MONTANTE (VIP)';
         break;
       case 'COTE_10':
         bg = AppTheme.gold;
-        label = 'CÔTE 10';
+        label = 'CÔTE 10 (VIP)';
         break;
       case 'COTE_50':
         bg = AppTheme.red;
-        label = 'CÔTE 50 (SEMAINE)';
+        label = 'CÔTE 50 (VIP)';
         break;
       case 'COTE_5':
       default:
         bg = Colors.blueAccent;
-        label = 'CÔTE 5';
+        label = 'CÔTE 5 (VIP)';
         break;
     }
 

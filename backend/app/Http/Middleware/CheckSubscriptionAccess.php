@@ -41,21 +41,13 @@ class CheckSubscriptionAccess
             return $next($request);
         }
 
-        // 1. COTE 5 -> Autorisé si abonnement VIP OU pendant les premières 48 heures (essai gratuit)
-        if ($targetCategory === 'COTE_5') {
-            if ($user->hasActiveVip() || $user->hasFreeTrialCote5()) {
-                return $next($request);
-            }
-            return response()->json([
-                'success' => false,
-                'code' => 'SUBSCRIPTION_REQUIRED',
-                'category' => 'COTE_5',
-                'message' => "🔒 Votre période d'essai gratuit de 48h est expirée. Abonnez-vous au forfait VIP (2000 FCFA/mois) pour continuer à recevoir nos pronostics Côte 5, 10 et 50.",
-            ], 403);
+        // 0. GRATUIT (Combiné de 3 matchs par jour) -> Accessible à tous
+        if ($targetCategory === 'FREE_3_MATCHS' || $targetCategory === 'FREE') {
+            return $next($request);
         }
 
-        // 2. COTE 10 ou COTE 50 -> Forfait VIP requis
-        if (in_array($targetCategory, ['COTE_10', 'COTE_50'])) {
+        // 1. COTE 5, COTE 10 ou COTE 50 -> Forfait VIP obligatoire (2000 FCFA/mois)
+        if (in_array($targetCategory, ['COTE_5', 'COTE_10', 'COTE_50'])) {
             if ($user->hasActiveVip()) {
                 return $next($request);
             }
@@ -63,7 +55,7 @@ class CheckSubscriptionAccess
                 'success' => false,
                 'code' => 'VIP_REQUIRED',
                 'category' => $targetCategory,
-                'message' => "🔒 Cette catégorie est strictement réservée aux abonnés VIP (2000 FCFA/mois).",
+                'message' => "🐸🔒 Cette catégorie est strictement réservée aux abonnés VIP (2000 FCFA/mois). Abonnez-vous pour débloquer toutes les analyses.",
             ], 403);
         }
 

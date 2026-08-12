@@ -251,14 +251,15 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  // 3. TABS CATÉGORIES FROGAZZ (MONTANTE, VIP, COTE 5, COTE 10, COTE 50)
+  // 3. TABS CATÉGORIES FROGAZZ (GRATUIT 3 MATCHS, VIP COTE 5, 10, 50, MONTANTE)
   Widget _buildCategoryTabs(WidgetRef ref, String currentCategory) {
     final categories = [
-      {'key': 'ALL', 'label': '🐸 TOUS'},
+      {'key': 'FREE_3_MATCHS', 'label': '🐸 GRATUIT (3 MATCHS)'},
+      {'key': 'ALL', 'label': '🔥 TOUS'},
+      {'key': 'COTE_5', 'label': '⚡ CÔTE 5 (VIP)'},
+      {'key': 'COTE_10', 'label': '👑 CÔTE 10 (VIP)'},
+      {'key': 'COTE_50', 'label': '💎 CÔTE 50 (VIP)'},
       {'key': 'MONTANTE', 'label': '📈 MONTANTE'},
-      {'key': 'COTE_5', 'label': '⚡ CÔTE 5'},
-      {'key': 'COTE_10', 'label': '👑 CÔTE 10'},
-      {'key': 'COTE_50', 'label': '💎 CÔTE 50 (SEMAINE)'},
     ];
 
     return SizedBox(
