@@ -22,8 +22,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# Copie des fichiers du projet
-COPY . /var/www
+# Copie des fichiers du projet.
+# Le contexte Docker est la racine du dépôt (dockerContext: .),
+# donc on copie explicitement le dossier backend/ dans /var/www.
+COPY backend/ /var/www
 
 # Configuration des permissions sur storage et cache
 RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache \
