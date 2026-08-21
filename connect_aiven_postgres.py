@@ -176,7 +176,7 @@ def main():
 
     print("✅ Schéma PostgreSQL des 7 tables créé avec succès !")
 
-    print("🌱 Insertion des données de démonstration (Forfaits, Utilisateurs, Pronostics combinés)...")
+    print("🌱 Initialisation des données de production réelles (Forfaits VIP/Montante, Admin, FAQs)...")
 
     # 1. Forfaits VIP et Montante
     cur.execute("""
@@ -190,99 +190,29 @@ def main():
         Json(["Pronostics Montante exclusifs", "Gestion de mise pas-à-pas", "Statistiques de progression sur 7 jours"])
     ))
 
-    # 2. Utilisateur Administrateur unique pour la production
+    # 2. Utilisateur Administrateur unique pour la production (mot de passe réel haché bcrypt)
+    #    Identifiants admin : admin@frogazz.pro  /  Frogazz@Admin2026  (À CHANGER après la première connexion)
     cur.execute("""
         INSERT INTO users (last_name, first_name, phone, email, password, is_admin, subscription_status, free_trial_expires_at, referral_code)
         VALUES
-        ('Traoré', 'Sidi (Admin)', '+22670000001', 'admin@frogazz.pro', '$2y$12$kS6Gv2zY3pE...', TRUE, 'ACTIVE', NOW() + INTERVAL '10 years', 'ADMINVIP')
+        ('Admin', 'Frogazz', '+22600000000', 'admin@frogazz.pro', '$2b$12$PTCEdN0x/xSkN8Qo28NvVOBbIAIvSN2VeHiCnEkJuAYd7AMAzzClK', TRUE, 'FREE', NULL, 'ADMINVIP')
         RETURNING id, email;
     """)
 
-    # 3. Mode Réel : 0 pronostic fictif inséré au démarrage. Les pronostics réels seront publiés par l'admin.
-    print("✅ Schéma réel créé avec succès — 0 pronostic fictif inséré.")
+    # 3. MODE 100% RÉEL : AUCUN pronostic, code promo ou utilisateur fictif inséré.
+    #    Les pronostics réels seront publiés par l'administrateur via le panneau /admin.
+    print("✅ Schéma réel créé avec succès — ZÉRO donnée fictive (0 pronostic, 0 code promo fictif, 0 utilisateur fictif).")
 
-    # 3. Pronostics Combinés (Côte 5, Côte 10, Côte 50, Montante)
-    predictions_data = [
-        (
-            '⚡ COMBINÉ CÔTE 5 DU LUNDI (3 MATCHS)', 'Europe - Combiné VIP', 'Europe', 'Combiné Europe',
-            '2026-08-03', '19:30', 'Real Madrid / PSG / Bayern', 'Séville / Lyon / Leipzig',
-            'COTE_5', 5.18,
-            Json([
-                {"match": "Real Madrid vs FC Séville", "championship": "La Liga - Espagne", "match_time": "19:30", "tip": "Victoire Real Madrid (1)", "odds": 1.65, "status": "PENDING"},
-                {"match": "PSG vs Olympique Lyonnais", "championship": "Ligue 1 - France", "match_time": "20:45", "tip": "Les deux équipes marquent (BTTS - Oui)", "odds": 1.80, "status": "PENDING"},
-                {"match": "Bayern Munich vs RB Leipzig", "championship": "Bundesliga - Allemagne", "match_time": "18:30", "tip": "Plus de 2.5 buts dans le match", "odds": 1.75, "status": "PENDING"}
-            ]),
-            5, 'Combiné de 3 matchs sélectionnés par nos algorithmes : 1.65 × 1.80 × 1.75 = 5.18 de cote totale.', 'PENDING', TRUE
-        ),
-        (
-            '⚡ COMBINÉ CÔTE 5 DU MARDI (3 MATCHS)', 'Europe - Combiné VIP', 'Europe', 'Combiné PL & Serie A',
-            '2026-08-04', '16:30', 'Arsenal / Inter Milan / FC Porto', 'Chelsea / AC Milan / Benfica',
-            'COTE_5', 5.04,
-            Json([
-                {"match": "Arsenal vs Chelsea", "championship": "Premier League - Angleterre", "match_time": "16:30", "tip": "Victoire Arsenal & Plus de 1.5 buts", "odds": 1.80, "status": "PENDING"},
-                {"match": "Inter Milan vs AC Milan", "championship": "Serie A - Italie", "match_time": "20:45", "tip": "Victoire Inter Milan (DNB 1)", "odds": 1.75, "status": "PENDING"},
-                {"match": "FC Porto vs Benfica", "championship": "Liga Portugal", "match_time": "21:00", "tip": "Plus de 1.5 buts en 2e mi-temps", "odds": 1.60, "status": "PENDING"}
-            ]),
-            5, 'Deuxième ticket Côte 5 de la semaine avec 3 sélections européennes à haute probabilité.', 'PENDING', TRUE
-        ),
-        (
-            '👑 COMBINÉ CÔTE 10 - GRAND CHELEM (4 MATCHS)', 'Europe - Combiné VIP', 'Europe', 'Combiné Champions & Europa',
-            '2026-08-05', '18:30', 'Man City / Juventus / Dortmund / Barça', 'Aston Villa / Naples / Francfort / Atl. Madrid',
-            'COTE_10', 10.45,
-            Json([
-                {"match": "Manchester City vs Aston Villa", "championship": "Premier League - Angleterre", "match_time": "18:30", "tip": "Man City & Haaland Buteur", "odds": 1.85, "status": "PENDING"},
-                {"match": "Juventus vs Naples", "championship": "Serie A - Italie", "match_time": "20:45", "tip": "Moins de 3.5 buts", "odds": 1.70, "status": "PENDING"},
-                {"match": "Borussia Dortmund vs Eintracht Francfort", "championship": "Bundesliga - Allemagne", "match_time": "17:30", "tip": "Victoire Dortmund (1)", "odds": 1.80, "status": "PENDING"},
-                {"match": "FC Barcelone vs Atletico Madrid", "championship": "La Liga - Espagne", "match_time": "21:00", "tip": "Les deux équipes marquent (Oui)", "odds": 1.85, "status": "PENDING"}
-            ]),
-            4, 'Combiné de 4 matchs pour atteindre notre cote 10 exclusive. Allouer 2% de bankroll.', 'PENDING', TRUE
-        ),
-        (
-            '💎 MÉGA COMBINÉ SEMAINE VIP (6 MATCHS)', 'Ligue des Champions', 'Europe', 'Ligue des Champions',
-            '2026-08-06', '21:00', 'Sélection 6 Équipes Européennes', 'Ligue des Champions',
-            'COTE_50', 54.20,
-            Json([
-                {"match": "Real Madrid vs Benfica", "championship": "UCL", "match_time": "21:00", "tip": "Victoire Real Madrid", "odds": 1.60, "status": "PENDING"},
-                {"match": "Manchester City vs Porto", "championship": "UCL", "match_time": "21:00", "tip": "Victoire City -1.5", "odds": 1.75, "status": "PENDING"},
-                {"match": "Bayern Munich vs Celtic", "championship": "UCL", "match_time": "21:00", "tip": "Plus de 3.5 buts", "odds": 1.80, "status": "PENDING"},
-                {"match": "Liverpool vs Galatasaray", "championship": "UCL", "match_time": "21:00", "tip": "Victoire Liverpool (1)", "odds": 1.55, "status": "PENDING"},
-                {"match": "Inter Milan vs Shakhtar", "championship": "UCL", "match_time": "21:00", "tip": "Inter Milan sans encaisser", "odds": 2.05, "status": "PENDING"},
-                {"match": "Arsenal vs PSV Eindhoven", "championship": "UCL", "match_time": "21:00", "tip": "Arsenal gagne les deux MT", "odds": 3.40, "status": "PENDING"}
-            ]),
-            4, 'Notre combiné phare de la semaine réunit 6 sélections pour une cote de 54.20. Réservé aux VIP.', 'PENDING', TRUE
-        ),
-        (
-            '📈 MONTANTE ÉTAPE 1 : Inter Milan vs AS Roma', 'Serie A', 'Italie', 'Serie A',
-            '2026-08-03', '20:45', 'Inter Milan', 'AS Roma',
-            'MONTANTE', 1.85,
-            Json([
-                {"match": "Inter Milan vs AS Roma", "championship": "Serie A - Italie", "match_time": "20:45", "tip": "Victoire Inter Milan (Remboursé si match nul)", "odds": 1.85, "status": "PENDING"}
-            ]),
-            5, 'Étape 1 de notre montante en 5 jours. Victoire de l\'Inter Milan (remboursé si match nul).', 'PENDING', TRUE
-        )
-    ]
-
-    for p in predictions_data:
-        cur.execute("""
-            INSERT INTO predictions (title, competition, country, championship, match_date, match_time, home_team, away_team, type, odds, selections_json, confidence, analysis, status, is_published)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
-        """, p)
-
-    # 4. Codes Promo et FAQs
+    # 4. FAQs réelles (sans mention d'essai 48h — suppression de l'offre fictive)
     cur.execute("""
-        INSERT INTO promo_codes (code, discount_percent, max_uses, used_count, is_active)
-        VALUES
-        ('WELCOME10', 10, 500, 12, TRUE),
-        ('VIP20', 20, 100, 5, TRUE);
-
         INSERT INTO faqs (question, answer, category, display_order)
         VALUES
-        ('Comment fonctionne l''essai gratuit de 48 heures ?', 'Dès votre inscription, votre compte accède gratuitement aux pronostics Côte 5 pendant 48 heures. Au-delà, un abonnement VIP (2000 FCFA/mois) est requis.', 'ABONNEMENT', 1),
+        ('Comment fonctionne le mode gratuit ?', 'Dès votre inscription, vous accédez gratuitement au Combiné Gratuit de 3 matchs publié chaque jour. Les catégories Côte 5, Côte 10, Côte 50 et Montante nécessitent un abonnement payant.', 'ABONNEMENT', 1),
         ('Quelle est la différence entre VIP et Montante ?', 'VIP (2000 FCFA/mois) donne accès aux Côtes 5, 10 et 50. Montante (2000 FCFA/semaine) est réservé à la stratégie Montante.', 'ABONNEMENT', 2),
         ('Comment payer par Orange Money ou Wave avec PayDunya ?', 'Sélectionnez votre forfait, choisissez Mobile Money ou Wave, saisissez votre numéro et validez sur votre mobile !', 'PAIEMENT', 3);
     """)
 
-    print("✅ Données de démonstration importées avec succès dans Aiven PostgreSQL !")
+    print("✅ Base de données réelle initialisée : schéma + forfaits + admin + FAQs réelles (zéro donnée fictive).")
 
     cur.close()
     conn.close()

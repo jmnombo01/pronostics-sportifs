@@ -50,7 +50,7 @@ class HomeScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. BANNIÈRE MODERNE (STATUT ABONNEMENT OU CTA ESSAI GRATUIT)
+              // 1. BANNIÈRE MODERNE (STATUT ABONNEMENT OU MODE GRATUIT)
               _buildModernBanner(context, user),
 
               // 2. STATISTIQUES EN TEMPS RÉEL
@@ -112,7 +112,6 @@ class HomeScreen extends ConsumerWidget {
   Widget _buildModernBanner(BuildContext context, user) {
     final isVip = user?.hasVip ?? false;
     final isMontante = user?.hasMontante ?? false;
-    final isTrial = user?.hasFreeTrialCote5 ?? false;
 
     return Container(
       margin: const EdgeInsets.all(16),
@@ -149,7 +148,7 @@ class HomeScreen extends ConsumerWidget {
                   border: Border.all(color: AppTheme.frogGreen, width: 1),
                 ),
                 child: Text(
-                  isVip ? '👑 MEMBRE VIP FROGAZZ ACTIF' : (isTrial ? '🎁 ESSAI GRATUIT 48H (Côte 5)' : '🔒 NON ABONNÉ'),
+                  isVip ? '👑 MEMBRE VIP FROGAZZ ACTIF' : '🐸 MODE GRATUIT (3 MATCHS/JOUR)',
                   style: const TextStyle(inherit: true, 
                     color: AppTheme.frogGreen,
                     fontSize: 11,
@@ -164,7 +163,7 @@ class HomeScreen extends ConsumerWidget {
           Text(
             isVip
                 ? '🐸 Accès 100% Débloqué à Nos Pronostics'
-                : 'Passez au Forfait Frogazz VIP ou Montante',
+                : '🐸 Combiné Gratuit 3 Matchs / Jour — Abonnez-vous pour Côtes 5, 10, 50',
             style: TextStyle(inherit: true, 
               color: isVip ? Colors.black : Colors.white,
               fontSize: 20,

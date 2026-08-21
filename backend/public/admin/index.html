@@ -473,9 +473,6 @@
       <button class="btn btn-gold" onclick="openCreateModal()">
         <i class="fa-solid fa-plus"></i> Nouveau Pronostic
       </button>
-      <button class="btn btn-outline" onclick="simulateCinetPayWebhook()">
-        <i class="fa-solid fa-bolt"></i> Simuler Webhook CinetPay
-      </button>
     </div>
   </header>
 
@@ -487,35 +484,35 @@
       <div class="stat-card">
         <div class="stat-card-icon"><i class="fa-solid fa-users"></i></div>
         <div class="stat-label">UTILISATEURS TOTAL</div>
-        <div class="stat-value" id="kpi-users">1,420</div>
-        <span class="stat-badge badge-green">+42 aujourd'hui</span>
+        <div class="stat-value" id="kpi-users">0</div>
+        <span class="stat-badge badge-green">Temps réel</span>
       </div>
 
       <div class="stat-card">
         <div class="stat-card-icon"><i class="fa-solid fa-crown"></i></div>
         <div class="stat-label">ABONNÉS VIP (2000 FCFA/M)</div>
-        <div class="stat-value" id="kpi-vip">640</div>
+        <div class="stat-value" id="kpi-vip">0</div>
         <span class="stat-badge badge-gold">Côte 5 • 10 • 50</span>
       </div>
 
       <div class="stat-card">
         <div class="stat-card-icon"><i class="fa-solid fa-chart-line"></i></div>
         <div class="stat-label">ABONNÉS MONTANTE (2000 FCFA/S)</div>
-        <div class="stat-value" id="kpi-montante">310</div>
+        <div class="stat-value" id="kpi-montante">0</div>
         <span class="stat-badge badge-green">Stratégie Hebdo</span>
       </div>
 
       <div class="stat-card">
         <div class="stat-card-icon"><i class="fa-solid fa-wallet"></i></div>
         <div class="stat-label">PAIEMENTS DU JOUR</div>
-        <div class="stat-value" id="kpi-pay-today">36,000 FCFA</div>
-        <span class="stat-badge badge-gold">18 transactions</span>
+        <div class="stat-value" id="kpi-pay-today">0 FCFA</div>
+        <span class="stat-badge badge-gold">Temps réel</span>
       </div>
 
       <div class="stat-card">
         <div class="stat-card-icon"><i class="fa-solid fa-coins"></i></div>
         <div class="stat-label">CHIFFRE D'AFFAIRES (CUMUL)</div>
-        <div class="stat-value" id="kpi-revenue">4,850,000 FCFA</div>
+        <div class="stat-value" id="kpi-revenue">0 FCFA</div>
         <span class="stat-badge badge-green">CinetPay Mobile Money</span>
       </div>
     </section>
@@ -597,7 +594,7 @@
               <th>Téléphone</th>
               <th>Email</th>
               <th>Statut Abonnement</th>
-              <th>Période d'essai 48h</th>
+              <th>Abonnement</th>
               <th>Date d'expiration</th>
               <th>Actions</th>
             </tr>
@@ -743,7 +740,8 @@
           <div class="form-group">
             <label class="form-label">Type de Pronostic</label>
             <select class="form-select" id="input-type" required>
-              <option value="COTE_5">⚡ CÔTE 5 (Essai 48h + VIP)</option>
+              <option value="FREE_3_MATCHS">🐸 GRATUIT (3 MATCHS/JOUR)</option>
+              <option value="COTE_5">⚡ CÔTE 5 (VIP)</option>
               <option value="COTE_10">👑 CÔTE 10 (VIP)</option>
               <option value="COTE_50">💎 CÔTE 50 - SEMAINE (VIP)</option>
               <option value="MONTANTE">📈 MONTANTE (Abonnement Montante)</option>
@@ -811,7 +809,7 @@
         <div class="form-grid">
           <div class="form-group full-width">
             <label class="form-label">Code Promotionnel</label>
-            <input type="text" class="form-input" id="input-promo-code" placeholder="Ex: WELCOME10, VIP20..." required />
+            <input type="text" class="form-input" id="input-promo-code" placeholder="Ex: FROGAZZ10..." required />
           </div>
 
           <div class="form-group">
@@ -842,9 +840,6 @@
   <div class="toast-container" id="toast-container"></div>
 
   <script>
-    // Base de données simulée pour le Dashboard (reprend les pronostics et utilisateurs du seeder Laravel 12)
-    let predictionsData = [];
-
     // Base de données réelle chargée depuis le serveur (PostgreSQL Aiven via l'API)
     let predictionsData = [];
     let usersData = [];
@@ -891,6 +886,31 @@
         const jsonUsers = await resUsers.json();
         if (jsonUsers && jsonUsers.success && Array.isArray(jsonUsers.data)) {
           usersData = jsonUsers.data;
+        }
+
+        const resPromo = await fetch('/api/v1/admin/promo-codes');
+        const jsonPromo = await resPromo.json();
+        if (jsonPromo && jsonPromo.success && Array.isArray(jsonPromo.data)) {
+          promoCodesData = jsonPromo.data.map(p => ({
+            id: p.id,
+            code: p.code,
+            discount: p.discount_percent,
+            used: p.used_count,
+            max: p.max_uses,
+            expiry: p.expires_at ? p.expires_at : 'Sans expiration',
+            active: p.is_active
+          }));
+        }
+
+        const resStats = await fetch('/api/v1/admin/dashboard/stats');
+        const jsonStats = await resStats.json();
+        if (jsonStats && jsonStats.success && jsonStats.data) {
+          const d = jsonStats.data;
+          document.getElementById('kpi-users').innerText = d.total_users;
+          document.getElementById('kpi-vip').innerText = d.vip_users;
+          document.getElementById('kpi-montante').innerText = d.montante_users;
+          document.getElementById('kpi-pay-today').innerText = d.revenue_today + ' FCFA';
+          document.getElementById('kpi-revenue').innerText = d.total_revenue + ' FCFA';
         }
       } catch (e) {
         console.warn('Erreur chargement données réels:', e);
@@ -987,8 +1007,8 @@
             </span>
           </td>
           <td>
-            <span class="stat-badge ${u.trialValid ? 'badge-green' : 'badge-orange'}">
-              ${u.trialValid ? '✔️ AUTORISÉ (<48H/VIP)' : '🔒 BLOQUÉ (>48H)'}
+            <span class="stat-badge ${(u.status === 'ACTIVE' || u.status === 'ACTIVE_MONTANTE') ? 'badge-green' : 'badge-orange'}">
+              ${u.status === 'ACTIVE' ? '👑 VIP ACTIF' : (u.status === 'ACTIVE_MONTANTE' ? '📈 MONTANTE ACTIF' : '🐸 GRATUIT')}
             </span>
           </td>
           <td>${u.expiresAt}</td>
@@ -1071,10 +1091,15 @@
       }
     }
 
-    function deletePromo(id) {
+    async function deletePromo(id) {
       if (confirm("Confirmez-vous la suppression du code promo #" + id + " ?")) {
-        promoCodesData = promoCodesData.filter(item => item.id !== id);
-        renderPromos();
+        try {
+          await fetch('/api/v1/admin/promo-codes/' + id, { method: 'DELETE' });
+          await loadRealDataFromServer();
+          renderPromos();
+        } catch (e) {
+          alert('Erreur : ' + e.message);
+        }
       }
     }
 
@@ -1087,42 +1112,23 @@
       document.getElementById('promo-modal').style.display = 'none';
     }
 
-    function handlePromoSubmit(event) {
+    async function handlePromoSubmit(event) {
       event.preventDefault();
       const codeVal = document.getElementById('input-promo-code').value.toUpperCase().trim();
       const discVal = parseInt(document.getElementById('input-promo-discount').value);
       const maxVal = parseInt(document.getElementById('input-promo-max').value);
-      const expVal = document.getElementById('input-promo-expiry').value || "Sans expiration";
-
-      const newId = promoCodesData.length ? Math.max(...promoCodesData.map(p => p.id)) + 1 : 1;
-      promoCodesData.unshift({
-        id: newId,
-        code: codeVal,
-        discount: discVal,
-        used: 0,
-        max: maxVal,
-        expiry: expVal,
-        active: true
-      });
-
-      closePromoModal();
-      renderPromos();
-
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.innerHTML = `
-        <div class="toast-icon" style="color: var(--gold);"><i class="fa-solid fa-ticket"></i></div>
-        <div>
-          <div style="font-weight: 800; color: var(--gold); font-size: 13px;">CODE PROMO CRÉÉ !</div>
-          <div style="font-size: 13px; font-weight: 700; color: var(--text-main);">${codeVal} (-${discVal}%)</div>
-        </div>
-      `;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 400);
-      }, 5000);
+      try {
+        await fetch('/api/v1/admin/promo-codes', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ code: codeVal, discount: discVal, max: maxVal })
+        });
+        closePromoModal();
+        await loadRealDataFromServer();
+        renderPromos();
+      } catch (e) {
+        alert('Erreur : ' + e.message);
+      }
     }
 
     function renderReferrals() {
@@ -1150,7 +1156,7 @@
       document.getElementById('modal-title').innerText = "CRÉER UN NOUVEAU PRONOSTIC";
       document.getElementById('pred-id').value = "";
       document.getElementById('pred-form').reset();
-      document.getElementById('input-date').value = "2026-08-03";
+      document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
       document.getElementById('input-time').value = "20:00";
       document.getElementById('pred-modal').style.display = 'flex';
     }
@@ -1181,133 +1187,74 @@
       document.getElementById('pred-modal').style.display = 'flex';
     }
 
-    function handleFormSubmit(event) {
+    async function handleFormSubmit(event) {
       event.preventDefault();
       const idVal = document.getElementById('pred-id').value;
-      const typeVal = document.getElementById('input-type').value;
-      const homeVal = document.getElementById('input-home').value;
-      const awayVal = document.getElementById('input-away').value;
-      const oddsVal = parseFloat(document.getElementById('input-odds').value);
-
-      if (idVal) {
-        // Modification
-        const idx = predictionsData.findIndex(item => item.id === parseInt(idVal));
-        if (idx !== -1) {
-          predictionsData[idx] = {
-            ...predictionsData[idx],
-            title: document.getElementById('input-title').value,
-            championship: document.getElementById('input-championship').value,
-            country: document.getElementById('input-country').value,
-            homeTeam: homeVal,
-            awayTeam: awayVal,
-            type: typeVal,
-            odds: oddsVal,
-            matchDate: document.getElementById('input-date').value,
-            matchTime: document.getElementById('input-time').value,
-            confidence: parseInt(document.getElementById('input-confidence').value),
-            status: document.getElementById('input-status').value,
-            analysis: document.getElementById('input-analysis').value,
-          };
+      const payload = {
+        title: document.getElementById('input-title').value,
+        competition: document.getElementById('input-championship').value,
+        championship: document.getElementById('input-championship').value,
+        country: document.getElementById('input-country').value,
+        home_team: document.getElementById('input-home').value,
+        away_team: document.getElementById('input-away').value,
+        type: document.getElementById('input-type').value,
+        odds: parseFloat(document.getElementById('input-odds').value),
+        match_date: document.getElementById('input-date').value,
+        match_time: document.getElementById('input-time').value,
+        confidence: parseInt(document.getElementById('input-confidence').value),
+        status: document.getElementById('input-status').value,
+        analysis: document.getElementById('input-analysis').value
+      };
+      try {
+        if (idVal) {
+          await fetch('/api/v1/admin/predictions/' + idVal, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+          });
+        } else {
+          await fetch('/api/v1/admin/predictions', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+          });
         }
-      } else {
-        // Création + Notification Push Firebase
-        const newId = predictionsData.length ? Math.max(...predictionsData.map(p => p.id)) + 1 : 1;
-        const newPred = {
-          id: newId,
-          title: document.getElementById('input-title').value,
-          competition: document.getElementById('input-championship').value,
-          country: document.getElementById('input-country').value,
-          championship: document.getElementById('input-championship').value,
-          homeTeam: homeVal,
-          awayTeam: awayVal,
-          type: typeVal,
-          odds: oddsVal,
-          matchDate: document.getElementById('input-date').value,
-          matchTime: document.getElementById('input-time').value,
-          confidence: parseInt(document.getElementById('input-confidence').value),
-          status: document.getElementById('input-status').value,
-          analysis: document.getElementById('input-analysis').value,
-          isPublished: true
-        };
-        predictionsData.unshift(newPred);
-
-        // Déclencher une simulation visuelle de notification push Firebase FCM !
-        showFcmNotification(newPred);
+        closeCreateModal();
+        await loadRealDataFromServer();
+        renderPredictions();
+      } catch (e) {
+        alert('Erreur lors de l\'enregistrement : ' + e.message);
       }
-
-      closeCreateModal();
-      renderPredictions();
     }
 
-    function togglePublish(id) {
+    async function togglePublish(id) {
       const p = predictionsData.find(item => item.id === id);
-      if (p) {
-        p.isPublished = !p.isPublished;
+      if (!p) return;
+      try {
+        await fetch('/api/v1/admin/predictions/' + id, {
+          method: 'PUT',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ is_published: !p.isPublished })
+        });
+        await loadRealDataFromServer();
         renderPredictions();
-        if (p.isPublished) {
-          showFcmNotification(p);
+      } catch (e) {
+        alert('Erreur : ' + e.message);
+      }
+    }
+
+    async function deletePrediction(id) {
+      if (confirm("Confirmez-vous la suppression du pronostic #" + id + " ?")) {
+        try {
+          await fetch('/api/v1/admin/predictions/' + id, { method: 'DELETE' });
+          await loadRealDataFromServer();
+          renderPredictions();
+        } catch (e) {
+          alert('Erreur : ' + e.message);
         }
       }
     }
 
-    function deletePrediction(id) {
-      if (confirm("Confirmez-vous la suppression du pronostic #" + id + " ?")) {
-        predictionsData = predictionsData.filter(item => item.id !== id);
-        renderPredictions();
-      }
-    }
-
-    // Simuler le Webhook asynchrone de CinetPay
-    function simulateCinetPayWebhook() {
-      const txId = "CP-20260803-" + Math.floor(Math.random() * 899999 + 100000);
-      const user = usersData[3]; // Brahima Sanou (Expiré)
-      user.status = "ACTIVE";
-      user.plan = "👑 VIP MENSUEl (2000 FCFA)";
-      user.trialValid = true;
-      user.expiresAt = "2026-09-03";
-
-      renderUsers();
-
-      // Afficher la notification de confirmation Webhook
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.innerHTML = `
-        <div class="toast-icon" style="color: var(--green); background: rgba(0,200,83,0.2);"><i class="fa-solid fa-check"></i></div>
-        <div>
-          <div style="font-weight: 800; color: var(--green); font-size: 14px;">WEBHOOK CINETPAY VALIDÉ !</div>
-          <div style="font-size: 12px; color: var(--text-main);">Paiement 2000 FCFA (Orange Money) • ID: ${txId}</div>
-          <div style="font-size: 11px; color: var(--gold);">Abonnement VIP activé instantanément pour ${user.name}</div>
-        </div>
-      `;
-      container.appendChild(toast);
-
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 400);
-      }, 5000);
-    }
-
-    // Simuler la notification push Firebase Cloud Messaging (FCM)
-    function showFcmNotification(pred) {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.innerHTML = `
-        <div class="toast-icon"><i class="fa-solid fa-bell"></i></div>
-        <div>
-          <div style="font-weight: 800; color: var(--gold); font-size: 13px;">📲 PUSH FCM ENVOYÉ [topic_${pred.type.toLowerCase()}]</div>
-          <div style="font-size: 13px; font-weight: 700; color: var(--text-main);">${pred.homeTeam} vs ${pred.awayTeam}</div>
-          <div style="font-size: 11px; color: var(--text-muted);">Cote : ${pred.odds.toFixed(2)} ⭐ Confiance ${pred.confidence}/5</div>
-        </div>
-      `;
-      container.appendChild(toast);
-
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 400);
-      }, 5000);
-    }
   </script>
 </body>
 </html>

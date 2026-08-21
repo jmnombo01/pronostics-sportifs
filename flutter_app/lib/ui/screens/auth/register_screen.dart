@@ -78,7 +78,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Bandeau Offre Gratuit 48h
+                // Bandeau Offre Gratuit 3 Matchs / jour
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
@@ -91,7 +91,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       Text('🐸 ', style: TextStyle(inherit: true, fontSize: 26)),
                       Expanded(
                         child: Text(
-                          'CADEAU : 48 Heures d\'accès gratuit à la catégorie Côte 5 offertes dès l\'inscription (aucune vérification d\'email requise) !',
+                          'Inscription 100% réelle : créez votre compte et recevez le Combiné Gratuit de 3 matchs chaque jour. Les Côtes 5, 10, 50 et Montante nécessitent un abonnement.',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 13,
@@ -147,7 +147,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 const SizedBox(height: 28),
 
                 CustomButton(
-                  text: 'S\'INSCRIRE ET PROFITER DE L\'ESSAI',
+                  text: 'CRÉER MON COMPTE (100% RÉEL)',
                   isLoading: authState.isLoading,
                   onPressed: _handleRegister,
                 ),

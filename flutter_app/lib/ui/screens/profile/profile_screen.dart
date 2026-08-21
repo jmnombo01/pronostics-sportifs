@@ -125,7 +125,7 @@ class ProfileScreen extends ConsumerWidget {
                           children: [
                             Expanded(child: _buildSubBadge('VIP (5/10/50)', user.hasVip)),
                             Expanded(child: _buildSubBadge('Montante', user.hasMontante)),
-                            Expanded(child: _buildSubBadge('Essai 48h', user.hasFreeTrialCote5)),
+                            Expanded(child: _buildSubBadge('Gratuit 3 matchs/jour', true)),
                           ],
                         ),
                       ],

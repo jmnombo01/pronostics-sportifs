@@ -52,42 +52,27 @@ class DatabaseSeeder extends Seeder
 
         // 2. Création de l'Administrateur principal unique
         $admin = User::create([
-            'last_name' => 'Traoré',
-            'first_name' => 'Sidi (Admin)',
-            'phone' => '+22670000001',
+            'last_name' => 'Admin',
+            'first_name' => 'Frogazz',
+            'phone' => '+22600000000',
             'email' => 'admin@frogazz.pro',
-            'password' => Hash::make('Password123!'),
+            'password' => Hash::make('Frogazz@Admin2026'),
             'is_admin' => true,
-            'subscription_status' => 'ACTIVE',
-            'subscription_expires_at' => $now->copy()->addYears(10),
+            'subscription_status' => 'FREE',
+            'subscription_expires_at' => null,
             'referral_code' => 'ADMINVIP',
         ]);
 
         // 3. Mode 100% réel : Zéro pronostic ou utilisateur fictif inséré !
         // Les pronostics et combinés officiels seront saisis par l'administrateur depuis le tableau de bord web.
 
-        // 8. Codes Promo
-        PromoCode::create([
-            'code' => 'WELCOME10',
-            'discount_percent' => 10,
-            'max_uses' => 500,
-            'used_count' => 12,
-            'is_active' => true,
-        ]);
-
-        PromoCode::create([
-            'code' => 'VIP20',
-            'discount_percent' => 20,
-            'max_uses' => 100,
-            'used_count' => 5,
-            'is_active' => true,
-        ]);
+        // 8. Codes Promo : AUCUN code promo fictif. Les codes sont créés par l'administrateur.
 
         // 9. FAQ
         $faqs = [
             [
-                'question' => 'Comment fonctionne l\'essai gratuit de 48 heures ?',
-                'answer' => 'Dès votre inscription, votre compte bénéficie de 48 heures d\'accès gratuit à tous les pronostics de la catégorie Côte 5. Après 48 heures, il suffit de s\'abonner pour continuer à recevoir nos analyses.',
+                'question' => 'Comment fonctionne le mode gratuit ?',
+                'answer' => 'Dès votre inscription, vous accédez gratuitement au Combiné Gratuit de 3 matchs publié chaque jour. Les catégories Côte 5, Côte 10, Côte 50 et Montante nécessitent un abonnement payant.',
                 'category' => 'ABONNEMENT',
                 'display_order' => 1,
             ],

@@ -12,11 +12,9 @@ echo "👑 =================================================================="
 mkdir -p storage/logs storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache
 chmod -R 777 storage bootstrap/cache || true
 
-# Si une base de données (PostgreSQL ou MySQL) est configurée dans Render, exécuter les migrations
-if [ -n "$DB_HOST" ]; then
-    echo "🐬 Connexion à la base $DB_CONNECTION ($DB_HOST)..."
-    php artisan migrate --force || echo "⚠️ Attention : Migration en attente de connexion BDD."
-fi
+# IMPORTANT : Le schéma de la base de données est géré par connect_aiven_postgres.py
+# (tables : users, subscription_plans, predictions, payments, promo_codes, faqs...).
+# On n'exécute PAS les migrations Laravel ici pour éviter d'écraser le schéma réel.
 
 echo "🌐 Lancement du serveur Web HTTP Laravel sur 0.0.0.0:$PORT ..."
 exec php -S 0.0.0.0:$PORT -t public public/index.php

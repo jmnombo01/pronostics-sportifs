@@ -73,7 +73,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'PRONOSTICS SPORTIFS',
+                    'FROGAZZ SPORT ANALYSE',
                     style: TextStyle(inherit: true, 
                       color: AppTheme.gold,
                       fontSize: 22,
@@ -83,7 +83,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 6),
                   const Text(
-                    'Analyses VIP & Stratégie Montante',
+                    '🐸 Analyses VIP & Stratégie Montante',
                     style: TextStyle(inherit: true, color: AppTheme.grey, fontSize: 14),
                   ),
                   const SizedBox(height: 36),
@@ -129,7 +129,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       GestureDetector(
                         onTap: () => context.push('/register'),
                         child: const Text(
-                          'S\'inscrire (48h Offertes)',
+                          'S\'inscrire (3 matchs gratuits/jour)',
                           style: TextStyle(inherit: true, 
                             color: AppTheme.gold,
                             fontWeight: FontWeight.bold,

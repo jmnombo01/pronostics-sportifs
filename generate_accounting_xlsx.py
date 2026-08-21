@@ -35,7 +35,7 @@ total_border = Border(
 )
 
 # En-tête principal
-ws1["A1"] = "👑 PRONOSTICS SPORTIFS - BILAN COMPTABLE CINETPAY (AOÛT 2026)"
+ws1["A1"] = "👑 FROGAZZ SPORT ANALYSE - BILAN COMPTABLE (MODE RÉEL)"
 ws1["A1"].font = font_title
 ws1["A2"] = "Export généré automatiquement depuis le serveur Laravel 12 / CinetPay API"
 ws1["A2"].font = font_subtitle
@@ -172,23 +172,7 @@ for col_num, h in enumerate(headers_ledger, start=1):
     cell.fill = fill_header
     cell.alignment = Alignment(horizontal="center", vertical="center")
 
-sample_transactions = [
-    ("CP-20260803-1001", 1, "Sawadogo Amadou", "+22670000002", "vip@pronostics.pro", "VIP", "Orange Money", 2000, "WELCOME10", "ACCEPTED", "2026-08-03 14:10:22"),
-    ("CP-20260803-1002", 2, "Ouédraogo Issa", "+22670000003", "montante@pronostics.pro", "MONTANTE", "MTN Mobile Money", 2000, "-", "ACCEPTED", "2026-08-03 14:18:05"),
-    ("CP-20260803-1003", 5, "Kaboré Moussa", "+22670112233", "moussa@example.com", "VIP", "Orange Money", 1800, "WELCOME10", "ACCEPTED", "2026-08-03 14:22:10"),
-    ("CP-20260803-1004", 6, "Traoré Adama", "+22678000006", "adama@example.com", "VIP", "Moov Money", 2000, "-", "ACCEPTED", "2026-08-03 14:35:40"),
-    ("CP-20260803-1005", 7, "Soma Mariam", "+22676000007", "mariam@example.com", "MONTANTE", "Orange Money", 2000, "-", "ACCEPTED", "2026-08-03 14:40:15"),
-    ("CP-20260803-1006", 8, "Bama Paul", "+22670000008", "paul@example.com", "VIP", "Carte Bancaire", 2000, "-", "ACCEPTED", "2026-08-03 14:45:00"),
-    ("CP-20260803-1007", 9, "Bationo Jean", "+22675000009", "jean@example.com", "VIP", "Airtel Money", 1600, "VIP20", "ACCEPTED", "2026-08-03 14:50:33"),
-    ("CP-20260803-1008", 10, "Zongo Aminata", "+22670000010", "zongo@example.com", "MONTANTE", "MTN Mobile Money", 2000, "-", "ACCEPTED", "2026-08-03 15:02:11"),
-    ("CP-20260803-1009", 11, "Sanfo Idrissa", "+22670000011", "idrissa@example.com", "VIP", "Orange Money", 2000, "-", "ACCEPTED", "2026-08-03 15:11:54"),
-    ("CP-20260803-1010", 12, "Diallo Salif", "+22671000012", "salif@example.com", "VIP", "Orange Money", 2000, "-", "ACCEPTED", "2026-08-03 15:20:00"),
-    ("CP-20260803-1011", 13, "Kone Fatim", "+22672000013", "fatim@example.com", "MONTANTE", "Moov Money", 2000, "-", "ACCEPTED", "2026-08-03 15:25:12"),
-    ("CP-20260803-1012", 14, "Barry Ousmane", "+22673000014", "ousmane@example.com", "VIP", "MTN Mobile Money", 2000, "-", "ACCEPTED", "2026-08-03 15:33:45"),
-    ("CP-20260803-1013", 15, "Coulibaly Awa", "+22674000015", "awa@example.com", "VIP", "Orange Money", 1800, "WELCOME10", "ACCEPTED", "2026-08-03 15:40:02"),
-    ("CP-20260803-1014", 16, "Diarra David", "+22675000016", "david@example.com", "MONTANTE", "Carte Bancaire", 2000, "-", "ACCEPTED", "2026-08-03 15:48:19"),
-    ("CP-20260803-1015", 17, "Sangaré Issa", "+22676000017", "sangare@example.com", "VIP", "Orange Money", 2000, "-", "ACCEPTED", "2026-08-03 15:55:00"),
-]
+sample_transactions = []
 
 for row_idx, row_data in enumerate(sample_transactions, start=4):
     for col_idx, val in enumerate(row_data, start=1):

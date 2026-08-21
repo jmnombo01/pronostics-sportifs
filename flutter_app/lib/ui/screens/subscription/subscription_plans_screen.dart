@@ -192,7 +192,7 @@ class _SubscriptionPlansScreenState extends ConsumerState<SubscriptionPlansScree
                   child: CustomTextField(
                     controller: _promoController,
                     label: '',
-                    hint: 'Ex: WELCOME10 (-10%)',
+                    hint: 'Code promo (optionnel)',
                   ),
                 ),
                 const SizedBox(width: 12),

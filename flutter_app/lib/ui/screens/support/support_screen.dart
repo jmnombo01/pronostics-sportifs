@@ -20,9 +20,9 @@ class SupportScreen extends StatelessWidget {
     final faqs = [
       FaqModel(
         id: 1,
-        question: 'Comment fonctionne l\'essai gratuit de 48 heures ?',
+        question: 'Comment fonctionne le mode gratuit ?',
         answer:
-            'Dès votre inscription, votre compte accède gratuitement aux pronostics de la catégorie Côte 5 pendant 48 heures. Au-delà, un abonnement est requis.',
+            'Dès votre inscription, vous recevez gratuitement le Combiné Gratuit de 3 matchs publié chaque jour. Les catégories Côte 5, Côte 10, Côte 50 et Montante nécessitent un abonnement payant.',
         category: 'ABONNEMENT',
       ),
       FaqModel(
@@ -166,7 +166,7 @@ class SupportScreen extends StatelessWidget {
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
                   _showLegalModal(context, 'CGU',
-                      '1. Objet : Les présentes conditions régissent l\'utilisation de l\'application Pronostics Sportifs.\n\n2. Essai Gratuit : 48h limitées à Côte 5.\n\n3. Responsabilité : Les pronostics sont fournis à titre indicatif et ne garantissent aucun gain absolu. Jouez de façon responsable.');
+                      '1. Objet : Les présentes conditions régissent l\'utilisation de l\'application Frogazz Sport Analyse.\n\n2. Mode Gratuit : Combiné Gratuit de 3 matchs par jour.\n\n3. Abonnements : VIP (2000 FCFA/mois) et Montante (2000 FCFA/semaine).\n\n4. Responsabilité : Les pronostics sont fournis à titre indicatif et ne garantissent aucun gain absolu. Jouez de façon responsable.');
                 },
               ),
             ),

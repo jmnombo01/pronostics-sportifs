@@ -150,7 +150,7 @@ class HistoryScreen extends ConsumerWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'Vos abonnements actifs (VIP et Montante) ainsi que vos périodes d\'essai 48h apparaissent sur votre profil et sont pris en compte automatiquement en temps réel.',
+              'Vos abonnements actifs (VIP et Montante) apparaissent sur votre profil et sont pris en compte automatiquement en temps réel.',
               textAlign: TextAlign.center,
               style: TextStyle(inherit: true, color: AppTheme.grey),
             ),

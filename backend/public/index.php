@@ -112,11 +112,11 @@ if (str_starts_with($uri, '/api/v1')) {
         $firstName = trim($input['first_name'] ?? '');
         $password = trim($input['password'] ?? '');
 
-        if (empty($email) || empty($password) || empty($firstName) || empty($lastName)) {
+        if (empty($email) || empty($phone) || empty($password) || empty($firstName) || empty($lastName)) {
             http_response_code(422);
             echo json_encode([
                 'success' => false,
-                'message' => 'Veuillez remplir tous les champs obligatoires (Nom, Prénom, Email, Mot de passe).'
+                'message' => 'Veuillez remplir tous les champs obligatoires (Nom, Prénom, Téléphone, Email, Mot de passe).'
             ], JSON_UNESCAPED_UNICODE);
             exit;
         }
@@ -153,6 +153,13 @@ if (str_starts_with($uri, '/api/v1')) {
         ");
         $insert->execute([$lastName, $firstName, $phone, $email, $hashedPassword, $refCode]);
         $user = $insert->fetch();
+
+        // Stocker le jeton d'accès réel pour que le profil soit récupérable par Bearer token
+        try {
+            $pdo->prepare("UPDATE users SET remember_token = ? WHERE id = ?")->execute([$token, $user['id']]);
+        } catch (Exception $e) {
+            error_log("[REGISTER] Impossible de stocker le jeton: " . $e->getMessage());
+        }
 
         http_response_code(201);
         echo json_encode([
@@ -212,6 +219,13 @@ if (str_starts_with($uri, '/api/v1')) {
         $isVip = $user['subscription_status'] === 'ACTIVE';
         $isMontante = $user['subscription_status'] === 'ACTIVE_MONTANTE';
 
+        // Stocker le jeton d'accès réel pour récupérer le profil ensuite
+        try {
+            $pdo->prepare("UPDATE users SET remember_token = ? WHERE id = ?")->execute([$token, $user['id']]);
+        } catch (Exception $e) {
+            error_log("[LOGIN] Impossible de stocker le jeton: " . $e->getMessage());
+        }
+
         echo json_encode([
             'success' => true,
             'message' => 'Connexion réussie',
@@ -236,40 +250,79 @@ if (str_starts_with($uri, '/api/v1')) {
         exit;
     }
 
-    // 3. PROFIL ACTUEL (/api/v1/auth/profile)
+    // 3. PROFIL ACTUEL (/api/v1/auth/profile) -> 100% réel, basé sur le Bearer token en base
     if ($uri === '/api/v1/auth/profile' && $method === 'GET') {
-        // En mode 100% réel, le profil nécessite un Bearer token valide
         $headers = getallheaders();
         $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
         if (empty($authHeader) || !str_starts_with($authHeader, 'Bearer ')) {
             http_response_code(401);
-            echo json_encode(['success' => false, 'message' => 'Non authentifié'], JSON_UNESCAPED_UNICODE);
+            echo json_encode(['success' => false, 'message' => 'Non authentifié.'], JSON_UNESCAPED_UNICODE);
             exit;
         }
+
+        $token = trim(substr($authHeader, 7));
+
+        if (!$pdo) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'code' => 'DB_CONNECTION_ERROR',
+                'message' => 'Erreur serveur : impossible de contacter la base de données réelle.'
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        try {
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE remember_token = ?");
+            $stmt->execute([$token]);
+            $user = $stmt->fetch();
+        } catch (Exception $e) {
+            error_log("[PROFILE] " . $e->getMessage());
+            $user = false;
+        }
+
+        if (!$user) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Session invalide ou expirée. Veuillez vous reconnecter.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $isVip = $user['subscription_status'] === 'ACTIVE';
+        $isMontante = $user['subscription_status'] === 'ACTIVE_MONTANTE';
 
         echo json_encode([
             'success' => true,
             'user' => [
-                'id' => 0,
-                'last_name' => 'Utilisateur',
-                'first_name' => 'Frogazz',
-                'phone' => '',
-                'email' => '',
-                'is_admin' => false,
-                'subscription_status' => 'FREE',
-                'subscription_expires_at' => null,
-                'free_trial_expires_at' => null,
-                'referral_code' => '',
-                'has_vip' => false,
-                'has_montante' => false,
+                'id' => (int) $user['id'],
+                'last_name' => $user['last_name'],
+                'first_name' => $user['first_name'],
+                'phone' => $user['phone'],
+                'email' => $user['email'],
+                'is_admin' => (bool) $user['is_admin'],
+                'subscription_status' => $user['subscription_status'],
+                'subscription_expires_at' => $user['subscription_expires_at'],
+                'free_trial_expires_at' => $user['free_trial_expires_at'],
+                'referral_code' => $user['referral_code'],
+                'has_vip' => $isVip,
+                'has_montante' => $isMontante,
                 'has_free_trial_cote_5' => false,
-                'created_at' => gmdate('Y-m-d\TH:i:s\Z')
+                'created_at' => $user['created_at']
             ]
         ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     if ($uri === '/api/v1/auth/logout' && $method === 'POST') {
+        $headers = getallheaders();
+        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+        if (!empty($authHeader) && str_starts_with($authHeader, 'Bearer ') && $pdo) {
+            try {
+                $token = trim(substr($authHeader, 7));
+                $pdo->prepare("UPDATE users SET remember_token = NULL WHERE remember_token = ?")->execute([$token]);
+            } catch (Exception $e) {
+                error_log("[LOGOUT] " . $e->getMessage());
+            }
+        }
         echo json_encode(['success' => true, 'message' => 'Déconnexion réussie.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
@@ -471,6 +524,232 @@ if (str_starts_with($uri, '/api/v1')) {
             'active_referrals' => 0,
             'reward_description' => 'Gagnez 7 jours d\'abonnement VIP gratuits pour chaque ami qui s\'abonne !'
         ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // =========================================================================
+    // E. ADMINISTRATION (100% RÉEL) : statistiques, utilisateurs & gestion des pronostics
+    // =========================================================================
+
+    // Statistiques du tableau de bord (zéro donnée fictive, issues de la base réelle)
+    if ($uri === '/api/v1/admin/dashboard/stats' && $method === 'GET') {
+        $stats = [
+            'total_users' => 0,
+            'vip_users' => 0,
+            'montante_users' => 0,
+            'total_revenue' => 0,
+            'payments_today' => 0,
+            'revenue_today' => 0,
+            'total_predictions' => 0,
+            'published_predictions' => 0
+        ];
+        if ($pdo) {
+            try {
+                $stats['total_users'] = (int) $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
+                $stats['vip_users'] = (int) $pdo->query("SELECT COUNT(*) FROM users WHERE subscription_status = 'ACTIVE'")->fetchColumn();
+                $stats['montante_users'] = (int) $pdo->query("SELECT COUNT(*) FROM users WHERE subscription_status = 'ACTIVE_MONTANTE'")->fetchColumn();
+                $stats['total_revenue'] = (int) $pdo->query("SELECT COALESCE(SUM(amount),0) FROM payments WHERE status = 'SUCCESS'")->fetchColumn();
+                $stats['payments_today'] = (int) $pdo->query("SELECT COUNT(*) FROM payments WHERE created_at::date = CURRENT_DATE")->fetchColumn();
+                $stats['revenue_today'] = (int) $pdo->query("SELECT COALESCE(SUM(amount),0) FROM payments WHERE created_at::date = CURRENT_DATE AND status = 'SUCCESS'")->fetchColumn();
+                $stats['total_predictions'] = (int) $pdo->query("SELECT COUNT(*) FROM predictions")->fetchColumn();
+                $stats['published_predictions'] = (int) $pdo->query("SELECT COUNT(*) FROM predictions WHERE is_published = TRUE")->fetchColumn();
+            } catch (Exception $e) {
+                error_log("[ADMIN STATS] " . $e->getMessage());
+            }
+        }
+        echo json_encode(['success' => true, 'data' => $stats], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // Liste des utilisateurs réels
+    if ($uri === '/api/v1/admin/users' && $method === 'GET') {
+        $data = [];
+        if ($pdo) {
+            try {
+                $rows = $pdo->query("SELECT id, last_name, first_name, phone, email, is_admin, subscription_status, subscription_expires_at, created_at FROM users ORDER BY created_at DESC")->fetchAll();
+                foreach ($rows as $r) {
+                    $status = $r['subscription_status'] ?? 'FREE';
+                    $plan = '🐸 Gratuit (3 matchs/jour)';
+                    if ($status === 'ACTIVE') $plan = '👑 VIP Mensuel (2000 FCFA)';
+                    elseif ($status === 'ACTIVE_MONTANTE') $plan = '📈 Montante (2000 FCFA/sem)';
+                    $data[] = [
+                        'id' => (int) $r['id'],
+                        'name' => trim($r['last_name'] . ' ' . $r['first_name']),
+                        'phone' => $r['phone'],
+                        'email' => $r['email'],
+                        'is_admin' => (bool) $r['is_admin'],
+                        'status' => $status,
+                        'plan' => $plan,
+                        'expiresAt' => $r['subscription_expires_at'] ?: '—',
+                        'created_at' => $r['created_at']
+                    ];
+                }
+            } catch (Exception $e) {
+                error_log("[ADMIN USERS] " . $e->getMessage());
+            }
+        }
+        echo json_encode(['success' => true, 'data' => $data], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // Création d'un pronostic réel (POST /api/v1/admin/predictions)
+    if ($uri === '/api/v1/admin/predictions' && $method === 'POST') {
+        if (!$pdo) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'code' => 'DB_CONNECTION_ERROR', 'message' => 'Base de données indisponible.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        $title = trim($input['title'] ?? '');
+        if ($title === '') {
+            http_response_code(422);
+            echo json_encode(['success' => false, 'message' => 'Le titre est obligatoire.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        $selections = $input['selections'] ?? [];
+        try {
+            $stmt = $pdo->prepare("
+                INSERT INTO predictions (title, competition, country, championship, match_date, match_time, home_team, away_team, type, odds, selections_json, confidence, analysis, status, is_published)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE)
+                RETURNING id
+            ");
+            $stmt->execute([
+                $title,
+                trim($input['competition'] ?? ''),
+                trim($input['country'] ?? ''),
+                trim($input['championship'] ?? ''),
+                trim($input['match_date'] ?? gmdate('Y-m-d')),
+                trim($input['match_time'] ?? '20:00'),
+                trim($input['home_team'] ?? ''),
+                trim($input['away_team'] ?? ''),
+                trim($input['type'] ?? 'COTE_5'),
+                (float) ($input['odds'] ?? 1.50),
+                json_encode($selections, JSON_UNESCAPED_UNICODE),
+                (int) ($input['confidence'] ?? 4),
+                trim($input['analysis'] ?? ''),
+                trim($input['status'] ?? 'PENDING')
+            ]);
+            $newId = (int) $stmt->fetchColumn();
+            echo json_encode(['success' => true, 'message' => 'Pronostic créé avec succès.', 'id' => $newId], JSON_UNESCAPED_UNICODE);
+        } catch (Exception $e) {
+            error_log("[ADMIN CREATE PRED] " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erreur lors de la création : ' . $e->getMessage()], JSON_UNESCAPED_UNICODE);
+        }
+        exit;
+    }
+
+    // Mise à jour d'un pronostic (PUT /api/v1/admin/predictions/{id})
+    if (preg_match('#^/api/v1/admin/predictions/(\d+)$#', $uri, $m) && $method === 'PUT') {
+        $id = (int) $m[1];
+        if (!$pdo) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'code' => 'DB_CONNECTION_ERROR', 'message' => 'Base de données indisponible.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        try {
+            // Si seul is_published est envoyé (bascule publier/dépublier)
+            if (array_key_exists('is_published', $input) && !array_key_exists('title', $input)) {
+                $pdo->prepare("UPDATE predictions SET is_published = ? WHERE id = ?")
+                    ->execute([($input['is_published'] ? 'TRUE' : 'FALSE'), $id]);
+                echo json_encode(['success' => true, 'message' => 'Statut de publication mis à jour.'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            $stmt = $pdo->prepare("
+                UPDATE predictions SET
+                    title = ?, competition = ?, country = ?, championship = ?, match_date = ?, match_time = ?,
+                    home_team = ?, away_team = ?, type = ?, odds = ?, confidence = ?, analysis = ?, status = ?
+                WHERE id = ?
+            ");
+            $stmt->execute([
+                trim($input['title'] ?? ''),
+                trim($input['competition'] ?? ''),
+                trim($input['country'] ?? ''),
+                trim($input['championship'] ?? ''),
+                trim($input['match_date'] ?? gmdate('Y-m-d')),
+                trim($input['match_time'] ?? '20:00'),
+                trim($input['home_team'] ?? ''),
+                trim($input['away_team'] ?? ''),
+                trim($input['type'] ?? 'COTE_5'),
+                (float) ($input['odds'] ?? 1.50),
+                (int) ($input['confidence'] ?? 4),
+                trim($input['analysis'] ?? ''),
+                trim($input['status'] ?? 'PENDING'),
+                $id
+            ]);
+            echo json_encode(['success' => true, 'message' => 'Pronostic mis à jour.'], JSON_UNESCAPED_UNICODE);
+        } catch (Exception $e) {
+            error_log("[ADMIN UPDATE PRED] " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erreur lors de la mise à jour : ' . $e->getMessage()], JSON_UNESCAPED_UNICODE);
+        }
+        exit;
+    }
+
+    // Suppression d'un pronostic (DELETE /api/v1/admin/predictions/{id})
+    if (preg_match('#^/api/v1/admin/predictions/(\d+)$#', $uri, $m) && $method === 'DELETE') {
+        $id = (int) $m[1];
+        if (!$pdo) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'code' => 'DB_CONNECTION_ERROR', 'message' => 'Base de données indisponible.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        try {
+            $pdo->prepare("DELETE FROM predictions WHERE id = ?")->execute([$id]);
+            echo json_encode(['success' => true, 'message' => 'Pronostic supprimé.'], JSON_UNESCAPED_UNICODE);
+        } catch (Exception $e) {
+            error_log("[ADMIN DELETE PRED] " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erreur lors de la suppression.'], JSON_UNESCAPED_UNICODE);
+        }
+        exit;
+    }
+
+    // Liste des codes promo réels
+    if ($uri === '/api/v1/admin/promo-codes' && $method === 'GET') {
+        $data = [];
+        if ($pdo) {
+            try {
+                $data = $pdo->query("SELECT id, code, discount_percent, max_uses, used_count, is_active, expires_at FROM promo_codes ORDER BY created_at DESC")->fetchAll();
+            } catch (Exception $e) {}
+        }
+        echo json_encode(['success' => true, 'data' => $data], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // Création d'un code promo réel (POST /api/v1/admin/promo-codes)
+    if ($uri === '/api/v1/admin/promo-codes' && $method === 'POST') {
+        if (!$pdo) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Base de données indisponible.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        $code = strtoupper(trim($input['code'] ?? ''));
+        if ($code === '') {
+            http_response_code(422);
+            echo json_encode(['success' => false, 'message' => 'Le code promo est obligatoire.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        try {
+            $stmt = $pdo->prepare("INSERT INTO promo_codes (code, discount_percent, max_uses, used_count, expires_at, is_active) VALUES (?, ?, ?, 0, NULL, TRUE) RETURNING id");
+            $stmt->execute([$code, (int) ($input['discount'] ?? 10), (int) ($input['max'] ?? 100)]);
+            echo json_encode(['success' => true, 'message' => 'Code promo créé.', 'id' => (int) $stmt->fetchColumn()], JSON_UNESCAPED_UNICODE);
+        } catch (Exception $e) {
+            error_log("[ADMIN CREATE PROMO] " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Erreur : ' . $e->getMessage()], JSON_UNESCAPED_UNICODE);
+        }
+        exit;
+    }
+
+    // Suppression d'un code promo (DELETE /api/v1/admin/promo-codes/{id})
+    if (preg_match('#^/api/v1/admin/promo-codes/(\d+)$#', $uri, $m) && $method === 'DELETE') {
+        $id = (int) $m[1];
+        if ($pdo) {
+            try {
+                $pdo->prepare("DELETE FROM promo_codes WHERE id = ?")->execute([$id]);
+            } catch (Exception $e) {}
+        }
+        echo json_encode(['success' => true, 'message' => 'Code promo supprimé.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 

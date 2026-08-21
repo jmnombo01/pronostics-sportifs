@@ -18,7 +18,7 @@ class _FrogMascotWidgetState extends State<FrogMascotWidget>
   final List<String> _frogTips = [
     "Coâââ ! Sécurise ton combiné Côte 5 du jour et saute vers la victoire !",
     "Ribbit ! Gère ta bankroll prudemment, pas de saut dans le vide !",
-    "Coââ ! Code promo WELCOME10 pour -10% sur le forfait Frogazz VIP !",
+    "Coââ ! Abonnez-vous pour débloquer les Côtes 5, 10, 50 et la Montante !",
     "Croââ ! Nos analystes ont repéré 3 matchs européens en or ce soir !",
     "Ribbit ! La stratégie Montante se joue pas à pas : chaque victoire finance l'étape suivante !"
   ];
