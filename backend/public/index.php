@@ -71,7 +71,8 @@ function getDbConnection(): ?PDO {
     if ($pdo !== null) return $pdo;
 
     // 1. Priorité : variable unique DATABASE_URL (postgresql://user:pass@host:port/db)
-    $dbUrl = getenv('DATABASE_URL');
+    //    Si absente, on utilise directement la base PostgreSQL Render de production.
+    $dbUrl = getenv('DATABASE_URL') ?: 'postgresql://frogazz_db_user:rLO7zi2vpbr3WgSyJqO4oVq42zBpoX00@dpg-da4kgec9v7es738fghvg-a.frankfurt-postgres.render.com/frogazz_db';
     if (!empty($dbUrl)) {
         $parts = parse_url($dbUrl);
         $driver = 'pgsql';
@@ -83,10 +84,10 @@ function getDbConnection(): ?PDO {
     } else {
         // 2. Sinon : variables séparées (DB_HOST, DB_PORT, ...)
         $driver = getenv('DB_CONNECTION') ?: 'pgsql';
-        $host = getenv('DB_HOST') ?: 'pg-e0591b-jmnombo01-9a23.l.aivencloud.com';
-        $port = getenv('DB_PORT') ?: '18819';
-        $dbname = getenv('DB_DATABASE') ?: 'defaultdb';
-        $user = getenv('DB_USERNAME') ?: 'avnadmin';
+        $host = getenv('DB_HOST') ?: 'dpg-da4kgec9v7es738fghvg-a.frankfurt-postgres.render.com';
+        $port = getenv('DB_PORT') ?: '5432';
+        $dbname = getenv('DB_DATABASE') ?: 'frogazz_db';
+        $user = getenv('DB_USERNAME') ?: 'frogazz_db_user';
         $pass = getenv('DB_PASSWORD') ?: '';
     }
 
