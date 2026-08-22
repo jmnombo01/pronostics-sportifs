@@ -38,6 +38,11 @@ jobs:
           sed -i 's/android:label=".*"/android:label="Frogazz Sport Analyse"/g' android/app/src/main/AndroidManifest.xml
           flutter pub get
 
+      - name: Apply Frog Icon 🐸 (launcher icon)
+        run: |
+          chmod +x flutter_app/set_launcher_icon.sh
+          flutter_app/set_launcher_icon.sh
+
       - name: Build APK Release
         run: |
           cd flutter_app
