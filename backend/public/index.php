@@ -94,10 +94,159 @@ function getDbConnection(): ?PDO {
     }
 }
 
+// 3b. AUTO-SCHÉMA : crée automatiquement les tables + admin + forfaits si absents (zéro migration manuelle)
+function ensureSchema(PDO $pdo): void {
+    static $done = false;
+    if ($done) return;
+    $done = true;
+    try {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS users (
+            id BIGSERIAL PRIMARY KEY,
+            last_name VARCHAR(100) NOT NULL,
+            first_name VARCHAR(100) NOT NULL,
+            phone VARCHAR(30) NOT NULL UNIQUE,
+            email VARCHAR(150) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            is_admin BOOLEAN NOT NULL DEFAULT FALSE,
+            subscription_status VARCHAR(50) NOT NULL DEFAULT 'FREE',
+            subscription_expires_at TIMESTAMP NULL,
+            free_trial_expires_at TIMESTAMP NULL,
+            referral_code VARCHAR(20) NULL UNIQUE,
+            referred_by_id BIGINT NULL,
+            fcm_token VARCHAR(255) NULL,
+            remember_token VARCHAR(255) NULL,
+            created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+        )");
+        $pdo->exec("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)");
+        $pdo->exec("CREATE INDEX IF NOT EXISTS idx_users_phone ON users(phone)");
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS subscription_plans (
+            id BIGSERIAL PRIMARY KEY,
+            code VARCHAR(50) NOT NULL UNIQUE,
+            name VARCHAR(100) NOT NULL,
+            price INTEGER NOT NULL DEFAULT 2000,
+            duration_days INTEGER NOT NULL DEFAULT 30,
+            description TEXT NULL,
+            features_json JSONB NULL,
+            is_active BOOLEAN NOT NULL DEFAULT TRUE,
+            created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS user_subscriptions (
+            id BIGSERIAL PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            subscription_plan_id BIGINT NOT NULL,
+            status VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
+            starts_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            expires_at TIMESTAMP NOT NULL,
+            auto_renew BOOLEAN NOT NULL DEFAULT FALSE,
+            created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS predictions (
+            id BIGSERIAL PRIMARY KEY,
+            title VARCHAR(200) NOT NULL,
+            competition VARCHAR(150) NOT NULL,
+            country VARCHAR(100) NOT NULL,
+            championship VARCHAR(150) NOT NULL,
+            match_date DATE NOT NULL,
+            match_time VARCHAR(10) NOT NULL,
+            home_team VARCHAR(150) NOT NULL,
+            away_team VARCHAR(150) NOT NULL,
+            type VARCHAR(50) NOT NULL,
+            odds NUMERIC(6,2) NOT NULL,
+            selections_json JSONB NULL,
+            confidence SMALLINT NOT NULL DEFAULT 4,
+            analysis TEXT NULL,
+            status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
+            image_url VARCHAR(255) NULL,
+            is_published BOOLEAN NOT NULL DEFAULT TRUE,
+            is_archived BOOLEAN NOT NULL DEFAULT FALSE,
+            scheduled_at TIMESTAMP NULL,
+            published_at TIMESTAMP NULL,
+            created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+        )");
+        $pdo->exec("CREATE INDEX IF NOT EXISTS idx_pred_type ON predictions(type)");
+        $pdo->exec("CREATE INDEX IF NOT EXISTS idx_pred_status ON predictions(status)");
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS payments (
+            id BIGSERIAL PRIMARY KEY,
+            user_id BIGINT NULL,
+            subscription_plan_id BIGINT NULL,
+            transaction_id VARCHAR(100) NOT NULL UNIQUE,
+            cinetpay_token VARCHAR(255) NULL,
+            amount INTEGER NOT NULL,
+            currency VARCHAR(10) NOT NULL DEFAULT 'XOF',
+            status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
+            payment_method VARCHAR(50) NOT NULL DEFAULT 'MOBILE_MONEY',
+            operator_id VARCHAR(100) NULL,
+            raw_response JSONB NULL,
+            paid_at TIMESTAMP NULL,
+            created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS promo_codes (
+            id BIGSERIAL PRIMARY KEY,
+            code VARCHAR(30) NOT NULL UNIQUE,
+            discount_percent INTEGER NOT NULL DEFAULT 10,
+            max_uses INTEGER NOT NULL DEFAULT 100,
+            used_count INTEGER NOT NULL DEFAULT 0,
+            expires_at TIMESTAMP NULL,
+            is_active BOOLEAN NOT NULL DEFAULT TRUE,
+            created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS faqs (
+            id BIGSERIAL PRIMARY KEY,
+            question VARCHAR(255) NOT NULL,
+            answer TEXT NOT NULL,
+            category VARCHAR(50) NOT NULL DEFAULT 'GENERAL',
+            display_order INTEGER NOT NULL DEFAULT 1,
+            is_active BOOLEAN NOT NULL DEFAULT TRUE,
+            created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+        )");
+
+        // Seed forfaits (VIP + Montante) si la table est vide
+        $cnt = (int) $pdo->query("SELECT COUNT(*) FROM subscription_plans")->fetchColumn();
+        if ($cnt === 0) {
+            $pdo->exec("INSERT INTO subscription_plans (code, name, price, duration_days, description, features_json, is_active) VALUES
+                ('VIP', 'Abonnement VIP Mensuel', 2000, 30, 'Accès Côte 5, 10 et 50', '[\"Côte 5 quotidienne\",\"Côte 10 exclusive\",\"Pronostic Semaine Côte 50\"]'::jsonb, TRUE),
+                ('MONTANTE', 'Abonnement Montante Hebdomadaire', 2000, 7, 'Stratégie Montante 7 jours', '[\"Pronostics Montante exclusifs\",\"Gestion de mise pas-à-pas\"]'::jsonb, TRUE)");
+        }
+
+        // Seed admin (admin@frogazz.pro / Frogazz@Admin2026) si aucun admin
+        $adminCnt = (int) $pdo->query("SELECT COUNT(*) FROM users WHERE is_admin = TRUE")->fetchColumn();
+        if ($adminCnt === 0) {
+            $hash = password_hash('Frogazz@Admin2026', PASSWORD_BCRYPT);
+            $st = $pdo->prepare("INSERT INTO users (last_name, first_name, phone, email, password, is_admin, subscription_status, referral_code) VALUES (?, ?, ?, ?, ?, TRUE, 'FREE', 'ADMINVIP')");
+            $st->execute(['Admin', 'Frogazz', '+22600000000', 'admin@frogazz.pro', $hash]);
+        }
+
+        // Seed FAQs réelles si vides
+        $faqCnt = (int) $pdo->query("SELECT COUNT(*) FROM faqs")->fetchColumn();
+        if ($faqCnt === 0) {
+            $pdo->exec("INSERT INTO faqs (question, answer, category, display_order) VALUES
+                ('Comment fonctionne le mode gratuit ?', 'Dès votre inscription, vous recevez le Combiné Gratuit de 3 matchs chaque jour. Les Côtes 5, 10, 50 et Montante nécessitent un abonnement.', 'ABONNEMENT', 1),
+                ('Quelle est la différence entre VIP et Montante ?', 'VIP (2000 FCFA/mois) = Côtes 5, 10, 50. Montante (2000 FCFA/semaine) = stratégie Montante.', 'ABONNEMENT', 2),
+                ('Comment payer ?', 'Via Orange Money, Wave, MTN, Moov ou carte bancaire (PayDunya / CinetPay).', 'PAIEMENT', 3)");
+        }
+    } catch (Exception $e) {
+        error_log("[AUTO-SCHEMA] " . $e->getMessage());
+    }
+}
+
 // 4. MOTEUR API REST v1 (100% RÉEL - ZÉRO DONNÉE FICTIVE)
 if (str_starts_with($uri, '/api/v1')) {
     header('Content-Type: application/json; charset=utf-8');
     $pdo = getDbConnection();
+    if ($pdo) ensureSchema($pdo);
     $input = json_decode(file_get_contents('php://input'), true) ?? [];
 
     // =========================================================================
