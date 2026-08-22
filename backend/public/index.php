@@ -70,12 +70,25 @@ function getDbConnection(): ?PDO {
     static $pdo = null;
     if ($pdo !== null) return $pdo;
 
-    $driver = getenv('DB_CONNECTION') ?: 'pgsql';
-    $host = getenv('DB_HOST') ?: 'pg-e0591b-jmnombo01-9a23.l.aivencloud.com';
-    $port = getenv('DB_PORT') ?: '18819';
-    $dbname = getenv('DB_DATABASE') ?: 'defaultdb';
-    $user = getenv('DB_USERNAME') ?: 'avnadmin';
-    $pass = getenv('DB_PASSWORD') ?: '';
+    // 1. Priorité : variable unique DATABASE_URL (postgresql://user:pass@host:port/db)
+    $dbUrl = getenv('DATABASE_URL');
+    if (!empty($dbUrl)) {
+        $parts = parse_url($dbUrl);
+        $driver = 'pgsql';
+        $host = $parts['host'] ?? '';
+        $port = $parts['port'] ?? '5432';
+        $dbname = ltrim($parts['path'] ?? '', '/');
+        $user = $parts['user'] ?? '';
+        $pass = $parts['pass'] ?? '';
+    } else {
+        // 2. Sinon : variables séparées (DB_HOST, DB_PORT, ...)
+        $driver = getenv('DB_CONNECTION') ?: 'pgsql';
+        $host = getenv('DB_HOST') ?: 'pg-e0591b-jmnombo01-9a23.l.aivencloud.com';
+        $port = getenv('DB_PORT') ?: '18819';
+        $dbname = getenv('DB_DATABASE') ?: 'defaultdb';
+        $user = getenv('DB_USERNAME') ?: 'avnadmin';
+        $pass = getenv('DB_PASSWORD') ?: '';
+    }
 
     try {
         if ($driver === 'pgsql') {

@@ -1,7 +1,6 @@
-databases:
-  - name: frogazz-db
-    plan: free
-    region: frankfurt
+# ⚠️ La base de données PostgreSQL existe déjà sur Render (frogazz_db).
+# Elle est reliée au serveur via la variable d'environnement DATABASE_URL.
+# (Ne pas re-créer de base : le plan gratuit n'autorise qu'une seule base.)
 
 services:
   - type: web
@@ -19,28 +18,8 @@ services:
         value: false
       - key: APP_URL
         value: https://pronostics-api-server.onrender.com
-      - key: DB_CONNECTION
-        value: pgsql
-      - key: DB_HOST
-        fromDatabase:
-          name: frogazz-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: frogazz-db
-          property: port
-      - key: DB_DATABASE
-        fromDatabase:
-          name: frogazz-db
-          property: database
-      - key: DB_USERNAME
-        fromDatabase:
-          name: frogazz-db
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: frogazz-db
-          property: password
+      # À renseigner manuellement dans le dashboard Render :
+      # DATABASE_URL = postgresql://frogazz_db_user:MOT_DE_PASSE@dpg-da4kgec9v7es738fghvg-a.frankfurt-postgres.render.com/frogazz_db
       - key: PAYDUNYA_MODE
         value: live
       - key: PAYDUNYA_IPN_URL
