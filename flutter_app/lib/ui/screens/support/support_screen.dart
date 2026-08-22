@@ -34,9 +34,9 @@ class SupportScreen extends StatelessWidget {
       ),
       FaqModel(
         id: 3,
-        question: 'Comment payer par Mobile Money via CinetPay ?',
+        question: 'Comment payer par Mobile Money via LigdiCash ?',
         answer:
-            'Sélectionnez votre forfait, choisissez "Mobile Money", saisissez votre numéro (Orange, MTN, Moov, Airtel) et validez la transaction dans l\'application CinetPay.',
+            'Sélectionnez votre forfait, choisissez Orange Money ou Moov Money, saisissez votre numéro puis validez (composez *144*4*6# pour Orange afin d'obtenir votre OTP).',
         category: 'PAIEMENT',
       ),
       FaqModel(
@@ -177,7 +177,7 @@ class SupportScreen extends StatelessWidget {
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () {
                   _showLegalModal(context, 'Politique de Confidentialité',
-                      '1. Collecte : Nous collectons uniquement les données utiles à l\'activation de votre compte.\n\n2. Sécurité : Vos données et paiements CinetPay sont 100% sécurisés et chiffrés.');
+                      '1. Collecte : Nous collectons uniquement les données utiles à l\'activation de votre compte.\n\n2. Sécurité : Vos données et paiements LigdiCash sont 100% sécurisés et chiffrés.');
                 },
               ),
             ),

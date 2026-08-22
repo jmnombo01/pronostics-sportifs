@@ -3,7 +3,7 @@
 /**
  * Frogazz Sport Analyse - API REST Production Engine (100% Mode Réel)
  * Zéro donnée fictive. Gère l'authentification PostgreSQL réelle,
- * les abonnements VIP/Montante et les webhooks PayDunya/CinetPay.
+ * les abonnements VIP/Montante et les webhooks de paiement LigdiCash.
  */
 
 header("Access-Control-Allow-Origin: *");
@@ -193,6 +193,7 @@ function ensureSchema(PDO $pdo): void {
             subscription_plan_id BIGINT NULL,
             transaction_id VARCHAR(100) NOT NULL UNIQUE,
             cinetpay_token VARCHAR(255) NULL,
+            ligdicash_token VARCHAR(255) NULL,
             amount INTEGER NOT NULL,
             currency VARCHAR(10) NOT NULL DEFAULT 'XOF',
             status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
@@ -249,10 +250,76 @@ function ensureSchema(PDO $pdo): void {
             $pdo->exec("INSERT INTO faqs (question, answer, category, display_order) VALUES
                 ('Comment fonctionne le mode gratuit ?', 'Dès votre inscription, vous recevez le Combiné Gratuit de 3 matchs chaque jour. Les Côtes 5, 10, 50 et Montante nécessitent un abonnement.', 'ABONNEMENT', 1),
                 ('Quelle est la différence entre VIP et Montante ?', 'VIP (2000 FCFA/mois) = Côtes 5, 10, 50. Montante (2000 FCFA/semaine) = stratégie Montante.', 'ABONNEMENT', 2),
-                ('Comment payer ?', 'Via Orange Money, Wave, MTN, Moov ou carte bancaire (PayDunya / CinetPay).', 'PAIEMENT', 3)");
+                ('Comment payer ?', 'Via Orange Money ou Moov Money (LigdiCash). Composez *144*4*6# pour Orange, ou validez la demande USSD pour Moov.', 'PAIEMENT', 3)");
         }
+        // Colonne token LigdiCash pour les bases déjà existantes (idempotent)
+        $pdo->exec("ALTER TABLE payments ADD COLUMN IF NOT EXISTS ligdicash_token VARCHAR(255) NULL");
+        $pdo->exec("ALTER TABLE payments ADD COLUMN IF NOT EXISTS operator_id VARCHAR(100) NULL");
     } catch (Exception $e) {
         error_log("[AUTO-SCHEMA] " . $e->getMessage());
+    }
+}
+
+// =========================================================================
+// HELPERS LIGDICASH (remplace CinetPay) — API officielle ligdicash.com
+// =========================================================================
+
+// Récupère l'utilisateur connecté à partir du Bearer token (ou null si non authentifié)
+function getAuthedUser(PDO $pdo): ?array {
+    $headers = getallheaders();
+    $auth = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+    if (empty($auth) || !str_starts_with($auth, 'Bearer ')) return null;
+    $token = trim(substr($auth, 7));
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE remember_token = ?");
+        $stmt->execute([$token]);
+        $u = $stmt->fetch();
+        return $u ?: null;
+    } catch (Exception $e) {
+        return null;
+    }
+}
+
+// Envoie une requête HTTP vers l'API LigdiCash (authentification Apikey + Bearer token)
+function ligdicashRequest(string $method, string $url, ?array $body = null): array {
+    $apiKey = getenv('LIGDICASH_API_KEY') ?: '';
+    $apiToken = getenv('LIGDICASH_API_TOKEN') ?: '';
+    $ch = curl_init($url);
+    $headers = [
+        'Apikey: ' . $apiKey,
+        'Authorization: Bearer ' . $apiToken,
+        'Accept: application/json',
+        'Content-Type: application/json',
+    ];
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 45);
+    if ($method === 'POST') {
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+    }
+    $resp = curl_exec($ch);
+    $err = curl_error($ch);
+    curl_close($ch);
+    if ($resp === false) {
+        return ['_error' => 'Erreur réseau LigdiCash: ' . $err];
+    }
+    $data = json_decode($resp, true);
+    return is_array($data) ? $data : ['_error' => 'Réponse LigdiCash invalide'];
+}
+
+// Active un abonnement VIP ou Montante pour un utilisateur (durée en jours)
+function activateSubscription(PDO $pdo, int $userId, string $planCode, int $durationDays): void {
+    $status = $planCode === 'MONTANTE' ? 'ACTIVE_MONTANTE' : 'ACTIVE';
+    $exp = gmdate('Y-m-d H:i:s', time() + $durationDays * 86400);
+    $pdo->prepare("UPDATE users SET subscription_status = ?, subscription_expires_at = ? WHERE id = ?")
+        ->execute([$status, $exp, $userId]);
+    $stmt = $pdo->prepare("SELECT id FROM subscription_plans WHERE code = ?");
+    $stmt->execute([$planCode]);
+    $plan = $stmt->fetch();
+    if ($plan) {
+        $pdo->prepare("INSERT INTO user_subscriptions (user_id, subscription_plan_id, status, starts_at, expires_at) VALUES (?, ?, 'ACTIVE', NOW(), ?)")
+            ->execute([$userId, $plan['id'], $exp]);
     }
 }
 
@@ -610,17 +677,264 @@ if (str_starts_with($uri, '/api/v1')) {
         exit;
     }
 
+    // =========================================================================
+    // ABONNEMENT & PAIEMENT LIGDICASH (remplace CinetPay)
+    // =========================================================================
+
+    // 1. INITIER LE PAIEMENT (POST /api/v1/subscriptions/subscribe)
+    //    Flow Orange Money (OTP USSD) : le client compose *144*4*6#, récupère l'OTP, on envoie numéro + OTP.
+    //    Flow Moov (USSD Push) : otp vide, l'opérateur envoie une demande de validation sur le téléphone du client.
     if ($uri === '/api/v1/subscriptions/subscribe' && $method === 'POST') {
-        $planCode = $input['plan_code'] ?? 'VIP';
-        $txId = 'CP-FROGAZZ-' . gmdate('Ymd') . '-' . rand(1000, 9999);
+        if (!$pdo) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'code' => 'DB_CONNECTION_ERROR', 'message' => 'Base de données indisponible.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        if (empty(getenv('LIGDICASH_API_KEY')) || empty(getenv('LIGDICASH_API_TOKEN'))) {
+            http_response_code(503);
+            echo json_encode(['success' => false, 'code' => 'LIGDICASH_NOT_CONFIGURED', 'message' => 'Paiement LigdiCash non configuré. Ajoutez LIGDICASH_API_KEY et LIGDICASH_API_TOKEN sur Render.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $user = getAuthedUser($pdo);
+        if (!$user) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Connectez-vous pour vous abonner.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $planCode = strtoupper(trim($input['plan_code'] ?? 'VIP'));
+        $phone = preg_replace('/[^0-9]/', '', trim($input['phone'] ?? ''));
+        $operator = strtoupper(trim($input['operator'] ?? 'ORANGE'));
+        $otp = trim($input['otp'] ?? '');
+
+        // Prix de base selon le plan
+        $stmt = $pdo->prepare("SELECT * FROM subscription_plans WHERE code = ?");
+        $stmt->execute([$planCode]);
+        $plan = $stmt->fetch();
+        if (!$plan) {
+            http_response_code(422);
+            echo json_encode(['success' => false, 'message' => 'Forfait inconnu.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        $amount = (int) $plan['price'];
+        $durationDays = (int) $plan['duration_days'];
+
+        // Application d'un éventuel code promo
+        $promoCode = strtoupper(trim($input['promo_code'] ?? ''));
+        if ($promoCode !== '') {
+            $ps = $pdo->prepare("SELECT * FROM promo_codes WHERE code = ? AND is_active = TRUE");
+            $ps->execute([$promoCode]);
+            $promo = $ps->fetch();
+            if ($promo) {
+                $amount = (int) round($amount * (100 - (int) $promo['discount_percent']) / 100);
+            }
+        }
+
+        if ($phone === '' || strlen($phone) < 8) {
+            http_response_code(422);
+            echo json_encode(['success' => false, 'message' => 'Numéro de téléphone invalide.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        // Forcer le préfixe 226 si absent (Burkina Faso)
+        if (!str_starts_with($phone, '226')) {
+            $phone = '226' . ltrim($phone, '0');
+        }
+
+        // Identifiant de transaction interne (règle d'or LigdiCash)
+        $transactionId = 'FGAZZ-' . gmdate('YmdHis') . '-' . strtoupper(bin2hex(random_bytes(4)));
+
+        $storeName = getenv('LIGDICASH_STORE_NAME') ?: 'Frogazz Sport Analyse';
+        $storeUrl = getenv('LIGDICASH_WEBSITE_URL') ?: 'https://pronostics-api-server.onrender.com';
+        $callbackUrl = getenv('LIGDICASH_CALLBACK_URL') ?: 'https://pronostics-api-server.onrender.com/api/v1/ligdicash/callback';
+
+        $payload = [
+            'commande' => [
+                'invoice' => [
+                    'items' => [],
+                    'total_amount' => $amount,
+                    'devise' => 'XOF',
+                    'description' => 'Abonnement ' . $planCode . ' — Frogazz Sport Analyse',
+                    'customer' => $phone,
+                    'customer_firstname' => $user['first_name'] ?? '',
+                    'customer_lastname' => $user['last_name'] ?? '',
+                    'customer_email' => $user['email'] ?? '',
+                    'external_id' => '',
+                    'otp' => ($operator === 'ORANGE') ? $otp : ''
+                ],
+                'store' => [
+                    'name' => $storeName,
+                    'website_url' => $storeUrl
+                ],
+                'actions' => [
+                    'cancel_url' => '',
+                    'return_url' => '',
+                    'callback_url' => $callbackUrl
+                ],
+                'custom_data' => [
+                    'transaction_id' => $transactionId,
+                    'user_id' => (int) $user['id'],
+                    'plan_code' => $planCode
+                ]
+            ]
+        ];
+
+        $res = ligdicashRequest('POST', 'https://app.ligdicash.com/pay/v01/straight/checkout-invoice/create', $payload);
+
+        if (isset($res['_error'])) {
+            http_response_code(502);
+            echo json_encode(['success' => false, 'message' => $res['_error']], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        if (($res['response_code'] ?? '01') !== '00') {
+            http_response_code(402);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Échec du paiement LigdiCash : ' . ($res['response_text'] ?? 'Erreur inconnue'),
+                'wiki' => $res['wiki'] ?? null
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $token = $res['token'] ?? '';
+
+        // Enregistrer le paiement (statut PENDING) en base
+        try {
+            $pdo->prepare("INSERT INTO payments (user_id, subscription_plan_id, transaction_id, ligdicash_token, amount, currency, status, payment_method, operator_id, raw_response, created_at) VALUES (?, ?, ?, ?, ?, 'XOF', 'PENDING', ?, ?, ?, NOW())")
+                ->execute([$user['id'], $plan['id'], $transactionId, $token, $amount, 'LIGDICASH', $operator, json_encode($res)]);
+        } catch (Exception $e) {
+            error_log("[SUBSCRIBE] " . $e->getMessage());
+        }
+
         echo json_encode([
             'success' => true,
-            'transaction_id' => $txId,
-            'amount' => 2000,
+            'transaction_id' => $transactionId,
+            'token' => $token,
+            'amount' => $amount,
             'currency' => 'XOF',
-            'cinetpay_payment_url' => "https://secure.cinetpay.com/payment/simulate/{$txId}",
-            'cinetpay_token' => "tok_{$txId}"
+            'operator' => $operator,
+            'status' => 'pending',
+            'ussd_code' => ($operator === 'ORANGE') ? '*144*4*6#' : null,
+            'message' => ($operator === 'ORANGE')
+                ? 'Paiement initié. Composez *144*4*6# pour obtenir votre OTP puis validez.'
+                : 'Paiement initié. Validez la demande USSD reçue sur votre téléphone.'
         ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // 2. VÉRIFIER LE STATUT (POST /api/v1/subscriptions/ligdicash/confirm)
+    //    L'application interroge cet endpoint pour savoir si le paiement est terminé.
+    if ($uri === '/api/v1/subscriptions/ligdicash/confirm' && $method === 'POST') {
+        if (!$pdo) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Base de données indisponible.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        $transactionId = trim($input['transaction_id'] ?? '');
+        if ($transactionId === '') {
+            http_response_code(422);
+            echo json_encode(['success' => false, 'message' => 'transaction_id requis.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        $stmt = $pdo->prepare("SELECT * FROM payments WHERE transaction_id = ?");
+        $stmt->execute([$transactionId]);
+        $payment = $stmt->fetch();
+        if (!$payment) {
+            http_response_code(404);
+            echo json_encode(['success' => false, 'message' => 'Paiement introuvable.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $token = $payment['ligdicash_token'] ?? '';
+        $confirm = ligdicashRequest('GET', 'https://app.ligdicash.com/pay/v01/redirect/checkout-invoice/confirm/?invoiceToken=' . urlencode($token));
+
+        $status = $confirm['status'] ?? 'pending';
+        $responseCode = $confirm['response_code'] ?? '01';
+
+        if ($status === 'completed') {
+            // Paiement confirmé -> activer l'abonnement
+            $pdo->prepare("UPDATE payments SET status = 'SUCCESS', paid_at = NOW() WHERE id = ?")->execute([$payment['id']]);
+            if (!empty($payment['user_id'])) {
+                $planStmt = $pdo->prepare("SELECT code FROM subscription_plans WHERE id = ?");
+                $planStmt->execute([$payment['subscription_plan_id']]);
+                $paidPlan = $planStmt->fetch();
+                $pcode = $paidPlan['code'] ?? 'VIP';
+                $pstmt = $pdo->prepare("SELECT duration_days FROM subscription_plans WHERE code = ?");
+                $pstmt->execute([$pcode]);
+                $days = (int) ($pstmt->fetchColumn() ?: 30);
+                activateSubscription($pdo, (int) $payment['user_id'], $pcode, $days);
+            }
+            echo json_encode(['success' => true, 'status' => 'completed', 'message' => 'Paiement confirmé, abonnement activé.'], JSON_UNESCAPED_UNICODE);
+        } elseif ($status === 'notcompleted') {
+            $pdo->prepare("UPDATE payments SET status = 'FAILED' WHERE id = ?")->execute([$payment['id']]);
+            echo json_encode(['success' => false, 'status' => 'notcompleted', 'message' => 'Paiement non abouti.'], JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode(['success' => true, 'status' => 'pending', 'message' => 'Paiement en attente de validation.'], JSON_UNESCAPED_UNICODE);
+        }
+        exit;
+    }
+
+    // 3. CALLBACK WEBHOOK (POST /api/v1/ligdicash/callback)
+    //    LigdiCash notifie cet endpoint quand l'opérateur a traité la transaction.
+    if ($uri === '/api/v1/ligdicash/callback' && $method === 'POST') {
+        $body = $input;
+        $customData = $body['custom_data'] ?? ($body['commande']['custom_data'] ?? []);
+        $transactionId = $customData['transaction_id'] ?? ($body['transaction_id'] ?? '');
+
+        if ($pdo && $transactionId !== '') {
+            $stmt = $pdo->prepare("SELECT * FROM payments WHERE transaction_id = ?");
+            $stmt->execute([$transactionId]);
+            $payment = $stmt->fetch();
+            if ($payment) {
+                // Toujours re-vérifier via confirm (sécurité) avec le token stocké à la création
+                $token = $payment['ligdicash_token'] ?? '';
+                $confirm = ligdicashRequest('GET', 'https://app.ligdicash.com/pay/v01/redirect/checkout-invoice/confirm/?invoiceToken=' . urlencode($token));
+                if (($confirm['status'] ?? '') === 'completed') {
+                    $pdo->prepare("UPDATE payments SET status = 'SUCCESS', paid_at = NOW() WHERE id = ?")->execute([$payment['id']]);
+                    if (!empty($payment['user_id'])) {
+                        $planStmt = $pdo->prepare("SELECT code FROM subscription_plans WHERE id = ?");
+                        $planStmt->execute([$payment['subscription_plan_id']]);
+                        $paidPlan = $planStmt->fetch();
+                        $pcode = $paidPlan['code'] ?? 'VIP';
+                        $pstmt = $pdo->prepare("SELECT duration_days FROM subscription_plans WHERE code = ?");
+                        $pstmt->execute([$pcode]);
+                        $days = (int) ($pstmt->fetchColumn() ?: 30);
+                        activateSubscription($pdo, (int) $payment['user_id'], $pcode, $days);
+                    }
+                }
+            }
+        }
+        echo json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // 4. HISTORIQUE DES PAIEMENTS RÉELS (GET /api/v1/history/payments)
+    if ($uri === '/api/v1/history/payments' && $method === 'GET') {
+        $data = [];
+        if ($pdo) {
+            $user = getAuthedUser($pdo);
+            if ($user) {
+                $stmt = $pdo->prepare("SELECT p.*, sp.code AS plan_code, sp.name AS plan_name FROM payments p LEFT JOIN subscription_plans sp ON sp.id = p.subscription_plan_id WHERE p.user_id = ? ORDER BY p.created_at DESC");
+                $stmt->execute([$user['id']]);
+                $rows = $stmt->fetchAll();
+                foreach ($rows as $r) {
+                    $data[] = [
+                        'id' => (int) $r['id'],
+                        'transaction_id' => $r['transaction_id'],
+                        'amount' => (int) $r['amount'],
+                        'currency' => $r['currency'],
+                        'status' => $r['status'],
+                        'payment_method' => $r['payment_method'],
+                        'operator' => $r['operator_id'],
+                        'paid_at' => $r['paid_at'],
+                        'created_at' => $r['created_at'],
+                        'plan' => ['code' => $r['plan_code'], 'name' => $r['plan_name']]
+                    ];
+                }
+            }
+        }
+        echo json_encode(['success' => true, 'data' => $data], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
@@ -662,7 +976,7 @@ if (str_starts_with($uri, '/api/v1')) {
         echo json_encode([
             'success' => true,
             'title' => 'Politique de Confidentialité — Frogazz Sport Analyse',
-            'content' => '1. Protection des Données : Toutes vos données sont chiffrées selon les normes industrielles (Sanctum/TLS). 2. Transactions : Traitées de façon sécurisée par CinetPay et PayDunya.',
+            'content' => '1. Protection des Données : Toutes vos données sont chiffrées selon les normes industrielles (TLS). 2. Transactions : Traitées de façon sécurisée par LigdiCash (mobile money Orange & Moov).',
             'updated_at' => '2026-08-01'
         ], JSON_UNESCAPED_UNICODE);
         exit;

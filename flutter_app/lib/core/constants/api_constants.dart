@@ -14,9 +14,10 @@ class ApiConstants {
   static const String historyPayments = '/history/payments';
   static const String historySubscriptions = '/history/subscriptions';
 
-  // Subscriptions & CinetPay endpoints
+  // Subscriptions & LigdiCash endpoints
   static const String subscriptionPlans = '/subscriptions/plans';
   static const String subscribe = '/subscriptions/subscribe';
+  static const String ligdicashConfirm = '/subscriptions/ligdicash/confirm';
   static const String mySubscriptions = '/subscriptions/my';
   static const String promoCheck = '/subscriptions/promo/check';
 

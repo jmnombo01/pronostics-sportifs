@@ -116,7 +116,7 @@ class ApiService {
   }
 
   // ---------------------------------------------------------------------------
-  // SUBSCRIPTIONS & CINETPAY
+  // SUBSCRIPTIONS & LIGDICASH
   // ---------------------------------------------------------------------------
   Future<List<SubscriptionPlanModel>> getPlans() async {
     final response = await _client.dio.get(ApiConstants.subscriptionPlans);
@@ -126,18 +126,28 @@ class ApiService {
 
   Future<Map<String, dynamic>> subscribe({
     required String planCode,
-    required String paymentMethod,
+    required String operator,
     required String phone,
+    String? otp,
     String? promoCode,
   }) async {
     final response = await _client.dio.post(
       ApiConstants.subscribe,
       data: {
         'plan_code': planCode,
-        'payment_method': paymentMethod,
+        'operator': operator,
         'phone': phone,
+        if (otp != null && otp.isNotEmpty) 'otp': otp,
         if (promoCode != null && promoCode.isNotEmpty) 'promo_code': promoCode,
       },
+    );
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> confirmLigdicash(String transactionId) async {
+    final response = await _client.dio.post(
+      ApiConstants.ligdicashConfirm,
+      data: {'transaction_id': transactionId},
     );
     return response.data;
   }

@@ -20,13 +20,11 @@ services:
         value: https://pronostics-api-server.onrender.com
       # À renseigner manuellement dans le dashboard Render :
       # DATABASE_URL = postgresql://frogazz_db_user:MOT_DE_PASSE@dpg-da4kgec9v7es738fghvg-a.frankfurt-postgres.render.com/frogazz_db
-      - key: PAYDUNYA_MODE
-        value: live
-      - key: PAYDUNYA_IPN_URL
-        value: https://pronostics-api-server.onrender.com/api/v1/paydunya/ipn
-      - key: PAYDUNYA_RETURN_URL
-        value: https://pronostics-api-server.onrender.com/api/v1/paydunya/return
-      - key: PAYDUNYA_CANCEL_URL
-        value: https://pronostics-api-server.onrender.com/api/v1/paydunya/cancel
-      - key: PAYDUNYA_CURRENCY
-        value: XOF
+      # LIGDICASH_API_KEY = (clé API LigdiCash)
+      # LIGDICASH_API_TOKEN = (token API LigdiCash)
+      - key: LIGDICASH_STORE_NAME
+        value: Frogazz Sport Analyse
+      - key: LIGDICASH_WEBSITE_URL
+        value: https://pronostics-api-server.onrender.com
+      - key: LIGDICASH_CALLBACK_URL
+        value: https://pronostics-api-server.onrender.com/api/v1/ligdicash/callback
